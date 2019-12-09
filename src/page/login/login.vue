@@ -22,7 +22,7 @@
             <div v-show="showLoginRegister" >
                 <div class="know-login-user-input">
                     <div class="know-login-user">
-                        <Input v-model="formlogin.userName" :class="{'know-login-error':showuserwarn}"  prefix="ios-paw-outline" placeholder="用户名"  size="large" @on-change='checkIswarn(1)' @on-blur='blurIswarn(1)' />
+                        <Input v-model="formlogin.username" :class="{'know-login-error':showuserwarn}"  prefix="ios-paw-outline" placeholder="用户名"  size="large" @on-change='checkIswarn(1)' @on-blur='blurIswarn(1)' />
                         <transition name="knowerror">
                             <div class="know-login-warn" v-show="showuserwarn">请输入用户名!</div>
                         </transition>
@@ -73,7 +73,7 @@
                 showpasswordwarn:false,
                 //登陆 上传 的 信息
                 formlogin:{
-                    userName:'',
+                    username:'',
                     password:''
                 },
             }
@@ -81,7 +81,6 @@
         methods:{
             //登陆
             Submitlanding(){
-                window.console.log(this.formlogin);
                 this. post_string('user/login',this.formlogin).then(res=>{
                     window.console.log(res);
                 })
