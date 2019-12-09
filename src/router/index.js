@@ -27,7 +27,7 @@ import axios from 'axios'
 /**
  * 引入路由组件
  */
-import helloWorld from '../components/HelloWorld.vue'
+import login from '../page/login/login'
 
 Vue.use(Vuex)
 Vue.use(ViewUI);
@@ -42,8 +42,8 @@ let router = new vueRouter({
     routes:[
         {
             path:'/',
-            name:'helloWorld',
-            component:helloWorld
+            name:'login',
+            component:login
         }
     ]
 })
