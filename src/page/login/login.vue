@@ -81,8 +81,15 @@
         methods:{
             //登陆
             Submitlanding(){
+                if(this.formlogin.username===''||this.formlogin.password===''){
+                    this.$Message.warning('请输入用户名或密码');
+                    return;
+                }
+                    
                 this. post_string('user/login',this.formlogin).then(res=>{
                     window.console.log(res);
+                }).catch(err=>{
+                    window.console.log(err);
                 })
             },
             //检测 信息 有误
