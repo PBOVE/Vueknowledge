@@ -5,7 +5,7 @@
 */
 
 //axios 上传地址
-let baseUrl = 'http://192.168.43.156:8080/api/';
+let baseUrl = 'http://172.16.61.159:8080/api';
 
 export {
     baseUrl

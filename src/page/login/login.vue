@@ -12,47 +12,56 @@
                 知&nbsp;识&nbsp;图&nbsp;谱
             </div>
             <div class="know-login-user-select ">
-                <span  :class="{'know-login-user-select-span':true,'know-login-user-select-border':showLoginRegister}" @click="showLoginRegister=true">
-                    <Icon type="md-person" /><span class="know-login-user-select-event ">登&nbsp;陆</span>
+                <span  :class="{'know-login-user-select-span':true,'know-login-user-select-border':showLoginRegister}" @click="loginRegister(1)">
+                    <Icon type="md-person" /><span class="know-login-user-select-event ">登&nbsp;录</span>
                 </span>
-                <span :class="{'know-login-user-select-span':true,'know-login-user-select-border':!showLoginRegister}" @click="showLoginRegister=false">
+                <span :class="{'know-login-user-select-span':true,'know-login-user-select-border':!showLoginRegister}" @click="loginRegister(2)">
                     <Icon type="md-create" /><span class="know-login-user-select-event">注&nbsp;册</span>
                 </span>
             </div>
             <div v-show="showLoginRegister" >
                 <div class="know-login-user-input">
                     <div class="know-login-user">
-                        <Input v-model="formlogin.username" :class="{'know-login-error':showuserwarn}"  prefix="ios-paw-outline" placeholder="用户名"  size="large" @on-change='checkIswarn(1)' @on-blur='blurIswarn(1)' />
+                        <Input v-model="formlogin.username" :class="{'know-login-error':showuserwarn}"  prefix="ios-paw-outline" placeholder="用户名"  size="large" @on-change='checkIswarn(1)' @on-blur='blurIswarn(1)' @on-enter='Submitlanding'/>
                         <transition name="knowerror">
                             <div class="know-login-warn" v-show="showuserwarn">请输入用户名!</div>
                         </transition>
                     </div>
                     <div class="know-login-user">
-                        <Input v-model="formlogin.password" :class="{'know-login-error':showpasswordwarn}" prefix="ios-lock-outline" type="password" password  placeholder="密   码"  size="large"  @on-change='checkIswarn(2)'  @on-blur='blurIswarn(1)'/>
+                        <Input v-model="formlogin.password" :class="{'know-login-error':showpasswordwarn}" prefix="ios-lock-outline" type="password" password  placeholder="密   码"  size="large"  @on-change='checkIswarn(2)'  @on-blur='blurIswarn(2)' @on-enter='Submitlanding'/>
                         <transition name="knowerror">
                             <div class="know-login-warn" v-show="showpasswordwarn">请输入密码!</div>
                         </transition>
                     </div>
                 </div>
                 <div class="know-login-user-land">
-                    <Button type="primary" class="know-login-user-land-button" size="large" @click="Submitlanding">登&nbsp;陆</Button>
+                    <Button type="primary" class="know-login-user-land-button" size="large" @click="Submitlanding">登&nbsp;录</Button>
                 </div>
             </div>
 
             <div  v-show="!showLoginRegister" >
                 <div class="know-login-user-input">
                     <div class="know-login-user">
-                        <Input   placeholder="账号"  size="large" />
+                        <Input  v-model="formRegister.username"  placeholder="账号"  size="large" :class="{'know-login-error':registerusername}" @on-change='checkIswarn(3)' @on-blur='blurIswarn(3)' @on-enter="SubmitRegister"/>
+                        <transition name="knowerror">
+                            <div class="know-login-warn" v-show="registerusername">请输入账号!</div>
+                        </transition>
                     </div>
                     <div class="know-login-user">
-                        <Input type="password"   placeholder="至少6位密码 区分大小写"  size="large"/>
+                        <Input type="password" v-model="formRegister.password"  placeholder="至少6位密码 区分大小写"  size="large"  :class="{'know-login-error':registerPassword}" @on-change='checkIswarn(4)' @on-blur='blurIswarn(4)' @on-enter="SubmitRegister"/>
+                        <transition name="knowerror">
+                            <div class="know-login-warn" v-show="registerPassword">请输入密码!</div>
+                        </transition>
                     </div>
                     <div class="know-login-user">
-                        <Input  type="password" placeholder="确认密码"  size="large"/>
+                        <Input  type="password"  v-model="formRegister.RepeatPassword" placeholder="确认密码"  size="large"  :class="{'know-login-error':registerRepeatPassword}" @on-change='checkIswarn(5)' @on-blur='blurIswarn(5)' @on-enter="SubmitRegister"/>
+                        <transition name="knowerror">
+                            <div class="know-login-warn" v-show="registerRepeatPassword">{{registerRepeatPasswordFalg?'两次输入的密码不匹配!':'请确认密码!'}}</div>
+                        </transition>
                     </div>
                 </div>
                 <div class="know-login-user-land">
-                    <Button type="primary" class="know-login-user-land-button" size="large">注&nbsp;册</Button>
+                    <Button type="primary" class="know-login-user-land-button" size="large" @click="SubmitRegister">注&nbsp;册</Button>
                 </div>
             </div>
 
@@ -71,43 +80,136 @@
                 showuserwarn:false,
                 // 密码 警告标志位
                 showpasswordwarn:false,
+                //注册 用户名 警告 标志位
+                registerusername:false,
+                //注册 密码 警告 标志位
+                registerPassword:false,
+                //注册 重复 密码  警告 标志位
+                registerRepeatPassword:false,
+                //注册 重复 密码  警告 信息 标志位
+                registerRepeatPasswordFalg :false,
                 //登陆 上传 的 信息
                 formlogin:{
                     username:'',
                     password:''
                 },
+                formRegister:{
+                    username:'',
+                    password:'',
+                    RepeatPassword:''
+                }
             }
         },
         methods:{
-            //登陆
+            //登录 注册 切换 函数
+            loginRegister(val){
+                this.showuserwarn = false;
+                this.showpasswordwarn = false;
+                this.registerusername = false;
+                this.registerPassword = false;
+                this.registerRepeatPassword = false;
+                switch(val){
+                    case 1:
+                        this.formlogin = {
+                            username:'',
+                            password:''
+                        }
+                        this.showLoginRegister = true;
+                        break;
+                    case 2:
+                        this.formRegister = {
+                            username:'',
+                            password:'',
+                            RepeatPassword:''
+                        }
+                        this.showLoginRegister = false;
+                        break;
+                }
+            },
+            //登录
             Submitlanding(){
-                if(this.formlogin.username===''||this.formlogin.password===''){
-                    this.$Message.warning('请输入用户名或密码');
+                if(this.formlogin.username===''&&this.formlogin.password===''){
+                    this.showuserwarn = true;
+                    this.showpasswordwarn = true;
+                    return;
+                }else if(this.formlogin.username===''){
+                    this.showuserwarn = true;
+                    return;
+                }else if(this.formlogin.password===''){
+                    this.showpasswordwarn = true;
                     return;
                 }
-                    
                 this. post_string('user/login',this.formlogin).then(res=>{
                     window.console.log(res);
-                }).catch(err=>{
-                    window.console.log(err);
+                }).catch(()=>{
+                    // window.console.log(err);
                 })
             },
-            //检测 信息 有误
+            // 注册
+            SubmitRegister(){
+                if(this.formRegister.username === ''){
+                    this.registerusername = true;
+                }
+                if(this.formRegister.password === ''){
+                     this.registerPassword = true;
+                }
+                if(this.formRegister.RepeatPassword === ''){
+                    this.registerRepeatPassword = true;
+                    this.registerRepeatPasswordFalg = false;
+                }
+                if(this.registerusername||this.registerPassword|| this.registerRepeatPassword)
+                    return;
+                this.post_json('register',{userName:this.formRegister.username,password:this.formRegister.password}).then(res=>{
+                    window.console.log(res);
+                    if(res.code === 0 && res.msg === 'Success'){
+                        this.showLoginRegister = !this.showLoginRegister;
+                    }
+                }).catch(()=>{
+                    this.$Message.error('注册错误');
+                })
+            },
+            //检测 信息 有误 change
             checkIswarn(val){
                 if(val === 1){
-                    if(this.formlogin.user !== ''){
+                    if(this.formlogin.username !== ''){
                         this.showuserwarn = false;
                     }
                 }else if(val === 2){
                     if(this.formlogin.password !== ''){
                         this.showpasswordwarn = false;
                     }
+                }else if(val === 3){
+                    if(this.formRegister.username !== ''){
+                        this.registerusername = false;
+                    }
+                }else if(val === 4){
+                    if(this.formRegister.password !== ''){
+                        this.registerPassword = false;
+                        if(this.formRegister.RepeatPassword!==''){
+                            if(this.formRegister.RepeatPassword===this.formRegister.password){
+                                this.registerRepeatPassword = false;
+                            }else{
+                                this.registerRepeatPassword = true
+                            }
+                        }
+                    }
+                }else if(val === 5){
+                    if(this.formRegister.RepeatPassword !== ''){
+                        this.registerRepeatPassword = false;
+                        let strRPass = this.formRegister.RepeatPassword;
+                        let strPass  = this.formRegister.password.substr(0,strRPass.length);
+                        if(strPass !== strRPass){
+                            this.registerRepeatPassword = true;
+                            this.registerRepeatPasswordFalg =true;
+                        }
+
+                    }
                 }
             },
             //失去 焦点
             blurIswarn(val){
                 if(val === 1){
-                    if(this.formlogin.user === ''){
+                    if(this.formlogin.username === ''){
                         this.showuserwarn = true;
                     }else{
                         this.showuserwarn = false;
@@ -118,14 +220,35 @@
                     }else{
                         this.showpasswordwarn = false;
                     }
+                }else if(val === 3){
+                    if(this.formRegister.username === ''){
+                        this.registerusername = true;
+                    }else{
+                        this.registerusername = false;
+                    }
+                }else if(val === 4){
+                    if(this.formRegister.password === ''){
+                        this.registerPassword = true;
+                    }else{
+                        this.registerPassword = false;
+                    }
+                }else if(val === 5){
+                    if(this.formRegister.RepeatPassword === ''){
+                        this.registerRepeatPassword = true;
+                        this.registerRepeatPasswordFalg =false;
+                    }else{
+                        this.registerRepeatPassword = false;
+                        if(this.formRegister.RepeatPassword!==this.formRegister.password){
+                            this.registerRepeatPassword = true;
+                              this.registerRepeatPasswordFalg = true;
+                        }
+                    }
                 }
             },
             // 获取  token
             getuserToken(){
                 this.get('user/me').then(res=>{
-                    window.console.log(res)
                     this.$store.commit('setToken',res.data._csrf);
-                    window.console.log(this.$store.getters.getToken);
                 })
             }
         },
