@@ -141,6 +141,8 @@
                 }
                 this. post_string('user/login',this.formlogin).then(res=>{
                     window.console.log(res);
+                    sessionStorage.setItem('token',this.$store.getters.getToken);
+                    this.$router.push({path:'/manage'})
                 }).catch(()=>{
                     // window.console.log(err);
                 })
@@ -248,7 +250,8 @@
             // 获取  token
             getuserToken(){
                 this.get('user/me').then(res=>{
-                    this.$store.commit('setToken',res.data._csrf);
+                    window.console.log(res)
+                    this.$store.commit('setToken',res.data._csrf.token);
                 })
             }
         },

@@ -28,6 +28,7 @@ import axios from 'axios'
  * 引入路由组件
  */
 import login from '../page/login/login'
+import manage from '../page/Backstage/manage'
 
 Vue.use(Vuex)
 Vue.use(ViewUI);
@@ -44,8 +45,28 @@ let router = new vueRouter({
             path:'/',
             name:'login',
             component:login
+        },
+        {
+            path:'/manage',
+            name:'manage',
+            component:manage,
+            meta:{requireAuth:true}
         }
     ]
 })
+
+router.beforeEach((to, from, next)=> {
+    let token  = sessionStorage.getItem('token');
+    if(to.matched.some(r => r.meta.requireAuth)){
+        if(token){
+            next();
+        }else{
+            next('/');
+        }
+    }else{
+        next();
+    }
+})
+
 
 export default  router

@@ -21,6 +21,9 @@
         mutations:{
             setToken(state,token){
                 state.token = token;
+            },
+            delTkoken(state){
+                state.token = ''
             }
         }
  })
