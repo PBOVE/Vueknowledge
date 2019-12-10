@@ -139,12 +139,21 @@
                     this.showpasswordwarn = true;
                     return;
                 }
-                this. post_string('user/login',this.formlogin).then(res=>{
-                    window.console.log(res);
-                    sessionStorage.setItem('token',this.$store.getters.getToken);
-                    this.$router.push({path:'/manage'})
+                this.post_string('user/login',this.formlogin).then(res=>{
+                    if(res.code === 0 && res.msg === 'Success'){
+                        // this.$store.getters.getToken             
+                        return Promise.resolve();
+                    }
+                }).then(()=>{
+                    this.get('user/me').then(res=>{
+                        window.console.log(res);
+                        this.$store.commit('setToken',res.data._csrf.token);
+                        sessionStorage.setItem('user',JSON.stringify(res.data.user));
+                        sessionStorage.setItem('token',res.data._csrf.token);
+                        this.$router.push({path:'/manage'})
+                    })
                 }).catch(()=>{
-                    // window.console.log(err);
+
                 })
             },
             // 注册
@@ -162,7 +171,6 @@
                 if(this.registerusername||this.registerPassword|| this.registerRepeatPassword)
                     return;
                 this.post_json('register',{userName:this.formRegister.username,password:this.formRegister.password}).then(res=>{
-                    window.console.log(res);
                     if(res.code === 0 && res.msg === 'Success'){
                         this.showLoginRegister = !this.showLoginRegister;
                     }
@@ -250,8 +258,8 @@
             // 获取  token
             getuserToken(){
                 this.get('user/me').then(res=>{
-                    window.console.log(res)
                     this.$store.commit('setToken',res.data._csrf.token);
+                    sessionStorage.setItem('user',JSON.stringify(res.data));
                 })
             }
         },

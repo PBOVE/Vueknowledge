@@ -7,7 +7,7 @@
 
 <template>
     <div>
-        {{msg}}
+        {{this.$store.state.token}}
     </div>
 </template>
 
@@ -16,6 +16,12 @@
     export default {
         data() {
             return {msg: '这个是Home模板页'}
+        },
+        methods:{
+            
+        },
+        mounted(){
+          
         }
     }
 </script>

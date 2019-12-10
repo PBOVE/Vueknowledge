@@ -52,6 +52,7 @@ export function post_string(url, params) {
           resolve(res.data);
         })
         .catch((err) =>{
+         
           reject(err)
         })
     });
@@ -71,7 +72,7 @@ axios.interceptors.request.use(
   },
     // 对请求错误做些什么
   error => {
-    return Promise.error(error);
+    return Promise.reject(error);
   })
 /**
  * 添加响应拦截器
@@ -83,4 +84,5 @@ axios.interceptors.response.use(response=> {
   // 对响应错误做点什么
 
   return Promise.reject(error);
+
 })
