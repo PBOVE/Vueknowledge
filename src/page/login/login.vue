@@ -140,14 +140,12 @@
                     return;
                 }
                 this.post_string('user/login',this.formlogin).then(res=>{
-                    window.console.log(res)
                     if(res.code === 0 && res.msg === 'Success'){
                         // this.$store.getters.getToken
                         return Promise.resolve();
                     }
                 }).then(()=>{
                     this.get('user/me').then(res=>{
-                        window.console.log(res);
                         this.$store.commit('setToken',res.data._csrf.token);
                         sessionStorage.setItem('user',JSON.stringify(res.data.user));
                         sessionStorage.setItem('token',res.data._csrf.token);
