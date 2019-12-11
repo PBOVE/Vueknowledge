@@ -18,6 +18,7 @@ import 'view-design/dist/styles/iview.css';
  * 引入 vuex
  */
 import Vuex from 'vuex'
+import store from '../store'
 
 /**
  *  引入 axios
@@ -34,6 +35,14 @@ Vue.use(Vuex)
 Vue.use(ViewUI);
 Vue.use(vueRouter);
 Vue.prototype.axios = axios;
+
+/**
+ * 页面刷新的时候重新获取token
+ */
+if (sessionStorage.getItem('token')) {
+    store.commit('setToken', sessionStorage.getItem('token'))
+}
+
 
 
 /**
@@ -55,6 +64,10 @@ let router = new vueRouter({
     ]
 })
 
+
+/**
+ *  路由 守卫 函数
+ */
 router.beforeEach((to, from, next)=> {
     let token  = sessionStorage.getItem('token');
     if(to.matched.some(r => r.meta.requireAuth)){

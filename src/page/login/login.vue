@@ -287,8 +287,8 @@
         height: 400px;
     }
     #loginBox .know-login-title{
-        height: 30px;
-        line-height: 30px;
+        height: 45px;
+        line-height: 45px;
         font-size: 45px;
         color: #000;
         text-align: center;
