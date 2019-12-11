@@ -140,6 +140,7 @@
                     return;
                 }
                 this.post_string('user/login',this.formlogin).then(res=>{
+                    window.console.log(res)
                     if(res.code === 0 && res.msg === 'Success'){
                         // this.$store.getters.getToken
                         return Promise.resolve();
