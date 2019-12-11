@@ -1,4 +1,5 @@
 module.exports = {
+    outputDir:process.env.outputDir,
     devServer:{
         proxy:{
             '/api':{
@@ -7,5 +8,4 @@ module.exports = {
             }
         }
     }
-  
 }

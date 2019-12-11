@@ -3,9 +3,9 @@
 *  @author ZTiger
 *
 */
-
+// window.console.log(process.env.VUE_APP_MODE);
 //axios 上传地址
-let baseUrl = 'http://192.168.43.156:8080/api';
+let baseUrl = process.env.VUE_APP_API_URL;
 
 export {
     baseUrl
