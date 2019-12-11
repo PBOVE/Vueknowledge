@@ -13,14 +13,21 @@
         <Layout>
             <Header class="know-tree-default know-tree-header-select">
                 <Tooltip content='添加'>
-                    <Button type="primary" icon="ios-add" class="know-tree-header-button"></Button>
+                    <div class="know-tree-header-button know-tree-header-button-add">
+                        <Icon type="ios-add" />
+                    </div>
                 </Tooltip>
                 <Tooltip content='删除'>
-                    <Button type="error"  icon="ios-remove"  class="know-tree-header-button" @click="buttonFlagFun"></Button>
+                    <div class="know-tree-header-button know-tree-header-button-del" @click="buttonFlagFun">
+                        <Icon type="ios-remove" />
+                    </div>
                 </Tooltip>
                 <Tooltip content='编辑'>
-                    <Button type="dashed"  icon='md-create'  class="know-tree-header-button"></Button>
+                    <div class="know-tree-header-button know-tree-header-button-exit">
+                        <Icon type="md-create" />
+                    </div>
                 </Tooltip>
+
             </Header>
             <Content class="know-tree-default">Content</Content>
         </Layout>
@@ -36,7 +43,7 @@
         data() {
             return {
                 buttonDelFlag:'',
-                selectNodeName:'<h1>243223423333</h1>'
+                selectNodeName:'<h1>24322342333</h1>'
             };
         },
         methods:{
@@ -74,6 +81,56 @@
     }
     .know-tree-header-button{
         font-size: 20px;
+        line-height: 30px;
         margin:0 15px;
+        box-sizing: border-box;
+        height: 32px;
+        width: 32px;
+        border-radius: 5px;
+        border-width: 1px;
+        outline: none;
+        cursor: pointer;
+    }
+    .know-tree-header-button-add{
+        color: #f2f2f2;
+        border-style: solid;
+        border-color: #2d8cf0;
+        background-color: #2d8cf0;
+    }
+    .know-tree-header-button-add:focus{
+        box-shadow: 0 0 0 2px rgba(45,140,240,.2);
+    }
+    .know-tree-header-button-add:hover{
+        color: #ffffff;
+        border-color: #57a3f3;
+        background-color: #57a3f3;
+        
+    }
+    .know-tree-header-button-del{
+        color: #f2f2f2;
+        border-style: solid;
+        background-color: #ed4014;
+        border-color: #ed4014;
+    }
+    .know-tree-header-button-del:hover{
+        color: #ffffff;
+        background-color: #f16643;
+        border-color: #f16643;
+    }
+    .know-tree-header-button-del:active{
+        box-shadow: 0 0 0 2px rgba(237,64,20,.2);
+    }
+    .know-tree-header-button-exit{
+        color: #515a6e;
+        background-color: #ffffff;
+        border-color: #dcdee2;
+        border-style: dashed;
+    }
+    .know-tree-header-button-exit:hover{
+        color: #57a3f3;
+        border-color: #57a3f3;
+    }
+    .know-tree-header-button-exit:focus{
+        box-shadow: 0 0 0 2px rgba(45,140,240,.2);
     }
 </style>
