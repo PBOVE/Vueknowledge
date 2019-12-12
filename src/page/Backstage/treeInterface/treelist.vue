@@ -89,27 +89,24 @@
 
 <style  scoped>
     .know-tree-list-header-title{
-        text-align: center;
+        text-indent: 0.5em;
         font-family: 楷体;
         font-size: 25px;
         line-height: 30px;
-        padding: 3px;
         border-radius: 5px;
     }
     .know-tree-default{
-        background-color:#f8f8f9;
+        background-color:#f5f7f9;
         border-radius: 5px;
-        /* border: 1px solid #dcdee2; */
-        margin-top: 10px;
     }
     .know-tree-header-select{
         height: 50px;
         padding: 0;
-        text-align: center;
         line-height: 50px;
-        box-shadow: 0 0 5px #e8eaec;
+        /* box-shadow: 0 0 5px #e8eaec; */
     }
     .know-tree-header-button{
+        text-align: center;
         font-size: 20px;
         line-height: 30px;
         margin:0 15px;
