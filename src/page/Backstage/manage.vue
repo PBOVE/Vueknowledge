@@ -10,7 +10,7 @@
         <div class="know-manage-split" id='knowManageSplit'>
             <Split v-model="splitinit" min='300px' max='500px' >
                 <div slot="left" class="know-manage-split-pane">
-                    <tree-list></tree-list>
+                    <tree-list :InnerHeight='InnerHeight-HeaderHeight'></tree-list>
                 </div>
                 <div slot="right" class="know-manage-split-pane">
                     右
