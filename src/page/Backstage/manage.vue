@@ -70,7 +70,7 @@
     }
     .know-manage-header{
         font-size: 40px;
-        font-family: 华文行楷;
+        font-family: 楷体;
         user-select: none;
         height: 70px;
         line-height: 75px

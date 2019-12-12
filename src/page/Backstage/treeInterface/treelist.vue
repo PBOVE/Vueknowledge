@@ -7,7 +7,7 @@
 
 <template>
     <div id="know-tree-list">
-        <div class="know-tree-list-header-title">目录</div>
+        <div class="know-tree-list-header-title">类层次结构</div>
         <Layout>
             <Header class="know-tree-default know-tree-header-select">
                 <Tooltip content='添加'>
@@ -90,12 +90,10 @@
 <style  scoped>
     .know-tree-list-header-title{
         text-align: center;
-        font-family: 华文行楷;
+        font-family: 楷体;
         font-size: 25px;
         line-height: 30px;
         padding: 3px;
-        background-color: #2d8cf0;
-        color: #fff;
         border-radius: 5px;
     }
     .know-tree-default{

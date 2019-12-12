@@ -42,19 +42,19 @@
             <div  v-show="!showLoginRegister" >
                 <div class="know-login-user-input">
                     <div class="know-login-user">
-                        <Input  v-model="formRegister.username"  placeholder="账号"  size="large" :class="{'know-login-error':registerusername}" @on-change='checkIswarn(3)' @on-blur='blurIswarn(3)' @on-enter="SubmitRegister"/>
+                        <Input  v-model="formRegister.username"  placeholder="账号" prefix="ios-contact-outline"   size="large" :class="{'know-login-error':registerusername}" @on-change='checkIswarn(3)' @on-blur='blurIswarn(3)' @on-enter="SubmitRegister"/>
                         <transition name="knowerror">
                             <div class="know-login-warn" v-show="registerusername">请输入账号!</div>
                         </transition>
                     </div>
                     <div class="know-login-user">
-                        <Input type="password" v-model="formRegister.password"  placeholder="至少6位密码 区分大小写"  size="large"  :class="{'know-login-error':registerPassword}" @on-change='checkIswarn(4)' @on-blur='blurIswarn(4)' @on-enter="SubmitRegister"/>
+                        <Input type="password" v-model="formRegister.password" prefix="ios-lock-outline" placeholder="至少6位密码 区分大小写"  size="large"  :class="{'know-login-error':registerPassword}" @on-change='checkIswarn(4)' @on-blur='blurIswarn(4)' @on-enter="SubmitRegister"/>
                         <transition name="knowerror">
                             <div class="know-login-warn" v-show="registerPassword">请输入密码!</div>
                         </transition>
                     </div>
                     <div class="know-login-user">
-                        <Input  type="password"  v-model="formRegister.RepeatPassword" placeholder="确认密码"  size="large"  :class="{'know-login-error':registerRepeatPassword}" @on-change='checkIswarn(5)' @on-blur='blurIswarn(5)' @on-enter="SubmitRegister"/>
+                        <Input  type="password"  v-model="formRegister.RepeatPassword" prefix="ios-key-outline" placeholder="确认密码"  size="large"  :class="{'know-login-error':registerRepeatPassword}" @on-change='checkIswarn(5)' @on-blur='blurIswarn(5)' @on-enter="SubmitRegister"/>
                         <transition name="knowerror">
                             <div class="know-login-warn" v-show="registerRepeatPassword">{{registerRepeatPasswordFalg?'两次输入的密码不匹配!':'请确认密码!'}}</div>
                         </transition>
@@ -292,7 +292,7 @@
         font-size: 45px;
         color: #000;
         text-align: center;
-        font-family: 华文行楷;
+        font-family: 楷体;
     }
     #loginBox .know-login-user-select{
 
@@ -360,6 +360,16 @@
     }
     #loginBox .bounce-leave-active {
         animation: namepasswordWarn 1s reverse;
+    }
+    @font-face {
+        font-family: 'webfont';
+        font-display: swap;
+        src:    url('//at.alicdn.com/t/webfont_j5e49hjmgji.eot'); /* IE9*/
+        src:    url('//at.alicdn.com/t/webfont_j5e49hjmgji.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+                url('//at.alicdn.com/t/webfont_j5e49hjmgji.woff2') format('woff2'),
+                url('//at.alicdn.com/t/webfont_j5e49hjmgji.woff') format('woff'), /* chrome、firefox */
+                url('//at.alicdn.com/t/webfont_j5e49hjmgji.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+                url('//at.alicdn.com/t/webfont_j5e49hjmgji.svg#杨任东竹石体-Bold') format('svg'); /* iOS 4.1- */
     }
     @keyframes namepasswordWarn {
         0%{
