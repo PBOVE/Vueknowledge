@@ -20,10 +20,10 @@
             </div>
             <div class="know-login-user-select ">
                 <span  :class="{'know-login-user-select-span':true,'know-login-user-select-border':showLoginRegister}" @click="loginRegister(1)">
-                    <Icon type="md-person" /><span class="know-login-user-select-event ">登&nbsp;录</span>
+                   <span class="know-login-user-select-event ">登&nbsp;录</span>
                 </span>
                 <span :class="{'know-login-user-select-span':true,'know-login-user-select-border':!showLoginRegister}" @click="loginRegister(2)">
-                    <Icon type="md-create" /><span class="know-login-user-select-event">注&nbsp;册</span>
+                   <span class="know-login-user-select-event">注&nbsp;册</span>
                 </span>
             </div>
             <div v-show="showLoginRegister" >
@@ -280,7 +280,7 @@
                     // window.console.log(res);
                     this.spinShow = false;
                     // this.$store.commit('setToken',res.data._csrf.token);
-                    if(res.data.user==='anonymousUser'&&!res.data.me){
+                    if(!res.data.me){
                         this.$store.commit('setToken',res.data._csrf.token);
                     }else{
                         this.$store.commit('setToken',res.data._csrf.token);
@@ -311,7 +311,7 @@
         width: 500px;
         position: absolute;
         left: 50%;
-        top: 40%;
+        top: 42%;
         transform: translate(-50%,-50%);
         height: 500px;
     }
@@ -323,15 +323,16 @@
         user-select: none;
         height: 45px;
         line-height: 45px;
-        font-size: 35px;
+        font-size: 33px;
         color: #000;
         text-align: center;
     }
     #loginBox .know-login-title-cn{
+        margin-top: 15px;
         height: 40px;
         line-height: 40px;
-        font-size:20px;
-        color: #000;
+        font-size:15px;
+        color: rgba(0, 0, 0, 0.45);
         text-align: center;
     }
     #loginBox .kown-login-title-logo{
@@ -345,31 +346,31 @@
         margin-right: 10px;
     }
     #loginBox .know-login-user-select{
-
         font-size: 16px;
         text-align: center;
         margin-top: 20px;
-
+        height: 30px;
     }
     #loginBox .know-login-check-select-an{
         width: 300px;
         user-select: none;
     }
     #loginBox .know-login-user-select .know-login-user-select-span{
-
         display: inline-block;
         text-align: center;
         cursor: pointer;
         width: 100px;
+        padding: 4px
     }
     #loginBox .know-login-user-select .know-login-user-select-span:first-of-type{
         margin-right: 50px;
     }
     #loginBox .know-login-user-select-border{
-        border-bottom: 1px solid #2d8cf0;
+        border-bottom: 2px solid #1890ff;
+        border-radius: 1px;
     }
     #loginBox .know-login-user-select-border .know-login-user-select-event {
-        color: #2d8cf0;
+        color: #1890ff;
     }
     #loginBox .know-login-user-select-event{
         width: 60px;
@@ -399,7 +400,9 @@
     #loginBox .know-login-user-land-button{
         width: 400px;
         margin-top: 30px;
-
+        background-color: #1890ff;
+        border-color: #1890ff;
+        /* text-shadow: 0 -1px 0 rgba(0,0,0,.12); */
     }
     #loginBox .know-login-error .ivu-input{
 
