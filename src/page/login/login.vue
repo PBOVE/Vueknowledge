@@ -7,13 +7,14 @@
 
 <template>
     <div id="loginBox">
+        <Spin size="large" fix v-if="spinShow"></Spin>
         <div class="know-login-box">
             <div class="know-login-title">
-                <div class="know-login-title-I">
+                <div class="know-login-title-en">
                     <span class="kown-login-title-logo"></span>
                     <span>Knowledge&nbsp;Graph</span>
                 </div>
-                <div class="know-login-title-II">
+                <div class="know-login-title-cn">
                     <span>知识图谱构建平台</span>
                 </div>
             </div>
@@ -38,6 +39,9 @@
                         <transition name="knowerror">
                             <div class="know-login-warn" v-show="showpasswordwarn">请输入密码!</div>
                         </transition>
+                    </div>
+                    <div class="know-login-user"> 
+                         <Checkbox v-model="formlogin.remeberMe" class="know-login-check-select-an">自动登录</Checkbox>
                     </div>
                 </div>
                 <div class="know-login-user-land">
@@ -80,6 +84,8 @@
     export default {
         data() {
             return {
+                //设置免密登录加载
+                spinShow:true,
                 // 登陆 和 注册 之间 跳转
                 showLoginRegister:true,
                 // 用户名 警告 标志位
@@ -97,8 +103,10 @@
                 //登陆 上传 的 信息
                 formlogin:{
                     username:'',
-                    password:''
+                    password:'',
+                    remeberMe:false
                 },
+                //注册 信息
                 formRegister:{
                     username:'',
                     password:'',
@@ -134,18 +142,24 @@
             },
             //登录
             Submitlanding(){
-                if(this.formlogin.username===''&&this.formlogin.password===''){
+                if(this.formlogin.username === ''&&this.formlogin.password === ''){
                     this.showuserwarn = true;
                     this.showpasswordwarn = true;
                     return;
-                }else if(this.formlogin.username===''){
+                }else if(this.formlogin.username === ''){
                     this.showuserwarn = true;
                     return;
-                }else if(this.formlogin.password===''){
+                }else if(this.formlogin.password === ''){
                     this.showpasswordwarn = true;
                     return;
                 }
-                this.post_string('user/login',this.formlogin).then(res=>{
+                window.console.log(this.formlogin.remeberMe)
+                let register={
+                    username:this.formlogin.username,
+                    password:this.formlogin.password,
+                    'remember-me':this.formlogin.remeberMe?'on':'off'
+                }
+                this.post_string('user/login',register).then(res=>{
                     if(res.code === 0 && res.msg === 'Success'){
                         // this.$store.getters.getToken
                         return Promise.resolve();
@@ -263,8 +277,17 @@
             // 获取  token
             getuserToken(){
                 this.get('user/me').then(res=>{
-                    this.$store.commit('setToken',res.data._csrf.token);
-                    sessionStorage.setItem('user',JSON.stringify(res.data));
+                    // window.console.log(res);
+                    this.spinShow = false;
+                    // this.$store.commit('setToken',res.data._csrf.token);
+                    if(res.data.user==='anonymousUser'&&!res.data.me){
+                        this.$store.commit('setToken',res.data._csrf.token);
+                    }else{
+                        this.$store.commit('setToken',res.data._csrf.token);
+                        sessionStorage.setItem('user',JSON.stringify(res.data));
+                        sessionStorage.setItem('token',res.data._csrf.token);
+                        this.$router.push({path:'/manage'});
+                    }
                 })
             }
         },
@@ -288,30 +311,34 @@
         width: 500px;
         position: absolute;
         left: 50%;
-        top: 45%;
+        top: 40%;
         transform: translate(-50%,-50%);
-        height: 400px;
+        height: 500px;
     }
-    #loginBox .know-login-title-I{
+    #loginBox .know-login-title-en{
+        text-align: center;
+    }
+    #loginBox .know-login-title-en span:nth-of-type(2){
+        /* font-weight: lighter; */
+        user-select: none;
         height: 45px;
         line-height: 45px;
         font-size: 35px;
         color: #000;
         text-align: center;
     }
-    #loginBox .know-login-title-II{
+    #loginBox .know-login-title-cn{
         height: 40px;
         line-height: 40px;
         font-size:20px;
         color: #000;
         text-align: center;
-        font-family: 楷体;
     }
     #loginBox .kown-login-title-logo{
         background-image: url('../../assets/images/logo.png');
         background-repeat: no-repeat;
-        background-position: 0px 8px;
-        background-size: 80% 80%;
+        background-position: 0px 12px;
+        background-size: 70% 70%;
         display: inline-block;
         width: 40px;
         height: 40px;
@@ -321,8 +348,12 @@
 
         font-size: 16px;
         text-align: center;
-        margin-top: 10px;
+        margin-top: 20px;
 
+    }
+    #loginBox .know-login-check-select-an{
+        width: 300px;
+        user-select: none;
     }
     #loginBox .know-login-user-select .know-login-user-select-span{
 
@@ -357,13 +388,16 @@
     #loginBox .know-login-user{
         margin: 0 auto;
         margin-top: 30px;
-        width: 300px;
+        width: 400px;
+    }
+    #loginBox .know-login-user:nth-of-type(3){
+        margin-top: 20px;
     }
     #loginBox .know-login-user-land{
         text-align:  center;
     }
     #loginBox .know-login-user-land-button{
-        width: 300px;
+        width: 400px;
         margin-top: 30px;
 
     }
@@ -383,16 +417,6 @@
     }
     #loginBox .bounce-leave-active {
         animation: namepasswordWarn 1s reverse;
-    }
-    @font-face {
-        font-family: 'webfont';
-        font-display: swap;
-        src:    url('//at.alicdn.com/t/webfont_j5e49hjmgji.eot'); /* IE9*/
-        src:    url('//at.alicdn.com/t/webfont_j5e49hjmgji.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-                url('//at.alicdn.com/t/webfont_j5e49hjmgji.woff2') format('woff2'),
-                url('//at.alicdn.com/t/webfont_j5e49hjmgji.woff') format('woff'), /* chrome、firefox */
-                url('//at.alicdn.com/t/webfont_j5e49hjmgji.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
-                url('//at.alicdn.com/t/webfont_j5e49hjmgji.svg#杨任东竹石体-Bold') format('svg'); /* iOS 4.1- */
     }
     @keyframes namepasswordWarn {
         0%{

@@ -6,7 +6,7 @@
 
 <template>
     <Layout>
-        <Header class="know-manage-default know-manage-header"><Icon type="ios-analytics" />&nbsp;&nbsp;知识图谱</Header>
+        <Header class="know-manage-default know-manage-header"><span class="know-mange-header-logo"></span>&nbsp;&nbsp;知识图谱</Header>
         <div class="know-manage-split" id='knowManageSplit'>
             <Split v-model="splitinit" min='300px' max='500px' >
                 <div slot="left" class="know-manage-split-pane">
@@ -82,5 +82,13 @@
     .know-manage-split-pane{
         padding: 10px;
         height: 100%;
+    }
+    .know-mange-header-logo{
+        background-image: url('../../assets/images/logo.png');
+        background-size: 80% 80%;
+        background-repeat: no-repeat;
+        display: inline-block;
+        width: 40px;
+        height: 40px;
     }
 </style>
