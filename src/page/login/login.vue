@@ -9,7 +9,13 @@
     <div id="loginBox">
         <div class="know-login-box">
             <div class="know-login-title">
-                知&nbsp;识&nbsp;图&nbsp;谱
+                <div class="know-login-title-I">
+                    <span class="kown-login-title-logo"></span>
+                    <span>Knowledge&nbsp;Graph</span>
+                </div>
+                <div class="know-login-title-II">
+                    <span>知识图谱构建平台</span>
+                </div>
             </div>
             <div class="know-login-user-select ">
                 <span  :class="{'know-login-user-select-span':true,'know-login-user-select-border':showLoginRegister}" @click="loginRegister(1)">
@@ -282,23 +288,40 @@
         width: 500px;
         position: absolute;
         left: 50%;
-        top: 40%;
+        top: 45%;
         transform: translate(-50%,-50%);
         height: 400px;
     }
-    #loginBox .know-login-title{
+    #loginBox .know-login-title-I{
         height: 45px;
         line-height: 45px;
-        font-size: 45px;
+        font-size: 35px;
+        color: #000;
+        text-align: center;
+    }
+    #loginBox .know-login-title-II{
+        height: 40px;
+        line-height: 40px;
+        font-size:20px;
         color: #000;
         text-align: center;
         font-family: 楷体;
+    }
+    #loginBox .kown-login-title-logo{
+        background-image: url('../../assets/images/logo.png');
+        background-repeat: no-repeat;
+        background-position: 0px 8px;
+        background-size: 80% 80%;
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        margin-right: 10px;
     }
     #loginBox .know-login-user-select{
 
         font-size: 16px;
         text-align: center;
-        margin-top: 30px;
+        margin-top: 10px;
 
     }
     #loginBox .know-login-user-select .know-login-user-select-span{
@@ -392,9 +415,9 @@
             width: 100%;
         }
     }
-    @media screen and (max-width: 300px){
+    @media screen and (max-width: 400px){
         #loginBox .know-login-box{
-            width: 300px;
+            width: 400px;
         }
     }
     @media screen and (max-height: 650px){
