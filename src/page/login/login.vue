@@ -153,7 +153,6 @@
                     this.showpasswordwarn = true;
                     return;
                 }
-                window.console.log(this.formlogin.remeberMe)
                 let register={
                     username:this.formlogin.username,
                     password:this.formlogin.password,
@@ -166,8 +165,14 @@
                     }
                 }).then(()=>{
                     this.get('user/me').then(res=>{
+                        let data = res.data;
+                        let user ={
+                            username:data.user.username,
+                            enabled:data.user.enabled,
+                            authorities:data.user.authorities
+                        }
                         this.$store.commit('setToken',res.data._csrf.token);
-                        sessionStorage.setItem('user',JSON.stringify(res.data.user));
+                        sessionStorage.setItem('user',JSON.stringify(user));
                         sessionStorage.setItem('token',res.data._csrf.token);
                         this.$router.push({path:'/manage'})
                     })
@@ -283,8 +288,14 @@
                     if(!res.data.me){
                         this.$store.commit('setToken',res.data._csrf.token);
                     }else{
+                        let data = res.data;
+                        let user ={
+                            username:data.user.username,
+                            enabled:data.user.enabled,
+                            authorities:data.user.authorities
+                        }
                         this.$store.commit('setToken',res.data._csrf.token);
-                        sessionStorage.setItem('user',JSON.stringify(res.data));
+                        sessionStorage.setItem('user',JSON.stringify(user));
                         sessionStorage.setItem('token',res.data._csrf.token);
                         this.$router.push({path:'/manage'});
                     }

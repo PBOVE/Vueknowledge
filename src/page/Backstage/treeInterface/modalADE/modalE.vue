@@ -13,7 +13,7 @@
         </p>
         <div class="know-modal-text">
             <p>编&nbsp;辑&nbsp;:&nbsp;<strong>{{selectNodeName.length>20?selectNodeName.substr(0,20):selectNodeName}}</strong></p>
-            <p><Input type="text" ref="modalExitInput" autofocus/></p>
+            <p><Input type="text" ref="modalExitInput"/></p>
             <p class="Tips">按&nbsp;<strong>ctrl&nbsp;+&nbsp;enter</strong>&nbsp;接受并关闭面板</p>
         </div>
         <div slot="footer">

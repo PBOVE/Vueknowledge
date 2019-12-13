@@ -4,9 +4,12 @@
 *
 */
 
+
 <template>
     <Layout>
-        <Header class="know-manage-default know-manage-header"><span class="know-mange-header-logo"></span>&nbsp;&nbsp;知识图谱</Header>
+        <Header class="know-manage-default know-manage-header">
+            <m-header></m-header>
+        </Header>
         <div class="know-manage-split" id='knowManageSplit'>
             <Split v-model="splitinit" min='300px' max='500px' >
                 <div slot="left" class="know-manage-split-pane">
@@ -24,8 +27,10 @@
 <script>
     //导入tree 模板
     import treeList from './treeInterface/treelist'
+    //导入 header 模板
+    import mHeader from './manageheader/mHeader'
     export default {
-        components:{treeList},
+        components:{treeList,mHeader},
         data() {
             return {
                 // 初始化 面板分割
@@ -69,11 +74,8 @@
         background-color:#fff;
     }
     .know-manage-header{
-        font-size: 40px;
-        font-family: 楷体;
-        user-select: none;
         height: 70px;
-        line-height: 75px
+        line-height: 0;  
     }
     .know-manage-split{
         height: 200px;
@@ -83,12 +85,5 @@
         padding: 10px;
         height: 100%;
     }
-    .know-mange-header-logo{
-        background-image: url('../../assets/images/logo.png');
-        background-size: 80% 80%;
-        background-repeat: no-repeat;
-        display: inline-block;
-        width: 40px;
-        height: 40px;
-    }
+    
 </style>

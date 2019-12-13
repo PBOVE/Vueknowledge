@@ -13,7 +13,7 @@
         </p>
         <div class="know-modal-text">
             <p>创建名称&nbsp;:</p>
-            <p><Input v-model="inputName" type="text" ref="modalAddInput" autofocus/></p>
+            <p><Input v-model="inputName" type="text" ref="modalAddInput" /></p>
             <p class="Tips">按&nbsp;<strong>ctrl&nbsp;+&nbsp;enter</strong>&nbsp;接受并关闭面板</p>
         </div>
         <div slot="footer">
