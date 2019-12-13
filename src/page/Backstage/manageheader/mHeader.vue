@@ -75,7 +75,7 @@
     .know-header-right{
         display: inline-block;
         float: right;
-       
+        
         height: 25px;
     }
     .know-header-right-span{
