@@ -8,111 +8,100 @@
 <template>
    <div class="know-header">
         <div class="know-header-left">
-            <span class="know-mange-header-logo"></span>
+            <span class="know-header-left-logo"></span>
             <span class="know-header-left-title">Knowledge Graph</span>
         </div>
         <div class="know-header-right">
-            <span class="know-header-right-span know-header-right-span-search"></span>
-            <span   class="know-header-right-span know-header-right-span-svg" v-html="svg"></span>
-            <span class="know-header-right-username know-header-right-span">{{username}}</span>
+           <span class="know-header-right-search ivu-icon"></span>
+           <span class="know-header-right-user-logo" ref='userLogo'></span>
+           <span class="know-header-right-user">{{username}}</span>
         </div>
    </div>
 </template>
 
 
 <script>
-    import Avatars from '@dicebear/avatars';
-    import sprites from '@dicebear/avatars-identicon-sprites';
+    // import Avatars from '@dicebear/avatars';
+    // import sprites from '@dicebear/avatars-identicon-sprites';
    export default {
        data() {
            return {
                //用户名称
                username:JSON.parse(sessionStorage.getItem('user')).username,
-               //用户头像
-               svg:''
+               //随机背景颜色
+                color:['#ff4e50','#84B1ED','00dffc','#0080ff','#f9d423','#5A9367'],
            }
        },
        methods:{
-            createUserSvg(){
-                let options = {
-                    padding: 0,
-                    background: '#e8eaec',
-                };
-                let avatars = new Avatars(sprites(options));
-                this.svg = avatars.create(this.username);
+           //创建用户 色彩 头像
+           createUserLogo(){
+               this.$refs.userLogo.innerHTML = this.username.charAt(0).toUpperCase();
+               this.$refs.userLogo.style.backgroundColor = this.color[Math.floor(Math.random()*6)];
            }
        },
        mounted(){
-           this.createUserSvg();
+           this.createUserLogo();
        }
    }
 </script>
 
 
-<style >
+<style scoped>
     .know-header{
-        margin-top: 15px;
-        height: 30px;
+        display: flex;
+        justify-content:space-between;
+        align-items: center;
+        height: 70px;
     }
-    .know-mange-header-logo{
-        background-image: url('../../../assets/images/logo.png');
-        background-size: 100% 100%;
-        background-repeat: no-repeat;
+    .know-header-left-logo{
         display: inline-block;
-        width: 25px;
+        background-image: url(../../../assets/images/logo.png);
+        background-size: 20px 20px;
+        background-repeat: no-repeat;
+        background-position: 0 5px;
         height: 25px;
-        margin-right:20px; 
-    }
-    .know-header-left{
-        display: inline;
+        width: 25px;
     }
     .know-header-left-title{
-        font-size: 20px;
-        height: 25px;
+        display: inline-block;
         font-family:Georgia;
-        user-select: none;
+        font-size: 20px;
+        text-indent: 0.2em;
     }
-    .know-header-right{
-        display: inline-block;
-        float: right;
-        
-        height: 25px;
-    }
-    .know-header-right-span{
-        margin-left:10px; 
-    }
-    .know-header-right-username{
-        display: inline;
-        font-family: Georgia;
-        font-size: 19px;
+    .know-header-right-user{
+        height: 20px;
+        font-family:Georgia;
         text-transform:capitalize;
-        cursor: pointer;
-        position: relative;
+        font-size: 18px;
     }
-    .know-header-right-username::before{
-        content: "";
-        position: absolute;
-        background-color: #2db7f5;
-        top: 100%;
-        left: 50%;
-        height: 2px;    
-        width: 0;
-        transition: all 0.5s;
-    }
-    .know-header-right-username:hover::before{
-        width: 100%;
-        left: 0%;
-    }
-    .know-header-right-span-search{
-        margin-right:15px; 
-    }
-    .know-header-right-span-svg{
-        margin-top: 10px;
+    .know-header-right-user-logo{
+        margin: 0 10px;
+        color: #fff;
+        font-family:Georgia;
         display: inline-block;
+        width: 26px;
+        border-radius: 50%;
+        text-align: center;
+        line-height: 25px;
+        font-size: 15px;
+        user-select: none;
+        
+    }
+    .know-header-right-search{
+        font-size: 18px;
         width: 20px;
         height: 20px;
-        border-radius: 2px
-        /* vertical-align: bottom; */
+        
     }
-
+    .know-header-right-search::before{
+        content: "\f2a7";
+    }
+    @media screen and (max-width: 800px){
+        .know-header{
+            justify-content: space-around;
+        }
+        .know-header-right{
+            display: none;
+        }
+     }
 </style>

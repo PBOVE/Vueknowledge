@@ -6,10 +6,10 @@
 
 
 <template>
-    <Layout>
-        <Header class="know-manage-default know-manage-header">
+    <div>
+        <div class="know-manage-header">
             <m-header></m-header>
-        </Header>
+        </div>
         <div class="know-manage-split" id='knowManageSplit'>
             <Split v-model="splitinit" min='300px' max='500px' >
                 <div slot="left" class="know-manage-split-pane">
@@ -20,7 +20,7 @@
                 </div>
             </Split>
         </div>
-    </Layout>
+    </div>
 </template>
 
 
@@ -61,7 +61,7 @@
         },
         watch:{
             InnerHeight(val){
-                // window.console.log(this.$refs.knowManageSplit)
+                // window.console.log(val)
               document.getElementById('knowManageSplit').style.height = val - this.HeaderHeight + 'px';
             }
         }
@@ -74,12 +74,13 @@
         background-color:#fff;
     }
     .know-manage-header{
-        height: 70px;
-        line-height: 0;  
+        height: 70px; 
+        padding: 0 50px;
     }
     .know-manage-split{
         height: 200px;
         border: 1px solid #dcdee2;
+        background-color: #f5f7f9;
     }
     .know-manage-split-pane{
         padding: 10px;
