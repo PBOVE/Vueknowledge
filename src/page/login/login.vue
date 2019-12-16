@@ -171,9 +171,7 @@
                             enabled:data.user.enabled,
                             authorities:data.user.authorities
                         }
-                        this.$store.commit('setToken',res.data._csrf.token);
-                        sessionStorage.setItem('user',JSON.stringify(user));
-                        sessionStorage.setItem('token',res.data._csrf.token);
+                        this.$store.commit('setUserData',user,res.data._csrf.token)
                         this.$router.push({path:'/manage'})
                     })
                 }).catch(()=>{
@@ -294,9 +292,7 @@
                             enabled:data.user.enabled,
                             authorities:data.user.authorities
                         }
-                        this.$store.commit('setToken',res.data._csrf.token);
-                        sessionStorage.setItem('user',JSON.stringify(user));
-                        sessionStorage.setItem('token',res.data._csrf.token);
+                        this.$store.commit('setUserData',user,res.data._csrf.token)
                         this.$router.push({path:'/manage'});
                     }
                 })

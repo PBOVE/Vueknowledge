@@ -24,6 +24,11 @@
             },
             delTkoken(state){
                 state.token = ''
+            },
+            setUserData(state,user,token){
+                state.token = token;
+                sessionStorage.setItem('user',JSON.stringify(user));
+                sessionStorage.setItem('token',token);
             }
         }
  })
