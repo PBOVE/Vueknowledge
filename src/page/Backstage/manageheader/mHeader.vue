@@ -13,8 +13,8 @@
         </div>
         <div class="know-header-right">
            <span class="know-header-right-search ivu-icon" @click="clickShowSearch">
-               <div class="k-h-r-s-d">
-                   <input type="text" class="know-header-right-search-input" ref='headerSearchInput'>
+               <div class="k-h-r-s-d" ref='headerSearchD'>
+                   <input type="text" class="know-header-right-search-input" ref='headerSearchIput' @blur="hiddenSearch">
                </div>
                
            </span>
@@ -47,7 +47,14 @@
            },
            //展开 search 框
            clickShowSearch(){
-
+                this.$refs.headerSearchD.style.width='150px';
+                this.$refs.headerSearchD.style.marginLeft='10px';
+                this.$refs.headerSearchIput.focus();
+           },
+           //失去焦点隐藏 搜索框
+           hiddenSearch(){
+                this.$refs.headerSearchD.style.width='0px';
+                this.$refs.headerSearchD.style.marginLeft='0px';
            }
        },
        mounted(){
@@ -121,11 +128,13 @@
     .know-header-right-search::before{
         content: "\f2a7";
     }
-     .k-h-r-s-d{
+    .k-h-r-s-d{
         display: inline-block;
-        width: 150px;
+        width: 0px;
         border-bottom: 1px solid #e8eaec;
-        margin-left: 10px;
+        margin-left: 0px;
+        transform-origin:  bottom right;
+        transition: all 0.5s;
     }
     .know-header-right-search-input{
         border-width: 0;
