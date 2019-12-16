@@ -22,7 +22,8 @@
                 <Dropdown @on-click='clickListevent'>
                     <span class="know-header-right-user-name">{{username}}</span>
                     <DropdownMenu slot="list" class="know-header-right-list">
-                        <DropdownItem name='0'>退出登录</DropdownItem>
+                        <DropdownItem name='1'>修改密码</DropdownItem>
+                        <DropdownItem name='0' divided>退出登录</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
            </div>
@@ -61,13 +62,12 @@
            },
            //点击菜单事件
            clickListevent(name){
-                window.console.log(typeof name);
+                // window.console.log(typeof name);
                switch(name){
                    case '0':
-                       this.post_json('user/logout').then(res=>{
-                           this.$store.commit('delTkoken');
-                           this.$router.push({path:'/'})
-                           window.console.log(res);
+                       this.post_json('user/logout').then(()=>{
+                           this.$store.commit('delToken');
+                           this.$router.push({path:'/'});
                        })
                        break;
                }
@@ -138,7 +138,7 @@
         font-size: 18px;
         height: 20px;
         cursor: pointer;
-        margin-right: 10px;
+        margin-right: 20px;
     }
     .know-header-right-search::before{
         content: "\f2a7";

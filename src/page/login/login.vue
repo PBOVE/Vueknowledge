@@ -166,12 +166,7 @@
                 }).then(()=>{
                     this.get('user/me').then(res=>{
                         let data = res.data;
-                        let user ={
-                            username:data.user.username,
-                            enabled:data.user.enabled,
-                            authorities:data.user.authorities
-                        }
-                        this.$store.commit('setUserData',user,res.data._csrf.token)
+                        this.$store.commit('setUserData',data);
                         this.$router.push({path:'/manage'})
                     })
                 }).catch(()=>{
@@ -287,13 +282,8 @@
                         this.$store.commit('setToken',res.data._csrf.token);
                     }else{
                         let data = res.data;
-                        let user ={
-                            username:data.user.username,
-                            enabled:data.user.enabled,
-                            authorities:data.user.authorities
-                        }
-                        this.$store.commit('setUserData',user,res.data._csrf.token)
-                        this.$router.push({path:'/manage'});
+                        this.$store.commit('setUserData',data);
+                        this.$router.push({path:'/manage'})
                     }
                 })
             },
