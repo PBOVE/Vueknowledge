@@ -175,7 +175,7 @@
                         this.$router.push({path:'/manage'})
                     })
                 }).catch(()=>{
-
+                    this.error();
                 })
             },
             // 注册
@@ -296,6 +296,13 @@
                         this.$router.push({path:'/manage'});
                     }
                 })
+            },
+            // 账号 或 密码 错误
+            error () {
+                this.$Notice.error({
+                    title: '错误',
+                    desc: '账号或密码 错误<br/>请重新输入正确的账号或密码'
+                });
             }
         },
         mounted(){

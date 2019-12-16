@@ -11,11 +11,11 @@
             <m-header></m-header>
         </div>
         <div class="know-manage-split" id='knowManageSplit'>
-            <Split v-model="splitinit" min='300px' max='500px' >
+            <Split v-model="splitinit" :min='splitMin' :max='splitMax'>
                 <div slot="left" class="know-manage-split-pane">
                     <tree-list :InnerHeight='InnerHeight-HeaderHeight'></tree-list>
                 </div>
-                <div slot="right" class="know-manage-split-pane">
+                <div slot="right" class="know-manage-split-pane know-manage-split-pane-right" >
                     右
                 </div>
             </Split>
@@ -40,7 +40,11 @@
                 // 获取 innerWidth
                 InnerWidth:'',
                 // header 高度
-                HeaderHeight:70
+                HeaderHeight:70,
+                // Split 最小宽度
+                splitMin: '300px',
+                //Split 最大宽度
+                splitMax: '500px'
             }
         },
         methods:{
@@ -61,8 +65,16 @@
         },
         watch:{
             InnerHeight(val){
-                // window.console.log(val)
               document.getElementById('knowManageSplit').style.height = val - this.HeaderHeight + 'px';
+            },
+            InnerWidth(val){
+                if(val<800){
+                    this.splitMax = '40px';
+                    this.splitinit = 1;
+                }else{
+                     this.splitMax = '500px';
+                     this.splitinit = 0.25;
+                }
             }
         }
     }
@@ -86,5 +98,15 @@
         padding: 10px;
         height: 100%;
     }
-    
+    @media screen and (max-width: 800px){
+        .know-manage-split-pane-right{
+            display: none;
+        }
+        .right-pane.ivu-split-pane{
+            display: none;
+        }
+        .ivu-split-trigger-con{
+            display: none;
+        }
+    }
 </style>

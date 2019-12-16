@@ -16,13 +16,16 @@
                <div class="k-h-r-s-d" ref='headerSearchD'>
                    <input type="text" class="know-header-right-search-input" ref='headerSearchIput' @blur="hiddenSearch">
                </div>
-               
            </span>
            <div class="know-header-right-user">
                 <span class="know-header-right-user-logo" ref='userLogo'></span>
-                <span class="know-header-right-user-name">{{username}}</span>
+                <Dropdown @on-click='clickListevent'>
+                    <span class="know-header-right-user-name">{{username}}</span>
+                    <DropdownMenu slot="list" class="know-header-right-list">
+                        <DropdownItem name='0'>退出登录</DropdownItem>
+                    </DropdownMenu>
+                </Dropdown>
            </div>
-          
         </div>
    </div>
 </template>
@@ -35,7 +38,7 @@
                //用户名称
                username:JSON.parse(sessionStorage.getItem('user')).username,
                //随机背景颜色
-                color:['#ff4e50','#84B1ED','00dffc','#0080ff','#f9d423','#5A9367'],
+                color:['#ff4e50','#84B1ED','#00dffc','#0080ff','#f9d423','#5A9367','#56A902'],
                 //
            }
        },
@@ -43,7 +46,7 @@
            //创建用户 色彩 头像
            createUserLogo(){
                this.$refs.userLogo.innerHTML = this.username.charAt(0).toUpperCase();
-               this.$refs.userLogo.style.backgroundColor = this.color[Math.floor(Math.random()*6)];
+               this.$refs.userLogo.style.backgroundColor = this.color[Math.floor(Math.random()*7)];
            },
            //展开 search 框
            clickShowSearch(){
@@ -55,6 +58,19 @@
            hiddenSearch(){
                 this.$refs.headerSearchD.style.width='0px';
                 this.$refs.headerSearchD.style.marginLeft='0px';
+           },
+           //点击菜单事件
+           clickListevent(name){
+                window.console.log(typeof name);
+               switch(name){
+                   case '0':
+                       this.post_json('user/logout').then(res=>{
+                           this.$store.commit('delTkoken');
+                           this.$router.push({path:'/'})
+                           window.console.log(res);
+                       })
+                       break;
+               }
            }
        },
        mounted(){
@@ -64,7 +80,7 @@
 </script>
 
 
-<style scoped>
+<style>
     .know-header{
         display: flex;
         justify-content:space-between;
@@ -116,7 +132,6 @@
         line-height: 25px;
         font-size: 15px;
         user-select: none;
-        
     }
     .know-header-right-search{
         display: inline-block;
@@ -143,7 +158,14 @@
         padding-left: 3px;
         width: 100%;
     }
-   
+    .ivu-select-dropdown{
+        margin:5px 0 5px -35px; 
+    }
+    .ivu-select-dropdown .ivu-dropdown-item{
+        color: #000;
+        font-family: 微软雅黑;
+        letter-spacing: 0.5em;
+    }
     @media screen and (max-width: 800px){
         .know-header{
             justify-content: space-around;

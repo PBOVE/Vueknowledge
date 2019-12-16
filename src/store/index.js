@@ -23,7 +23,8 @@
                 state.token = token;
             },
             delTkoken(state){
-                state.token = ''
+                state.token = '';
+                sessionStorage.clear();
             },
             setUserData(state,user,token){
                 state.token = token;
