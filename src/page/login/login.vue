@@ -31,13 +31,14 @@
                     <div class="know-login-user">
                         <Input v-model="formlogin.username" :class="{'know-login-error':showuserwarn}"  prefix="ios-paw-outline" placeholder="用户名"  size="large" @on-change='checkIswarn(1)' @on-blur='blurIswarn(1)' @on-enter='Submitlanding'/>
                         <transition name="knowerror">
-                            <div class="know-login-warn" v-show="showuserwarn">请输入用户名!</div>
+                            
+                            <div class="know-login-warn" v-show="showuserwarn"><Icon type="ios-information-circle" size=17 color='#f5222d' />请输入用户名!</div>
                         </transition>
                     </div>
                     <div class="know-login-user">
                         <Input v-model="formlogin.password" :class="{'know-login-error':showpasswordwarn}" prefix="ios-lock-outline" type="password" password  placeholder="密   码"  size="large"  @on-change='checkIswarn(2)'  @on-blur='blurIswarn(2)' @on-enter='Submitlanding'/>
                         <transition name="knowerror">
-                            <div class="know-login-warn" v-show="showpasswordwarn">请输入密码!</div>
+                            <div class="know-login-warn" v-show="showpasswordwarn"><Icon type="ios-information-circle" size=17 color='#f5222d' />请输入密码!</div>
                         </transition>
                     </div>
                     <div class="know-login-user"> 
@@ -52,21 +53,36 @@
             <div  v-show="!showLoginRegister" >
                 <div class="know-login-user-input">
                     <div class="know-login-user">
-                        <Input  v-model="formRegister.username"  placeholder="账号" prefix="ios-contact-outline"   size="large" :class="{'know-login-error':registerusername}" @on-change='checkIswarn(3)' @on-blur='blurIswarn(3)' @on-enter="SubmitRegister"/>
+                        <Input  v-model="formRegister.username"  placeholder="账号" prefix="ios-paw-outline"  size="large" :class="{'know-login-error':registerusername}" @on-change='checkIswarn(3)' @on-blur='blurIswarn(3)' @on-enter="SubmitRegister"/>
                         <transition name="knowerror">
-                            <div class="know-login-warn" v-show="registerusername">请输入账号!</div>
+                            <div class="know-login-warn" v-show="registerusername"><Icon type="ios-information-circle" size=17 color='#f5222d' />请输入账号!</div>
                         </transition>
                     </div>
                     <div class="know-login-user">
-                        <Input type="password" v-model="formRegister.password" prefix="ios-lock-outline" placeholder="至少6位密码 区分大小写"  size="large"  :class="{'know-login-error':registerPassword}" @on-change='checkIswarn(4)' @on-blur='blurIswarn(4)' @on-enter="SubmitRegister"/>
+                        <Input type="password" v-model="formRegister.password" prefix="ios-lock-outline" placeholder="密码"  size="large"  :class="{'know-login-error':registerPassword}" @on-change='checkIswarn(4)' @on-blur='blurIswarn(4)' @on-enter="SubmitRegister"/>
                         <transition name="knowerror">
                             <div class="know-login-warn" v-show="registerPassword">请输入密码!</div>
-                        </transition>
+                        </transition>    
+                        <div class="know-login-user-password-tips">
+                            <div class="know-login-user-password-tips-d">
+                                <Icon :type="regexPassword.space" size=17 :color='regexPassword.Scolor' />&nbsp;&nbsp;&nbsp; 不能包括空格
+                            </div>
+                            <div class="know-login-user-password-tips-d">
+                                <Icon :type="regexPassword.number"  size=17 :color='regexPassword.Ncolor' />&nbsp;&nbsp;&nbsp;长度为6-32个字符
+                            </div>
+                            <div class="know-login-user-password-tips-d">
+                                <Icon :type="regexPassword.different"  size=17 :color='regexPassword.Dcolor' />&nbsp;&nbsp;&nbsp;必须包含字母、数字、符号中至少2种
+                            </div>
+                        </div>
+                            
+                        
                     </div>
                     <div class="know-login-user">
-                        <Input  type="password"  v-model="formRegister.RepeatPassword" prefix="ios-key-outline" placeholder="确认密码"  size="large"  :class="{'know-login-error':registerRepeatPassword}" @on-change='checkIswarn(5)' @on-blur='blurIswarn(5)' @on-enter="SubmitRegister"/>
+                        <Input  type="password"  v-model="formRegister.RepeatPassword" prefix="ios-lock-outline" placeholder="确认密码"  size="large"  :class="{'know-login-error':registerRepeatPassword}" @on-change='checkIswarn(5)' @on-blur='blurIswarn(5)' @on-enter="SubmitRegister"/>
                         <transition name="knowerror">
-                            <div class="know-login-warn" v-show="registerRepeatPassword">{{registerRepeatPasswordFalg?'两次输入的密码不匹配!':'请确认密码!'}}</div>
+                            <div class="know-login-warn" v-show="registerRepeatPassword">
+                                <Icon type="ios-information-circle" size=17 color='#f5222d' />
+                                {{registerRepeatPasswordFalg?'两次输入的密码不匹配!':'请确认密码!'}}</div>
                         </transition>
                     </div>
                 </div>
@@ -96,10 +112,27 @@
                 registerusername:false,
                 //注册 密码 警告 标志位
                 registerPassword:false,
+                //注册 密码 正则 标志位
+                regexPassword:{
+                    //空格
+                    space:'md-checkmark-circle',
+                    Scolor:'#19be6b',
+                    //位数
+                    number:'ios-information-circle',
+                    Ncolor:'#87CEFA',
+                    //不同
+                    different:'ios-information-circle',
+                    Dcolor:'#87CEFA'
+                },
+                //感叹号 ios-information-circle
+                information:'ios-information-circle',
+                //对号 md-checkmark-circle
+                checkmark:'md-checkmark-circle',
                 //注册 重复 密码  警告 标志位
                 registerRepeatPassword:false,
                 //注册 重复 密码  警告 信息 标志位
                 registerRepeatPasswordFalg :false,
+                
                 //登陆 上传 的 信息
                 formlogin:{
                     username:'',
@@ -321,6 +354,7 @@
     }
     #loginBox .know-login-title-en{
         text-align: center;
+        font-family:Georgia;
     }
     #loginBox .know-login-title-en span:nth-of-type(2){
         /* font-weight: lighter; */
@@ -387,7 +421,7 @@
     }
     #loginBox .know-login-warn{
         margin-top: 1px;
-        font-size: 12px;
+        font-size: 14px;
         color: #f5222d;
     }
     #loginBox .know-login-user{
@@ -422,8 +456,14 @@
     #loginBox .knowerror-enter-active{
         animation: namepasswordWarn 1s;
     }
-    #loginBox .bounce-leave-active {
+    #loginBox .knowerror-leave-active{
         animation: namepasswordWarn 1s reverse;
+    }
+    #loginBox .know-login-user-password-tips{
+        color: #000;
+    }
+    #loginBox .know-login-user-password-tips-d{
+        margin-top: 2px;
     }
     @keyframes namepasswordWarn {
         0%{
@@ -435,6 +475,7 @@
             opacity: 1;
         }
     }
+
     @media screen and (max-width: 500px){
         #loginBox .know-login-box{
             width: 100%;
