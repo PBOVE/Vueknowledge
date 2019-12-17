@@ -40,7 +40,8 @@ Vue.prototype.axios = axios;
  * 页面刷新的时候重新获取token
  */
 if (sessionStorage.getItem('token')) {
-    store.commit('setToken', sessionStorage.getItem('token'))
+    store.commit('setToken', sessionStorage.getItem('token'));
+    store.commit('setUser',sessionStorage.getItem('user'));
 }
 
 

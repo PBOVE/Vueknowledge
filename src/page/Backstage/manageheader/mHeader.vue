@@ -22,25 +22,29 @@
                 <Dropdown @on-click='clickListevent'>
                     <span class="know-header-right-user-name">{{username}}</span>
                     <DropdownMenu slot="list" class="know-header-right-list">
-                        <DropdownItem name='1'>修改密码</DropdownItem>
+                        <DropdownItem name='1'>密码修改</DropdownItem>
                         <DropdownItem name='0' divided>退出登录</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
            </div>
         </div>
+        <change-password :modalCFalg='changePasswordFlag'></change-password>
    </div>
 </template>
 
 
 <script>
+    import changePassword from './modalChangPassword'
    export default {
+       components:{changePassword},
        data() {
            return {
                //用户名称
-               username:JSON.parse(sessionStorage.getItem('user')).username,
+                username:JSON.parse(sessionStorage.getItem('user')).username,
                //随机背景颜色
                 color:['#ff4e50','#84B1ED','#00dffc','#0080ff','#f9d423','#5A9367','#56A902'],
-                //
+                // 修改密码 遮罩层 标志位
+                changePasswordFlag:''
            }
        },
        methods:{
@@ -63,13 +67,16 @@
            //点击菜单事件
            clickListevent(name){
                 // window.console.log(typeof name);
-               switch(name){
-                   case '0':
+                switch(name){
+                    case '0':
                        this.post_json('user/logout').then(()=>{
                            this.$store.commit('delToken');
                            this.$router.push({path:'/'});
                        })
                        break;
+                    case '1':
+                        this.changePasswordFlag=Math.random();
+                        break;
                }
            }
        },

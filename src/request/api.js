@@ -57,7 +57,19 @@ export function post_string(url, params) {
         })
     });
   }
-
+/**
+ *  封装 patch from 方法
+ */
+export function patch_string(url,params){
+  return new Promise((resolve,reject)=>{
+    axios.patch(url,qs.stringify(params),{headers:{'Content-Type':'application/x-www-form-urlencoded'}})
+      .then(res=>{
+        resolve(res.data);
+      }).catch(err=>{
+        reject(err);
+      })
+  })
+}
 
 /**
  * 请求拦截

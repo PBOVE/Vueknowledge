@@ -24,6 +24,9 @@
             setToken(state,token){
                 state.token = token;
             },
+            setUser(state,data){
+                state.user = data;
+            },
             delToken(state){
                 state.token = '';
                 state.user = '';

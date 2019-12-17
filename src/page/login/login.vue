@@ -31,7 +31,6 @@
                     <div class="know-login-user">
                         <Input v-model="formlogin.username" :class="{'know-login-error':showuserwarn}"  prefix="ios-paw-outline" placeholder="用户名"  size="large" @on-change='checkIswarn(1)' @on-blur='blurIswarn(1)' @on-enter='Submitlanding'/>
                         <transition name="knowerror">
-                            
                             <div class="know-login-warn" v-show="showuserwarn"><Icon type="ios-information-circle" size=17 color='#f5222d' />请输入用户名!</div>
                         </transition>
                     </div>
@@ -59,17 +58,17 @@
                         </transition>
                     </div>
                     <div class="know-login-user">
-                        <Input type="password" 
-                            v-model="formRegister.password" 
-                            prefix="ios-lock-outline" 
-                            placeholder="密码"  
-                            size="large"  
-                            :class="{'know-login-error':registerPassword}" 
+                        <Input type="password"
+                            v-model="formRegister.password"
+                            prefix="ios-lock-outline"
+                            placeholder="密码"
+                            size="large"
+                            :class="{'know-login-error':registerPassword}"
+                            maxlength="32"
                             @on-change='checkIswarn(4)'
                             @on-focus ='registerPasswordShowTips = true,registerPassword = false'
-                            @on-blur='blurIswarn(4)' 
+                            @on-blur='blurIswarn(4)'
                             @on-enter="SubmitRegister"/>
-                        
                         <transition name="knowTips">
                             <div class="know-login-user-password-tips" v-show="registerPasswordShowTips">
                                 <div :class="{'know-login-user-password-tips-d':true}">
@@ -87,15 +86,21 @@
                             <div class="know-login-warn know-login-show-tips" v-show="registerPassword">
                                 <Icon type="ios-information-circle" size=17 color='#f5222d' />&nbsp;&nbsp;&nbsp;{{registerShowPassword}}</div>
                         </transition>
-                        
-                            
-                        
                     </div>
                     <div class="know-login-user">
-                        <Input  type="password"  v-model="formRegister.RepeatPassword" prefix="ios-lock-outline" placeholder="确认密码"  size="large"  :class="{'know-login-error':registerRepeatPassword}" @on-change='checkIswarn(5)' @on-blur='blurIswarn(5)' @on-enter="SubmitRegister"/>
+                        <Input  type="password"  
+                        v-model="formRegister.RepeatPassword"
+                        prefix="ios-lock-outline" 
+                        placeholder="确认密码"  
+                        size="large"  
+                        :class="{'know-login-error':registerRepeatPassword}"
+                        maxlength="32"
+                        @on-change='checkIswarn(5)' 
+                        @on-blur='blurIswarn(5)' 
+                        @on-enter="SubmitRegister"/>
                         <transition name="knowerror">
                             <div class="know-login-warn" v-show="registerRepeatPassword">
-                                <Icon type="ios-information-circle" size=17 color='#f5222d' />
+                                <Icon type="ios-information-circle" size=17 color='#f5222d' />&nbsp;&nbsp;&nbsp;
                                 {{registerRepeatPasswordFalg?'两次输入的密码不匹配!':'请确认密码!'}}</div>
                         </transition>
                     </div>
@@ -127,7 +132,7 @@
                 //注册 密码 警告 标志位
                 registerPassword:false,
                 //注册 密码 显示 语句
-                registerShowPassword:'',
+                registerShowPassword:'请输入密码!',
                 //注册 密码 显示 提示
                 registerPasswordShowTips:false,
                 //注册 密码 正则 标志位
@@ -159,7 +164,6 @@
                 registerRepeatPassword:false,
                 //注册 重复 密码  警告 信息 标志位
                 registerRepeatPasswordFalg :false,
-                
                 //登陆 上传 的 信息
                 formlogin:{
                     username:'',
@@ -199,11 +203,15 @@
                         this.regexPassword = {
                             space:'md-checkmark-circle',
                             Scolor:'#19be6b',
+                            Sflag:true,
                             number:'ios-information-circle',
                             Ncolor:'#87CEFA',
+                            Nflag:false,
                             different:'ios-information-circle',
-                            Dcolor:'#87CEFA'
+                            Dcolor:'#87CEFA',
+                            Dflag:false
                         }
+                        this.registerShowPassword = "请输入密码!";
                         this.showLoginRegister = false;
                         break;
                 }
