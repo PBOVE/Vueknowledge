@@ -56,7 +56,7 @@ export default {
         }
     },
     mounted() {
-        this.getTreeData();
+        // this.getTreeData();
         $.fn.zTree.init($('#ztreeDemo'), this.selectTreeSetting, this.ZNode);
     }
 };

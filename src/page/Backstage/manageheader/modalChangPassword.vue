@@ -6,7 +6,10 @@
 
 
 <template>
-  <Modal v-model="modalCPFalg" width="500" :styles="{top: '30%'}" :mask-closable="false">
+  <Modal v-model="modalCPFalg" width="32%" :styles="{top: '25%'}" :mask-closable="false">
+    <Spin fix  v-show="spinShow">
+      <div>{{spinShowTips}}</div> 
+    </Spin>
     <p slot="header" style="color:#2d8cf0;text-align:center">
       <Icon type="ios-information-circle"></Icon>
       <span>&nbsp;&nbsp;&nbsp;密码修改</span>
@@ -25,6 +28,7 @@
           :class="{'K-H-C-P-I-W':changeoldPass}"
           @on-change="changeModalInput(1)"
           @on-blur="blurModalInput(1)"
+          @on-enter='submitChange'
         />
         <div class="k-h-C-P-W" v-show="changeoldPass">
           <Icon type="ios-information-circle" size="17" color="#f5222d" />&nbsp;&nbsp;&nbsp;请输入旧密码!
@@ -44,6 +48,7 @@
             :class="{'K-H-C-P-I-W':changenewPass}"
             @on-change="changeModalInput(2)"
             @on-blur="blurModalInput(2)"
+            @on-enter='submitChange'
           />
           <div slot="content">
             <div class="k-h-C-P-I-C">
@@ -74,6 +79,7 @@
           :class="{'K-H-C-P-I-W':changerepeatPassr}"
           @on-change="changeModalInput(3)"
           @on-blur="blurModalInput(3)"
+          @on-enter='submitChange'
         />
         <div class="k-h-C-P-W" v-show="changerepeatPassr">
           <Icon type="ios-information-circle" size="17" color="#f5222d" />
@@ -93,8 +99,12 @@ export default {
   props: ["modalCFalg"],
   data() {
     return {
+      // 加载框标志符号
+      spinShow:false,
+      //加载框标志信息
+      spinShowTips: 'Loading...',
       //修改密码 遮罩层 标志位
-      modalCPFalg: true,
+      modalCPFalg: false,
       //修改 旧密码 标志位
       changeoldPass: false,
       //修改 新密码 标志位
@@ -150,11 +160,27 @@ export default {
       if (this.fromCPass.RepeatPass === "") {
         this.changerepeatPassr = true;
         this.changeRepeatPasswordFalg = false;
-			}
-			window.console.log(this.$store.state.user);
-			if(this.changeoldPass||this.changenewPass||this.changerepeatPassr){
-				return;
-			}
+      }
+
+      if (this.changeoldPass || this.changenewPass || this.changerepeatPassr) {
+        return;
+      }
+      this.spinShow = true;
+      let userJson = this.$store.state.user;
+      let userId = JSON.parse(userJson).id;
+      this.patch_string("user/" + userId + "/password", {
+        srcPassword: this.fromCPass.oldPass,
+        password: this.fromCPass.newPass
+      }).then(() => {
+        this.modalCPFalg = false;
+        this.spinShow = false;
+      }).catch(() =>{
+        setTimeout(()=>{
+          this.spinShowTips = 'Loading...';
+          this.spinShow = false;
+        },3000)
+        this.spinShowTips = '旧密码错误';
+      })
     },
     //change 事件改变
     changeModalInput(val) {
@@ -282,11 +308,11 @@ export default {
         oldPass: "",
         newPass: "",
         RepeatPass: ""
-			};
-			this.changeoldPass= false;
-			this.changenewPass = false;
-			this.changerepeatPassr = false;
-			this.changehowPassword = "请输入新密码!";
+      };
+      this.changeoldPass = false;
+      this.changenewPass = false;
+      this.changerepeatPassr = false;
+      this.changehowPassword = "请输入新密码!";
     }
   }
 };
@@ -299,8 +325,11 @@ export default {
 .k-h-C-P {
   margin-top: 20px;
 }
+.k-h-C-P .ivu-poptip,.k-h-C-P  .ivu-poptip-rel{
+  width: 100%;
+}
 .k-h-C-P-I {
-  width: 470px;
+  width:100%;
 }
 .k-h-C-P-I-C {
   text-align: left;
@@ -321,5 +350,19 @@ export default {
 }
 .K-H-C-P-I-W .ivu-input:hover {
   border-color: #f5222d;
+}
+.demo-spin-icon-load {
+  animation: ani-demo-spin 1s linear infinite;
+}
+@keyframes ani-demo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>
