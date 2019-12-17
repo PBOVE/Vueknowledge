@@ -69,7 +69,7 @@ let router = new vueRouter({
  *  路由 守卫 函数
  */
 router.beforeEach((to, from, next)=> {
-    let token  = store.getters.getSessionStorage;
+    let token  = sessionStorage.getItem('token');
     if(to.matched.some(r => r.meta.requireAuth)){
         if(token){
             next();

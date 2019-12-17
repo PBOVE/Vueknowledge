@@ -235,7 +235,6 @@
                     this.get('user/me').then(res=>{
                         let data = res.data;
                         this.$store.commit('setUserData',data);
-                        this.$router.push({path:'/manage'})
                     })
                 }).catch(()=>{
                     this.error();
@@ -400,7 +399,6 @@
                     }else{
                         let data = res.data;
                         this.$store.commit('setUserData',data);
-                        this.$router.push({path:'/manage'})
                     }
                 })
             },

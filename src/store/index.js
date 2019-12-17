@@ -6,6 +6,7 @@
 
  import Vue from 'vue'
  import Vuex from 'vuex'
+ import router from '../router'
 
  Vue.use(Vuex);
 
@@ -17,10 +18,7 @@
         getters:{
             getToken:(state)=>{
                 return state.token;
-            },
-            getSessionStorage:()=>{
-                return sessionStorage.getItem('token');
-            },
+            }
         },
         mutations:{
             setToken(state,token){
@@ -45,6 +43,7 @@
                 state.user = JSON.stringify(user)
                 sessionStorage.setItem('user',JSON.stringify(user));
                 sessionStorage.setItem('token',token);
+                router.push({path:'/manage'})
             }
         }
  })
