@@ -59,21 +59,35 @@
                         </transition>
                     </div>
                     <div class="know-login-user">
-                        <Input type="password" v-model="formRegister.password" prefix="ios-lock-outline" placeholder="密码"  size="large"  :class="{'know-login-error':registerPassword}" @on-change='checkIswarn(4)' @on-blur='blurIswarn(4)' @on-enter="SubmitRegister"/>
-                        <transition name="knowerror">
-                            <div class="know-login-warn" v-show="registerPassword">请输入密码!</div>
-                        </transition>    
-                        <div class="know-login-user-password-tips">
-                            <div class="know-login-user-password-tips-d">
-                                <Icon :type="regexPassword.space" size=17 :color='regexPassword.Scolor' />&nbsp;&nbsp;&nbsp; 不能包括空格
+                        <Input type="password" 
+                            v-model="formRegister.password" 
+                            prefix="ios-lock-outline" 
+                            placeholder="密码"  
+                            size="large"  
+                            :class="{'know-login-error':registerPassword}" 
+                            @on-change='checkIswarn(4)'
+                            @on-focus ='registerPasswordShowTips = true,registerPassword = false'
+                            @on-blur='blurIswarn(4)' 
+                            @on-enter="SubmitRegister"/>
+                        
+                        <transition name="knowTips">
+                            <div class="know-login-user-password-tips" v-show="registerPasswordShowTips">
+                                <div :class="{'know-login-user-password-tips-d':true}">
+                                    <Icon :type="regexPassword.space" size=17 :color='regexPassword.Scolor' />&nbsp;&nbsp;&nbsp; 不能包括空格
+                                </div>
+                                <div :class="{'know-login-user-password-tips-d':true}">
+                                   <Icon :type="regexPassword.number"  size=17 :color='regexPassword.Ncolor' />&nbsp;&nbsp;&nbsp;长度为6-32个字符
+                                </div>
+                                <div :class="{'know-login-user-password-tips-d':true}">
+                                    <Icon :type="regexPassword.different"  size=17 :color='regexPassword.Dcolor' />&nbsp;&nbsp;&nbsp;必须包含字母、数字、符号中至少2种
+                                </div>
                             </div>
-                            <div class="know-login-user-password-tips-d">
-                                <Icon :type="regexPassword.number"  size=17 :color='regexPassword.Ncolor' />&nbsp;&nbsp;&nbsp;长度为6-32个字符
-                            </div>
-                            <div class="know-login-user-password-tips-d">
-                                <Icon :type="regexPassword.different"  size=17 :color='regexPassword.Dcolor' />&nbsp;&nbsp;&nbsp;必须包含字母、数字、符号中至少2种
-                            </div>
-                        </div>
+                        </transition>
+                        <transition name='knowLoginShowTips'>
+                            <div class="know-login-warn know-login-show-tips" v-show="registerPassword">
+                                <Icon type="ios-information-circle" size=17 color='#f5222d' />&nbsp;&nbsp;&nbsp;{{registerShowPassword}}</div>
+                        </transition>
+                        
                             
                         
                     </div>
@@ -112,21 +126,34 @@
                 registerusername:false,
                 //注册 密码 警告 标志位
                 registerPassword:false,
+                //注册 密码 显示 语句
+                registerShowPassword:'',
+                //注册 密码 显示 提示
+                registerPasswordShowTips:false,
                 //注册 密码 正则 标志位
                 regexPassword:{
                     //空格
                     space:'md-checkmark-circle',
                     Scolor:'#19be6b',
+                    Sflag:true,
                     //位数
                     number:'ios-information-circle',
                     Ncolor:'#87CEFA',
+                    Nflag:false,
                     //不同
                     different:'ios-information-circle',
-                    Dcolor:'#87CEFA'
+                    Dcolor:'#87CEFA',
+                    Dflag:false
                 },
-                //感叹号 ios-information-circle
+                //绿色
+                successColor:'#19be6b',
+                //蓝色
+                primaryColor:'#87CEFA',
+                //红色
+                errorColor:'#f5222d',
+                //感叹号 
                 information:'ios-information-circle',
-                //对号 md-checkmark-circle
+                //对号
                 checkmark:'md-checkmark-circle',
                 //注册 重复 密码  警告 标志位
                 registerRepeatPassword:false,
@@ -168,6 +195,14 @@
                             username:'',
                             password:'',
                             RepeatPassword:''
+                        }
+                        this.regexPassword = {
+                            space:'md-checkmark-circle',
+                            Scolor:'#19be6b',
+                            number:'ios-information-circle',
+                            Ncolor:'#87CEFA',
+                            different:'ios-information-circle',
+                            Dcolor:'#87CEFA'
                         }
                         this.showLoginRegister = false;
                         break;
@@ -242,17 +277,54 @@
                     if(this.formRegister.username !== ''){
                         this.registerusername = false;
                     }
+
                 }else if(val === 4){
-                    if(this.formRegister.password !== ''){
+                    let password = this.formRegister.password
+                    if(password !== ''){
                         this.registerPassword = false;
                         if(this.formRegister.RepeatPassword!==''){
-                            if(this.formRegister.RepeatPassword===this.formRegister.password){
+                            if(this.formRegister.RepeatPassword === password){
                                 this.registerRepeatPassword = false;
                             }else{
                                 this.registerRepeatPassword = true
                             }
                         }
                     }
+                    //空格正则
+                    let regSpace = /(^\s+)|(\s+$)|\s+/g;
+                    //密码强度正则  包含字母、数字、符号中至少2种
+                    let regDifferent = /(?=.*[a-zA-Z])(?=.*\d)|(?=.*[a-zA-Z])(?=.*[-+=|,!@#$%^&*?_`.~/(){}[\]<>])|(?=.*\d)(?=.*[-+=|,!@#$%^&*?_`.~/(){}[\]<>])/
+                    // 匹配是否有空格
+                    if(regSpace.test(password)){
+                        this.regexPassword.space = this.information;
+                        this.regexPassword.Scolor = this.errorColor;
+                        this.regexPassword.Sflag  = false;
+                    }else{
+                        this.regexPassword.space = this.checkmark;
+                        this.regexPassword.Scolor = this.successColor;
+                        this.regexPassword.Sflag  = true;
+                    }
+                    //判断输入的密码长度不小于6位
+                    if(password.length>=6){
+                        this.regexPassword.number = this.checkmark;
+                        this.regexPassword.Ncolor =  this.successColor;
+                        this.regexPassword.Nflag = true;
+                    }else{
+                        this.regexPassword.number = this.information;
+                        this.regexPassword.Ncolor =  this.primaryColor;
+                        this.regexPassword.Nflag = false;
+                    }
+                    //判断包含字母、数字、符号中至少2种
+                    if(regDifferent.test(password)){
+                        this.regexPassword.different = this.checkmark;
+                        this.regexPassword.Dcolor = this.successColor;
+                        this.regexPassword.Dflag = true;
+                    }else{
+                        this.regexPassword.different = this.information;
+                        this.regexPassword.Dcolor =  this.primaryColor;
+                        this.regexPassword.Dflag = false;
+                    }
+
                 }else if(val === 5){
                     if(this.formRegister.RepeatPassword !== ''){
                         this.registerRepeatPassword = false;
@@ -287,10 +359,22 @@
                         this.registerusername = false;
                     }
                 }else if(val === 4){
+                    this.registerPasswordShowTips = false;
                     if(this.formRegister.password === ''){
                         this.registerPassword = true;
+                        this.registerShowPassword = "请输入密码!";
                     }else{
-                        this.registerPassword = false;
+                        if(!this.regexPassword.Sflag){
+                            this.registerPassword = true;
+                            this.registerShowPassword = "不能包括空格!";
+                        }else if(!this.regexPassword.Nflag){
+                            this.registerPassword = true;
+                            this.registerShowPassword = "长度为6-32个字符";
+                        }else if(!this.regexPassword.Dflag){
+                            this.registerPassword = true;
+                            this.registerShowPassword = "必须包含字母、数字、符号中至少2种";
+                        }
+                        else this.registerPassword = false;
                     }
                 }else if(val === 5){
                     if(this.formRegister.RepeatPassword === ''){
@@ -348,9 +432,9 @@
         width: 500px;
         position: absolute;
         left: 50%;
-        top: 42%;
+        top: 45%;
         transform: translate(-50%,-50%);
-        height: 500px;
+        height: 550px;
     }
     #loginBox .know-login-title-en{
         text-align: center;
@@ -429,9 +513,9 @@
         margin-top: 30px;
         width: 400px;
     }
-    #loginBox .know-login-user:nth-of-type(3){
-        margin-top: 20px;
-    }
+    /* #loginBox .know-login-user:nth-of-type(3){
+        margin-top: 30px;
+    } */
     #loginBox .know-login-user-land{
         text-align:  center;
     }
@@ -459,11 +543,26 @@
     #loginBox .knowerror-leave-active{
         animation: namepasswordWarn 1s reverse;
     }
+    #loginBox .knowTips-enter-active{
+        animation: passwordTips 0.5s;
+    }
+    #loginBox .knowTips-leave-active{
+        animation: passwordTips 0.5s reverse;
+    }
     #loginBox .know-login-user-password-tips{
         color: #000;
     }
     #loginBox .know-login-user-password-tips-d{
         margin-top: 2px;
+    }
+    #loginBox .knowLoginShowTips-enter-active{
+       animation: passwordshowWarn 0.5s ease-in;
+    }
+    #loginBox .knowLoginShowTips-leave-active{
+        animation: passwordshowWarn 0.2s reverse;
+    }
+    #loginBox .know-login-show-tips{
+        background-color: #f0f2f5;
     }
     @keyframes namepasswordWarn {
         0%{
@@ -473,6 +572,27 @@
         100%{
             transform: translateY(0);
             opacity: 1;
+        }
+    }
+    @keyframes passwordTips{
+        0%{
+            height: 0;
+        }
+        100%{
+             height: 66px;
+
+        }
+    }
+    @keyframes passwordshowWarn {
+        0%{
+            transform: translateY(-10px);
+            opacity: 0;
+            height: 0;
+        }
+        100%{
+            opacity: 1;
+            transform: translateY(0);
+             height: 22px;
         }
     }
 
