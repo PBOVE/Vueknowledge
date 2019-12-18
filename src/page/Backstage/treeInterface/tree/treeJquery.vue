@@ -44,7 +44,7 @@ export default {
       // 点击后ztree 节点
       StreeNode: "",
       // 树
-      zTree: ""
+      zTree: "",
     };
   },
   methods: {
@@ -55,6 +55,7 @@ export default {
           window.console.log(res);
           let data = res.data.content;
           let Arr = [];
+          this.$emit('selectNode',9,data.length);
           data.forEach(function(item) {
             let obj = {
               id: item.id,

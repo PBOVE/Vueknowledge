@@ -41,21 +41,17 @@
         <tree-z @selectNode="TLCallback" :treelistVal="treeZ"></tree-z>
       </Content>
     </Layout>
-    <modal-a 
-			:AddModalFlag="buttonAddFlag" 
-			:treeNode="treeNode" 
-			@addNameS="TLCallback"
-		></modal-a>
-    <modal-d 
-			:DelModalFlag="buttonDelFlag" 
-			:selectNodeName="selectNodeName"
-			:treeNodeId= 'treeNode.id'
-			@addNameS="TLCallback"
-		></modal-d>
+    <modal-a :AddModalFlag="buttonAddFlag" :treeNode="treeNode" @addNameS="TLCallback"></modal-a>
+    <modal-d
+      :DelModalFlag="buttonDelFlag"
+      :selectNodeName="selectNodeName"
+      :treeNodeId="treeNode.id"
+      @addNameS="TLCallback"
+    ></modal-d>
     <modal-e
       :ExitModalFalg="buttonExitFlag"
       :selectNodeName="selectNodeName"
-			:treeNodeId= 'treeNode.id'
+      :treeNodeId="treeNode.id"
       @ExitNameS="TLCallback"
     ></modal-e>
   </div>
@@ -92,9 +88,11 @@ export default {
       //传给treeZ组件的值
       treeZ: {
         ExitName: "",
-				addName: "",
-				delName:""
-      }
+        addName: "",
+        delName: ""
+			},
+			// 根节点数量
+      rootNodeNum:""
     };
   },
   methods: {
@@ -108,8 +106,8 @@ export default {
         //获取点击节点的名称
         2: () => {
           this.selectNodeName = val.name;
-					this.treeNode = val;
-					// window.console.log(val.id);
+          this.treeNode = val;
+          // window.console.log(val.id);
         },
         3: () => {
           //modal修改 触发
@@ -132,10 +130,15 @@ export default {
         // modal 创建 触发
         7: () => {
           this.treeZ.addName = val;
-				},
-				// modal 删除 触发
-				8: () =>{
-					this.treeZ.delName = val;
+        },
+        // modal 删除 触发
+        8: () => {
+          this.treeZ.delName = val;
+        },
+        //根节点 数量 获取
+        9: () => {
+					window.console.log(val)
+					this.rootNodeNum = val;
 				}
       };
       statusMap[type]();
