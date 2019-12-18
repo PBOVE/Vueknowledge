@@ -44,7 +44,7 @@ export default {
       // 点击后ztree 节点
       StreeNode: "",
       // 树
-      zTree: "",
+      zTree: ""
     };
   },
   methods: {
@@ -55,17 +55,25 @@ export default {
           window.console.log(res);
           let data = res.data.content;
           let Arr = [];
-          this.$emit('selectNode',9,data.length);
+          this.$emit("selectNode", 9, data.length);
           data.forEach(function(item) {
             let obj = {
               id: item.id,
               name: item.name,
+              sortId:item.sortId,
               childLen: item.childNodes.length,
               isParent: item.childNodes.length ? true : false
             };
             Arr.push(obj);
           });
-          this.ZNode = Arr;
+          function sortA(ObjA, ObjB) {
+            var valA = ObjA.sortId;
+            var valB = ObjB.sortId;
+            if (valA < valB) return -1;
+            else if (valA > valB) return 1;
+            else return 0;
+          }
+          this.ZNode = Arr.sort(sortA);
           this.createTree();
         })
         .catch(() => {
@@ -95,7 +103,7 @@ export default {
     //点击 节点响应函数
     beforeMouseUp(treeId, treeNode) {
       if (!treeNode) return;
-      window.console.log(treeNode)
+      window.console.log(treeNode);
       this.StreeId = treeNode.tId;
       this.StreeNode = treeNode;
       this.$emit("selectNode", 1, true);
@@ -127,9 +135,9 @@ export default {
         }
       }
     },
-    "treelistVal.delName":{
-       handler: function(){
-        this.zTree.removeNode(this.StreeNode,false);
+    "treelistVal.delName": {
+      handler: function() {
+        this.zTree.removeNode(this.StreeNode, false);
         this.$emit("selectNode", 1, false);
       }
     }

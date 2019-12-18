@@ -137,7 +137,6 @@ export default {
         },
         //根节点 数量 获取
         9: () => {
-					window.console.log(val)
 					this.rootNodeNum = val;
 				}
       };

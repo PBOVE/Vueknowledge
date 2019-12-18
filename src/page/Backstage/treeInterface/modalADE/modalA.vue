@@ -43,7 +43,8 @@
                 }
                 let obj = {
                     name : this.inputName,
-                    parentId : this.treeNode.id?this.treeNode.id:null
+                    parentId : this.treeNode.id?this.treeNode.id:null,
+                    sortId:(new Date().getTime()/1000/60/60-437968).toFixed(5)
                 }
                 this.post_json('node',obj).then(res=>{
                     this.$emit('addNameS',7,res.data);
