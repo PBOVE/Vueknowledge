@@ -95,8 +95,11 @@
         background-color: #f5f7f9;
     }
     .know-manage-split-pane{
-        padding: 10px;
+        padding: 0px;
         height: 100%;
+    }
+    .know-manage-split-pane-right{
+        padding-left: 6px;
     }
     @media screen and (max-width: 800px){
         .know-manage-split-pane-right{

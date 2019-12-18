@@ -115,7 +115,7 @@
     .know-header-right-user{
         display: inline-block;
         height: 70px;
-        padding: 0 10px;
+        padding: 0 20px;
         transition:  background-color 0.5s;
         cursor: pointer;
     }

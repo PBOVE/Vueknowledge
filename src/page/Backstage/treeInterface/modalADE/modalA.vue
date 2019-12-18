@@ -20,12 +20,12 @@
             <Button type="text"  @click='modalFlag=false'>取&nbsp;消</Button>
             <Button type="primary"  @click.stop="userAddfun" >添&nbsp;加</Button>
         </div>
-    </Modal> 
+    </Modal>
 </template>
 
 <script>
     export default {
-        props:['AddModalFlag'],
+        props:['AddModalFlag','treeNode'],
         data() {
             return {
                 // modal标志位
@@ -41,12 +41,15 @@
                 if(this.inputName === ''){
                     return
                 }
-                // let obj = {
-                //     name : this.inputName
-                // }
-                // this.post_json('node',JSON.stringify(obj)).then(res=>{
-                //     window.console.log(res);
-                // });
+                let obj = {
+                    name : this.inputName,
+                    parentId : this.treeNode.id?this.treeNode.id:null
+                }
+                this.post_json('node',obj).then(res=>{
+                    this.$emit('addNameS',7,res.data);
+                }).catch(()=>{
+                    this.$Message.error('创建失败');
+                });
             },
             //监听 ctrl + ender 按键 执行函数
             upCtrlEnter(e){
@@ -59,6 +62,7 @@
             // 监听 treelist 事件
             AddModalFlag(){
                 this.modalFlag = true;
+                this.inputName = '';
                 this.$nextTick(() => {
                     this.$refs.modalAddInput.focus();
                 })

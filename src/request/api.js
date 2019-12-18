@@ -31,7 +31,7 @@ export function get(url,params={}){
 /**
  * 封装 post 方法
  */
-export function post_json(url, params) {
+export function post_json(url, params={}) {
     return new Promise((resolve, reject) => {
       axios.post(url, (params),{headers:{'Content-Type':'application/json'}})
         .then(res => {
@@ -45,7 +45,7 @@ export function post_json(url, params) {
 /**
  *  封装 post form 方法
  */
-export function post_string(url, params) {
+export function post_string(url, params={}) {
     return new Promise((resolve, reject) => {
       axios.post(url, qs.stringify(params),{headers:{'Content-Type':'application/x-www-form-urlencoded'}})
         .then(res => {
@@ -60,7 +60,7 @@ export function post_string(url, params) {
 /**
  *  封装 patch from 方法
  */
-export function patch_string(url,params){
+export function patch_string(url,params={}){
   return new Promise((resolve,reject)=>{
     axios.patch(url,qs.stringify(params),{headers:{'Content-Type':'application/x-www-form-urlencoded'}})
       .then(res=>{
@@ -70,6 +70,33 @@ export function patch_string(url,params){
       })
   })
 }
+/** 
+ * 封装 patch json
+*/
+export function patch_json(url,params={}){
+  return new Promise((resolve,reject)=>{
+    axios.patch(url,JSON.stringify(params),{headers:{'Content-Type':'application/json;charset=UTF-8'}})
+    .then(res=>{
+      resolve(res.data);
+    }).catch(err=>{
+      reject(err);
+    })
+  })
+}
+/**
+ * 封装delete from
+ */
+export function delete_string(url,params={}){
+  return new Promise((resolve,reject)=>{
+    axios.delete(url,qs.stringify(params),{headers:{'Content-Type':'application/x-www-form-urlencoded'}})
+    .then(res=>{
+      resolve(res.data);
+    }).catch(err=>{
+      reject(err);
+    })
+  })
+}
+
 
 /**
  * 请求拦截

@@ -24,7 +24,7 @@
 
 <script>
     export default {
-        props:['DelModalFlag','selectNodeName'],
+        props:['DelModalFlag','selectNodeName','treeNodeId'],
         data() {
             return {
                 // modal标志位
@@ -48,9 +48,17 @@
         methods:{
             //点击 删除 按键
             userDelfun(){
-
                 this.modalFlag = false;
-                window.console.log(12312);
+                let url = 'node/' + this.treeNodeId;
+                this.delete_string(url).then(res=>{
+                    if(res.data){
+                        this.$emit('addNameS',8,Math.random());
+                    }else{
+                        this.$Message.error('删除失败');
+                    }
+                }).catch(()=>{
+                    this.$Message.error('删除失败');
+                });
             },
             //监听 ctrl + ender 按键 执行函数
             upCtrlEnter(e){

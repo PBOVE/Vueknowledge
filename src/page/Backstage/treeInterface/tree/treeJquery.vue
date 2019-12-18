@@ -7,73 +7,220 @@
 
 <template>
   <div>
-      <ul id='ztreeDemo' class="ztree"></ul>
+    <ul id="ztreeDemo" class="ztree"></ul>
   </div>
 </template>
 
 <script>
-import $ from '../../../../assets/jquery-vendor'
-import 'ztree'
-import 'ztree/css/metroStyle/metroStyle.css'
+import $ from "../../../../assets/jquery-vendor";
+import "ztree";
+import "ztree/css/metroStyle/metroStyle.css";
 export default {
-    data() {
-        return {
-            ZNode: [
-                { id: 1, pId: 0, name: "文件夹", open: true },
-                { id: 11, pId: 1, name: "收件箱" },
-                { id: 111, pId: 11, name: "收件箱1" },
-                { id: 112, pId: 111, name: "收件箱2" },
-                { id: 113, pId: 112, name: "收件箱3" },
-                { id: 114, pId: 113, name: "收件箱4" },
-                { id: 12, pId: 1, name: "垃圾邮件" },
-                { id: 13, pId: 1, name: "草稿" },
-                { id: 14, pId: 1, name: "已发送邮件" },
-                { id: 15, pId: 1, name: "已删除邮件" },
-                { id: 3, pId: 0, name: "快速视图" },
-                { id: 31, pId: 3, name: "文档" },
-                { id: 32, pId: 3, name: "照片" }
-            ],
-            selectTreeSetting:{
-                view: {
-                howLine: false,
-                showIcon: false,
-                selectedMulti: false,
-                dblClickExpand: true,
-                },
-                data: {
-                    simpleData: {
-                    enable: true
-                    }
-                }
-            }
-        };
-    },
-    methods: {
-        getTreeData() {
-            this.get("node").then(res => {
-            window.console.log(res);
-        });
+  props: ["treelistVal"],
+  data() {
+    return {
+      // 树节点
+      ZNode: [],
+      //设置 ztree 树
+      selectTreeSetting: {
+        view: {
+          howLine: false,
+          showIcon: false,
+          selectedMulti: false,
+          dblClickExpand: true,
+          addDiyDom: this.addDiyDom
+        },
+        data: {
+          simpleData: {
+            enable: true
+          }
+        },
+        callback: {
+          beforeMouseUp: this.beforeMouseUp
         }
+      },
+      //点击后ztree id
+      StreeId: "",
+      // 点击后ztree 节点
+      StreeNode: "",
+      // 树
+      zTree: ""
+    };
+  },
+  methods: {
+    //获取服务器数据
+    getTreeData() {
+      this.get("node")
+        .then(res => {
+          window.console.log(res);
+          let data = res.data.content;
+          let Arr = [];
+          data.forEach(function(item) {
+            let obj = {
+              id: item.id,
+              name: item.name,
+              childLen: item.childNodes.length,
+              isParent: item.childNodes.length ? true : false
+            };
+            Arr.push(obj);
+          });
+          this.ZNode = Arr;
+          this.createTree();
+        })
+        .catch(() => {
+          this.$Message.error("数据获取失败");
+        });
     },
-    mounted() {
-        // this.getTreeData();
-        $.fn.zTree.init($('#ztreeDemo'), this.selectTreeSetting, this.ZNode);
+    //添加节点 修改样式
+    addDiyDom(treeId, treeNode) {
+      let spaceWidth = 1.5;
+      let switchObj = $("#" + treeNode.tId + "_switch");
+      let icoObj = $("#" + treeNode.tId + "_ico");
+      switchObj.remove();
+      icoObj.before(switchObj);
+      if (treeNode.level > 0) {
+        let spaceStr =
+          "<span style='display: inline-block;width:" +
+          spaceWidth * treeNode.level +
+          "em'></span>";
+        switchObj.before(spaceStr);
+      }
+    },
+    //创建 树图 修改样式
+    createTree() {
+      $.fn.zTree.init($("#ztreeDemo"), this.selectTreeSetting, this.ZNode);
+      this.zTree = $.fn.zTree.getZTreeObj("ztreeDemo");
+    },
+    //点击 节点响应函数
+    beforeMouseUp(treeId, treeNode) {
+      if (!treeNode) return;
+      window.console.log(treeNode)
+      this.StreeId = treeNode.tId;
+      this.StreeNode = treeNode;
+      this.$emit("selectNode", 1, true);
+      this.$emit("selectNode", 2, treeNode);
     }
+  },
+  watch: {
+    "treelistVal.ExitName": {
+      handler: function(val) {
+        $("#" + this.StreeId + "_a").attr("title", val);
+        $("#" + this.StreeId + "_span").text(val);
+        this.StreeNode["name"] = val;
+      }
+    },
+    "treelistVal.addName": {
+      handler: function(val) {
+        if (this.StreeNode) {
+          this.zTree.addNodes(this.StreeNode, {
+            id: val.id,
+            name: val.name,
+            isParent: false
+          });
+        } else {
+          this.zTree.addNodes(null, {
+            id: val.id,
+            name: val.name,
+            isParent: false
+          });
+        }
+      }
+    },
+    "treelistVal.delName":{
+       handler: function(){
+        this.zTree.removeNode(this.StreeNode,false);
+        this.$emit("selectNode", 1, false);
+      }
+    }
+  },
+  mounted() {
+    this.getTreeData();
+  }
 };
 </script>
 
 <style>
-    .ztree li a{
-        text-indent: 0.1em;
-        border-radius: 3px;
-    }
-    .ztree li a:hover{
-        text-decoration: none;
-        background-color: #e8eaec;
-        cursor: pointer;
-    }
-    .ztree li a.curSelectedNode{
-        background-color: #808695;
-        color: #fff;
-    }
+.ztree * {
+  font-size: 13px;
+}
+.ztree li {
+  line-height: 30px;
+}
+.ztree li ul {
+  margin: 0;
+  padding: 0;
+}
+
+.ztree li a {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%;
+  height: 30px;
+  padding-top: 0px;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.ztree li a:hover {
+  text-decoration: none;
+  background-color: #eaf4fe;
+}
+.ztree.showIcon li a span.button.switch {
+  visibility: visible;
+}
+
+.ztree li a.curSelectedNode {
+  background-color: #d5e8fc;
+  border: 0;
+  height: 30px;
+  color: #000;
+}
+
+.ztree li span {
+  line-height: 30px;
+}
+.ztree li span.button.switch {
+  width: 16px;
+  height: 16px;
+}
+
+.ztree li span.button.switch.level0 {
+  width: 20px;
+  height: 20px;
+}
+
+.ztree li span.button.switch.level1 {
+  width: 20px;
+  height: 20px;
+}
+.ztree li span.button,
+.ztree li ul.line {
+  background-image: none;
+}
+.ztree li span.button {
+  display: inline-block;
+  font-family: Ionicons;
+  speak: none;
+  font-style: normal;
+  font-weight: 400;
+  font-variant: normal;
+  text-transform: none;
+  text-rendering: optimizeLegibility;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  vertical-align: -0.125em;
+  text-align: center;
+}
+.ztree li span.button.roots_close::before,
+.ztree li span.button.bottom_close::before,
+.ztree li span.button.center_close::before {
+  content: "\f11f";
+  font-size: 15px;
+}
+.ztree li span.button.roots_open::before,
+.ztree li span.button.bottom_open::before,
+.ztree li span.button.center_open::before {
+  content: "\F116";
+  font-size: 15px;
+}
 </style>

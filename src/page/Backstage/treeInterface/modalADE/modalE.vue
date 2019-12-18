@@ -13,7 +13,7 @@
         </p>
         <div class="know-modal-text">
             <p>编&nbsp;辑&nbsp;:&nbsp;<strong>{{selectNodeName.length>20?selectNodeName.substr(0,20):selectNodeName}}</strong></p>
-            <p><Input type="text" ref="modalExitInput"/></p>
+            <p><Input type="text" id='modalExitInput'  v-model = 'changeName' /></p>
             <p class="Tips">按&nbsp;<strong>ctrl&nbsp;+&nbsp;enter</strong>&nbsp;接受并关闭面板</p>
         </div>
         <div slot="footer">
@@ -25,17 +25,29 @@
 
 <script>
     export default {
-        props:['ExitModalFalg','selectNodeName'],
+        props:['ExitModalFalg','selectNodeName','treeNodeId'],
         data() {
             return {
                  // modal标志位
-                modalFlag:false
+                modalFlag:false,
+                //改变的名称
+                changeName:'',
+                //名字是否改变标志位
+                changeNameFlag:'',
             };
         },
         methods:{
-            // 点击 编辑 节点
+            // 点击 编辑  上传 节点
             userExitfun(){
                 this.modalFlag = false;
+                if(this.changeNameFlag === this.changeName||this.changeName === '')
+                    return;
+                let url = 'node/'+ this.treeNodeId +'/name';
+                this.patch_json(url,{'name':this.changeName}).then(res=>{
+                    this.$emit('ExitNameS',3,res.data.name);
+                }).catch(() => {
+                    this.$Message.error('修改失败');
+                });
             },
             //监听 ctrl + ender 按键 执行函数
             upCtrlEnter(e){
@@ -48,8 +60,12 @@
              // 监听 treelist 事件
             ExitModalFalg(){
                 this.modalFlag = true;
+                this.changeName = this.selectNodeName;
+                this.changeNameFlag = this.selectNodeName;
                 this.$nextTick(() => {
-                    this.$refs.modalExitInput.focus();
+                    let IputDom = document.querySelector('#modalExitInput .ivu-input');
+                    IputDom.focus();
+                    IputDom.setSelectionRange(0, this.selectNodeName.length);
                 })
             },
             // 监听 modalflag = true

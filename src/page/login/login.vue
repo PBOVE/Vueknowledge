@@ -59,6 +59,7 @@
                     </div>
                     <div class="know-login-user">
                         <Input type="password"
+                            autocomplete="off"
                             v-model="formRegister.password"
                             prefix="ios-lock-outline"
                             placeholder="密码"
@@ -90,11 +91,12 @@
                     <div class="know-login-user">
                         <Input  type="password"  
                         v-model="formRegister.RepeatPassword"
-                        prefix="ios-lock-outline" 
-                        placeholder="确认密码"  
-                        size="large"  
+                        prefix="ios-lock-outline"
+                        placeholder="确认密码"
+                        size="large"
                         :class="{'know-login-error':registerRepeatPassword}"
                         maxlength="32"
+                        autocomplete="off"
                         @on-change='checkIswarn(5)' 
                         @on-blur='blurIswarn(5)' 
                         @on-enter="SubmitRegister"/>
@@ -156,7 +158,7 @@
                 primaryColor:'#87CEFA',
                 //红色
                 errorColor:'#f5222d',
-                //感叹号 
+                //感叹号
                 information:'ios-information-circle',
                 //对号
                 checkmark:'md-checkmark-circle',
@@ -175,7 +177,9 @@
                     username:'',
                     password:'',
                     RepeatPassword:''
-                }
+                },
+                //防止 多次提交
+                submitFlag:false
             }
         },
         methods:{
@@ -229,6 +233,9 @@
                     this.showpasswordwarn = true;
                     return;
                 }
+                if(this.submitFlag)
+                    return;
+                this.submitFlag = true;
                 let register={
                     username:this.formlogin.username,
                     password:this.formlogin.password,
@@ -245,6 +252,7 @@
                         this.$store.commit('setUserData',data);
                     })
                 }).catch(()=>{
+                    this.submitFlag = false;
                     this.error();
                 })
             },
@@ -262,11 +270,16 @@
                 }
                 if(this.registerusername||this.registerPassword|| this.registerRepeatPassword)
                     return;
+                if(this.submitFlag)
+                    return;
+                this.submitFlag = true;
                 this.post_json('register',{userName:this.formRegister.username,password:this.formRegister.password}).then(res=>{
+                    this.submitFlag  =  false;
                     if(res.code === 0 && res.msg === 'Success'){
                         this.showLoginRegister = !this.showLoginRegister;
                     }
                 }).catch(()=>{
+                    this.submitFlag  =  false;
                     this.$Message.error('注册错误');
                 })
             },
