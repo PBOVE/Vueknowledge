@@ -41,9 +41,10 @@
         <tree-z @selectNode="TLCallback" :treelistVal="treeZ"></tree-z>
       </Content>
     </Layout>
-    <modal-a 
-      :AddModalFlag="buttonAddFlag" 
-      :treeNode="treeNode" 
+
+    <modal-a
+      :AddModalFlag="buttonAddFlag"
+      :treeNode="treeNode"
       @addNameS="TLCallback"
     ></modal-a>
     <modal-d
@@ -109,12 +110,16 @@ export default {
         },
         //获取点击节点的名称
         2: () => {
+          let node = {
+            name:val.name,
+            id:val.id
+          }
           this.selectNodeName = val.name;
-          this.treeNode = val;
-          // window.console.log(val.id);
+          this.treeNode = node;
+          this.$emit('MangageCallback',1,node);
         },
+        //modal修改 触发
         3: () => {
-          //modal修改 触发
           this.treeZ.ExitName = val;
           this.selectNodeName = val;
         },
@@ -137,8 +142,9 @@ export default {
         },
         // modal 删除 触发
         8: () => {
-          this.selectNodeName = ''
+          this.selectNodeName = '';
           this.treeNode = '';
+          this.$emit('MangageCallback',1,'');
           this.treeZ.delName = val;
         },
         //根节点 数量 获取
@@ -159,6 +165,9 @@ export default {
 </script>
 
 <style  scoped>
+#know-tree-list{
+   min-width: 300px;
+}
 .know-tree-list-header-title {
   font-weight: bold;
   font-size: 18px;
@@ -174,7 +183,6 @@ export default {
 .know-tree-header-select {
   height: 50px;
   padding: 0;
-  /* box-shadow: 0 0 5px #e8eaec; */
 }
 .know-tree-header-button {
   width: 50px;
@@ -190,6 +198,7 @@ export default {
 }
 .know-tree-header-button:hover {
   background-color: #e0e0e0;
+  transition: all 0.5s;
 }
 .know-tree-header-button-add:hover {
   color: #19be6b;
@@ -208,14 +217,17 @@ export default {
   overflow: auto;
 }
 .know-tree-main-content::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 .know-tree-main-content::-webkit-scrollbar-thumb {
   background-color: #c5c8ce;
   border-radius: 5px;
 }
 .know-tree-header-button-no-selete {
+  color: #a0a0a0;
+}
+.know-tree-header-button-no-selete:hover {
   color: #a0a0a0;
 }
 </style>

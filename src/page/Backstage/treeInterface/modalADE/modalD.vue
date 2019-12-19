@@ -16,8 +16,8 @@
             <p>{{selectNodeName.length>20?selectNodeName.substr(0,20):selectNodeName}}</p>
         </div>
         <div slot="footer">
-            <Button type="text"  @click='modalFlag=false'>取&nbsp;消</Button>
-            <Button type="error"  @click.stop="userDelfun" >删&nbsp;除</Button>
+            <Button type="info"  @click='modalFlag=false'>取&nbsp;消</Button>
+            <Button type="text"  @click.stop="userDelfun" class="know-modal-footer-del" >删&nbsp;除</Button>
         </div>
     </Modal>
 </template>
@@ -86,5 +86,14 @@
     }
     .Tips{
         color: #c5c8ce;
+    }
+    .know-modal-footer-del:hover{
+        color: #ed4014;
+    }
+    .know-modal-footer-del:focus{
+        box-shadow:0 0 0 2px rgba(237,64,20,.2)
+    }
+    .know-modal-footer-del:active{
+        color: #ed4014;
     }
 </style>

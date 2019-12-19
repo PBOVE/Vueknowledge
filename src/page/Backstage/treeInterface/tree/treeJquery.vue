@@ -143,6 +143,7 @@ export default {
         $("#" + this.StreeId + "_a").attr("title", val);
         $("#" + this.StreeId + "_span").text(val);
         this.StreeNode["name"] = val;
+        this.$emit("selectNode", 2, this.StreeNode);
       }
     },
     "treelistVal.addName": {

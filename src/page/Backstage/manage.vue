@@ -13,10 +13,16 @@
         <div class="know-manage-split" id='knowManageSplit'>
             <Split v-model="splitinit" :min='splitMin' :max='splitMax'>
                 <div slot="left" class="know-manage-split-pane">
-                    <tree-list :InnerHeight='InnerHeight-HeaderHeight'></tree-list>
+                    <tree-list
+                        :InnerHeight='InnerHeight-HeaderHeight'
+                        @MangageCallback='MangageCallback'
+                    ></tree-list>
                 </div>
                 <div slot="right" class="know-manage-split-pane know-manage-split-pane-right" >
-                    右
+                    <operate-main
+                        :InnerHeight='InnerHeight-HeaderHeight'
+                        :treeNode='treeNode'
+                    ></operate-main>
                 </div>
             </Split>
         </div>
@@ -29,8 +35,10 @@
     import treeList from './treeInterface/treelist'
     //导入 header 模板
     import mHeader from './manageheader/mHeader'
+    // 导入 操作 模板
+    import operateMain from './operate/operateMain'
     export default {
-        components:{treeList,mHeader},
+        components:{treeList,mHeader,operateMain},
         data() {
             return {
                 // 初始化 面板分割
@@ -44,7 +52,9 @@
                 // Split 最小宽度
                 splitMin: '300px',
                 //Split 最大宽度
-                splitMax: '500px'
+                splitMax: '500px',
+                //树节点
+                treeNode:''
             }
         },
         methods:{
@@ -52,6 +62,15 @@
             getInner(){
                 this.InnerHeight = window.innerHeight;
                 this.InnerWidth= window.innerWidth;
+            },
+            // 子组件 调用函数
+            MangageCallback(type,val){
+                const statusMap ={
+                    1:()=>{
+                        this.treeNode = val;
+                    }
+                };
+                statusMap[type]();
             }
         },
         mounted(){
@@ -86,7 +105,8 @@
         background-color:#fff;
     }
     .know-manage-header{
-        height: 70px; 
+        min-width:300px;
+        height: 70px;
         padding: 0 50px;
     }
     .know-manage-split{

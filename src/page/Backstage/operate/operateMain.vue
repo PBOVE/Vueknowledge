@@ -1,0 +1,104 @@
+/**
+*
+*  @author ZTiger
+*
+*/
+
+
+<template>
+  <div>
+    <div class="know-operate-mian-header-title">名称&nbsp;:&nbsp;{{treeNodename}}</div>
+    <div class="know-operate-mian-header-select">
+      <selete-button
+        ref= 'OperateSelectBu'
+        :showClientFlag="showClientFlag"
+        @oMainCallback='oMainCallback'></selete-button>
+    </div>
+    <div class="know-operate-mian-content" :style="{height:setTreeClientHeight}">
+      <show-client
+        :treeNode="treeNode"
+        :showSelectNum='showSelectNum'
+        v-show="showClientFlag"></show-client>
+    </div>
+  </div>
+</template>
+
+<script>
+// 导入operaSelete 组件
+import SeleteButton from "./operateSelete/SeleteButton";
+// 导入 展示操作 界面
+import showClient from "./operateClient/showClient";
+export default {
+  components: { SeleteButton, showClient },
+  props: ["InnerHeight", "treeNode"],
+  data() {
+    return {
+      //节点名称
+      treeNodename: "",
+      // 设置top高度
+      TopHeight: 100,
+      //展示 操作界面标志位
+      showClientFlag: false,
+      // 选择 视图
+      showSelectNum:0
+    };
+  },
+  methods: {
+    oMainCallback(type, val) {
+      const statusMap = {
+        // 选择 视图
+        1: () => {
+          this.showSelectNum = val;
+        }
+      };
+      statusMap[type]();
+    }
+  },
+  watch: {
+    treeNode: {
+      handler: function(val) {
+        if (val === "") {
+          this.treeNodename = "";
+          this.showSelectNum = 0;
+          this.showClientFlag = false;
+          return;
+        }
+        if(this.showSelectNum === 0){
+          this.$refs.OperateSelectBu.setSelectNum(1);
+           this.showSelectNum = 1;
+        }
+        this.showClientFlag = true;
+        this.treeNodename = val.name;
+      },
+      deep: true
+    }
+  },
+  computed: {
+    //设置 树 可视区 高度
+    setTreeClientHeight() {
+      return this.InnerHeight - this.TopHeight + "px";
+    }
+  }
+};
+</script>
+
+<style  scoped>
+.know-operate-mian-header-title {
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 25px;
+  padding: 5px 10px 3px 10px;
+  border-bottom: 1px solid #dcdee2;
+  background-color: #dcdee2;
+}
+.know-operate-mian-header-select {
+  line-height: 64px;
+  height: 50px;
+  padding: 0;
+}
+.know-operate-mian-content {
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 10px;
+}
+</style>
