@@ -36,10 +36,12 @@ export default {
           }
         },
         callback: {
-          beforeMouseUp: this.beforeMouseUp
+          beforeMouseUp: this.beforeMouseUp,
+          beforeDblClick: this.showChildClik,
+          beforeExpand: this.showChildClik
         }
       },
-      //点击后ztree id
+      //点击后ztree节点 id
       StreeId: "",
       // 点击后ztree 节点
       StreeNode: "",
@@ -56,24 +58,17 @@ export default {
           let data = res.data.content;
           let Arr = [];
           this.$emit("selectNode", 9, data.length);
-          data.forEach(function(item) {
+          data.forEach(item => {
             let obj = {
               id: item.id,
               name: item.name,
-              sortId:item.sortId,
+              sortId: item.sortId,
               childLen: item.childNodes.length,
               isParent: item.childNodes.length ? true : false
             };
             Arr.push(obj);
           });
-          function sortA(ObjA, ObjB) {
-            var valA = ObjA.sortId;
-            var valB = ObjB.sortId;
-            if (valA < valB) return -1;
-            else if (valA > valB) return 1;
-            else return 0;
-          }
-          this.ZNode = Arr.sort(sortA);
+          this.ZNode = Arr;
           this.createTree();
         })
         .catch(() => {
@@ -95,6 +90,14 @@ export default {
         switchObj.before(spaceStr);
       }
     },
+    // sord 排序
+    sortId(ObjA, ObjB) {
+      var valA = ObjA.sortId;
+      var valB = ObjB.sortId;
+      if (valA < valB) return -1;
+      else if (valA > valB) return 1;
+      else return 0;
+    },
     //创建 树图 修改样式
     createTree() {
       $.fn.zTree.init($("#ztreeDemo"), this.selectTreeSetting, this.ZNode);
@@ -103,11 +106,35 @@ export default {
     //点击 节点响应函数
     beforeMouseUp(treeId, treeNode) {
       if (!treeNode) return;
-      window.console.log(treeNode);
       this.StreeId = treeNode.tId;
       this.StreeNode = treeNode;
       this.$emit("selectNode", 1, true);
       this.$emit("selectNode", 2, treeNode);
+    },
+    // 双击 节点 展开 节点 函数
+    showChildClik(treeId, treeNode) {
+      if (!treeNode) return;
+      if (!treeNode.isParent || treeNode.asyncParent) return 1;
+      //异步加载 防止重复加载
+      treeNode.asyncParent = true;
+      let url = "node/" + treeNode.id + "/child";
+      this.get(url)
+        .then(res => {
+          let data = res.data.sort(this.sortId);
+          let Arr = [];
+          data.forEach(item => {
+            Arr.push({
+              id: item.id,
+              name: item.name,
+              childLen: item.childNodes.length,
+              isParent: item.childNodes.length !== 0 ? true : false
+            });
+          });
+          this.zTree.addNodes(treeNode, Arr, false);
+        })
+        .catch(() => {
+          this.$Message.error("数据获取失败");
+        });
     }
   },
   watch: {
@@ -121,11 +148,15 @@ export default {
     "treelistVal.addName": {
       handler: function(val) {
         if (this.StreeNode) {
-          this.zTree.addNodes(this.StreeNode, {
-            id: val.id,
-            name: val.name,
-            isParent: false
-          });
+          //判断 是否双击 点击过
+          if (this.showChildClik("", this.StreeNode) === 1) {
+            this.StreeNode.asyncParent = true;
+            this.zTree.addNodes(this.StreeNode, {
+              id: val.id,
+              name: val.name,
+              isParent: false
+            });
+          }
         } else {
           this.zTree.addNodes(null, {
             id: val.id,
@@ -138,6 +169,7 @@ export default {
     "treelistVal.delName": {
       handler: function() {
         this.zTree.removeNode(this.StreeNode, false);
+        this.StreeNode = "";
         this.$emit("selectNode", 1, false);
       }
     }

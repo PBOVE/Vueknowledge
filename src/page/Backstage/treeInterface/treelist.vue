@@ -41,7 +41,11 @@
         <tree-z @selectNode="TLCallback" :treelistVal="treeZ"></tree-z>
       </Content>
     </Layout>
-    <modal-a :AddModalFlag="buttonAddFlag" :treeNode="treeNode" @addNameS="TLCallback"></modal-a>
+    <modal-a 
+      :AddModalFlag="buttonAddFlag" 
+      :treeNode="treeNode" 
+      @addNameS="TLCallback"
+    ></modal-a>
     <modal-d
       :DelModalFlag="buttonDelFlag"
       :selectNodeName="selectNodeName"
@@ -133,6 +137,8 @@ export default {
         },
         // modal 删除 触发
         8: () => {
+          this.selectNodeName = ''
+          this.treeNode = '';
           this.treeZ.delName = val;
         },
         //根节点 数量 获取

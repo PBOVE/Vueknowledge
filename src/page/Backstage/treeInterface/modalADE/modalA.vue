@@ -42,8 +42,8 @@
                     return
                 }
                 let obj = {
-                    name : this.inputName,
-                    parentId : this.treeNode.id?this.treeNode.id:null,
+                    name : this.inputName.replace(/^\s+|\s+$/g,""),
+                    parentId : this.treeNode === '' ?null:this.treeNode.id,
                     sortId:(new Date().getTime()/1000/60/60-437968).toFixed(5)
                 }
                 this.post_json('node',obj).then(res=>{
