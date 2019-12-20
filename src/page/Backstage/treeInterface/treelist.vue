@@ -10,29 +10,28 @@
     <div class="know-tree-list-header-title">类层次结构</div>
     <Layout>
       <Header class="know-tree-default know-tree-header-select">
-        <Tooltip content="添加">
-          <div class="know-tree-header-button know-tree-header-button-add" @click="TLCallback(4)">
-            <Icon type="md-add" size="25" />
-          </div>
-        </Tooltip>
-        <Tooltip content="删除">
-          <div
-            class="know-tree-header-button know-tree-header-button-del"
-            :class="{'know-tree-header-button-no-selete':!SeleteNodeFlag}"
-            @click="TLCallback(5)"
-          >
-            <Icon type="md-remove" size="25" />
-          </div>
-        </Tooltip>
-        <Tooltip content="编辑">
-          <div
-            class="know-tree-header-button know-tree-header-button-exit"
-            :class="{'know-tree-header-button-no-selete':!SeleteNodeFlag}"
-            @click="TLCallback(6)"
-          >
-            <Icon type="md-create" size="25" />
-          </div>
-        </Tooltip>
+        <div class="know-tree-header-button know-tree-header-button-add" @click="TLCallback(4)">
+          <Icon type="md-add" size="20" />
+          <div class="know-tree-header-button-title">添加</div>
+        </div>
+
+        <div
+          class="know-tree-header-button know-tree-header-button-del"
+          :class="{'know-tree-header-button-no-selete':!SeleteNodeFlag}"
+          @click="TLCallback(5)"
+        >
+          <Icon type="md-remove" size="20" />
+          <div class="know-tree-header-button-title">删除</div>
+        </div>
+
+        <div
+          class="know-tree-header-button know-tree-header-button-exit"
+          :class="{'know-tree-header-button-no-selete':!SeleteNodeFlag}"
+          @click="TLCallback(6)"
+        >
+          <Icon type="md-create" size="25" />
+          <div class="know-tree-header-button-title">编辑</div>
+        </div>
       </Header>
       <Content
         class="know-tree-default know-tree-main-content"
@@ -42,11 +41,7 @@
       </Content>
     </Layout>
 
-    <modal-a
-      :AddModalFlag="buttonAddFlag"
-      :treeNode="treeNode"
-      @addNameS="TLCallback"
-    ></modal-a>
+    <modal-a :AddModalFlag="buttonAddFlag" :treeNode="treeNode" @addNameS="TLCallback"></modal-a>
     <modal-d
       :DelModalFlag="buttonDelFlag"
       :selectNodeName="selectNodeName"
@@ -95,9 +90,9 @@ export default {
         ExitName: "",
         addName: "",
         delName: ""
-			},
-			// 根节点数量
-      rootNodeNum:""
+      },
+      // 根节点数量
+      rootNodeNum: ""
     };
   },
   methods: {
@@ -111,12 +106,12 @@ export default {
         //获取点击节点的名称
         2: () => {
           let node = {
-            name:val.name,
-            id:val.id
-          }
+            name: val.name,
+            id: val.id
+          };
           this.selectNodeName = val.name;
           this.treeNode = node;
-          this.$emit('MangageCallback',1,node);
+          this.$emit("MangageCallback", 1, node);
         },
         //modal修改 触发
         3: () => {
@@ -142,15 +137,15 @@ export default {
         },
         // modal 删除 触发
         8: () => {
-          this.selectNodeName = '';
-          this.treeNode = '';
-          this.$emit('MangageCallback',1,'');
+          this.selectNodeName = "";
+          this.treeNode = "";
+          this.$emit("MangageCallback", 1, "");
           this.treeZ.delName = val;
         },
         //根节点 数量 获取
         9: () => {
-					this.rootNodeNum = val;
-				}
+          this.rootNodeNum = val;
+        }
       };
       statusMap[type]();
     }
@@ -165,8 +160,11 @@ export default {
 </script>
 
 <style  scoped>
-#know-tree-list{
-   min-width: 300px;
+.ivu-layout-header{
+  line-height: 0;
+}
+#know-tree-list {
+  min-width: 300px;
 }
 .know-tree-list-header-title {
   font-weight: bold;
@@ -180,33 +178,51 @@ export default {
   background-color: #f5f7f9;
   border-radius: 5px;
 }
+.know-tree-header-button-title{
+  display: inline-block;
+  height: 40px;
+  line-height: 40px;
+  font-size: 16px;
+  text-indent: 0.3em;
+}
 .know-tree-header-select {
+  display: flex;
+  justify-content: flex-start;
+  align-items:center;
   height: 50px;
   padding: 0;
 }
 .know-tree-header-button {
-  width: 50px;
-  height: 30px;
   box-sizing: border-box;
+  height: 40px;
+  width: 80px;
   text-align: center;
-  border-radius: 5px;
-  line-height: 30px;
-  font-size: 20px;
-  color: #505050;
-  margin: 0 15px;
   cursor: pointer;
+  border-radius: 5px;
+  margin: 0 5px;
+  display: inline-block;
+  color: #505050;
 }
 .know-tree-header-button:hover {
-  background-color: #e0e0e0;
+  background-color: #e8eaec;
   transition: all 0.5s;
 }
-.know-tree-header-button-add:hover {
+.know-tree-header-button-add:hover .ivu-icon{
   color: #19be6b;
 }
-.know-tree-header-button-del:hover {
+.know-tree-header-button-del:hover .ivu-icon{
   color: #f16643;
 }
-.know-tree-header-button-exit:hover {
+.know-tree-header-button-exit:hover .ivu-icon{
+  color: #2d8cf0;
+}
+.know-tree-header-button-add:active{
+  color: #19be6b;
+}
+.know-tree-header-button-del:active{
+  color: #f16643;
+}
+.know-tree-header-button-exit:active{
   color: #2d8cf0;
 }
 .know-tree-main-content {

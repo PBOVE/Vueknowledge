@@ -36,7 +36,8 @@ export default {
           }
         },
         callback: {
-          beforeMouseUp: this.beforeMouseUp,
+          beforeClick:this.beforeMouseUp,
+          // beforeMouseUp: this.beforeMouseUp,
           beforeDblClick: this.showChildClik,
           beforeExpand: this.showChildClik
         }
@@ -54,7 +55,6 @@ export default {
     getTreeData() {
       this.get("node")
         .then(res => {
-          window.console.log(res);
           let data = res.data.content;
           let Arr = [];
           this.$emit("selectNode", 9, data.length);

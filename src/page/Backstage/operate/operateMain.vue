@@ -16,6 +16,7 @@
     </div>
     <div class="know-operate-mian-content" :style="{height:setTreeClientHeight}">
       <show-client
+        :InnerHeight='InnerHeight'
         :treeNode="treeNode"
         :showSelectNum='showSelectNum'
         v-show="showClientFlag"></show-client>
@@ -92,7 +93,6 @@ export default {
   background-color: #dcdee2;
 }
 .know-operate-mian-header-select {
-  line-height: 64px;
   height: 50px;
   padding: 0;
 }
@@ -100,5 +100,14 @@ export default {
   background-color: #fff;
   border-radius: 5px;
   padding: 10px;
+  overflow: auto;
+}
+.know-operate-mian-content::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.know-operate-mian-content::-webkit-scrollbar-thumb {
+  background-color: #c5c8ce;
+  border-radius: 5px;
 }
 </style>

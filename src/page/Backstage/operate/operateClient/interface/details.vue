@@ -13,20 +13,24 @@
     <div class="know-operate-details-default">
       <div class="know-operate-details-title">关系&nbsp;:</div>
     </div>
-    
   </div>
 </template>
 
 <script>
 export default {
-  props: ["treeNode"],
+  props: ["treeNode", "showSelectNum"],
   data() {
-    return {};
+    return {
+      //请求数据标志位
+      getDataFlag: false
+    };
   },
   methods: {
     // 获取 服务器 节点属性 节点关系
-    getAttriBute(Id) {
-      let url = "node/" + Id;
+    getAttriBute() {
+      if (this.getDataFlag) return;
+      this.getDataFlag = true;
+      let url = "node/" + this.treeNode.id;
       this.get(url).then(res => {
         window.console.log(res);
       });
@@ -34,21 +38,25 @@ export default {
   },
   watch: {
     treeNode: {
-      handler: function(val) {
-        if (val === "") {
-          return;
+      handler: function(newval,oldval) {
+        if (newval === "" ||newval.id === oldval.id) return;
+        this.getDataFlag = false;
+        if (this.showSelectNum === 1) {
+          this.getAttriBute();
         }
-        window.console.log(val);
-        this.getAttriBute(val.id);
       },
       deep: true
+    },
+    showSelectNum(val) {
+      if (val !== 1) return;
+      this.getAttriBute();
     }
   }
 };
 </script>
 
 <style  scoped>
-.know-operate-details-default{
+.know-operate-details-default {
   margin-bottom: 10px;
 }
 .know-operate-details-title {
