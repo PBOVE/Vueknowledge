@@ -11,10 +11,12 @@
       <details-show 
         :treeNode="treeNode"
         :showSelectNum = 'showSelectNum'
+        @SClientCallback='SClientCallback'
         ></details-show>
     </div>
     <div v-show="showSelectNum === 2">
       <force-diagram
+        ref = 'forcediagram'
         :InnerHeight='InnerHeight'
         :treeNode="treeNode"
         :showSelectNum = 'showSelectNum'></force-diagram>
@@ -48,7 +50,21 @@ export default {
   data() {
     return {};
   },
-  methods: {},
+  methods: {
+     SClientCallback(type, val) {
+      const statusMap = {
+        // 名称 改变
+        1: () => {
+         this.$emit('oMainCallback',2,val);
+         this.$refs.forcediagram.setForce();
+        },
+        2:()=>{
+          this.$refs.forcediagram.setForce();
+        }
+      };
+      statusMap[type]();
+    }
+  },
   watch: {
   }
 };

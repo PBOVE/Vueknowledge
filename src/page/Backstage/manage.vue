@@ -14,6 +14,7 @@
             <Split v-model="splitinit" :min='splitMin' :max='splitMax'>
                 <div slot="left" class="know-manage-split-pane">
                     <tree-list
+                        ref='treelist'
                         :InnerHeight='InnerHeight-HeaderHeight'
                         @MangageCallback='MangageCallback'
                     ></tree-list>
@@ -22,6 +23,7 @@
                     <operate-main
                         :InnerHeight='InnerHeight-HeaderHeight'
                         :treeNode='treeNode'
+                        @MangageCallback='MangageCallback'
                     ></operate-main>
                 </div>
             </Split>
@@ -48,7 +50,7 @@
                 // 获取 innerWidth
                 InnerWidth:'',
                 // header 高度
-                HeaderHeight:70,
+                HeaderHeight:61,
                 // Split 最小宽度
                 splitMin: '300px',
                 //Split 最大宽度
@@ -68,6 +70,9 @@
                 const statusMap ={
                     1:()=>{
                         this.treeNode = val;
+                    },
+                    2: () =>{
+                        this.$refs.treelist.TLCallback(3,val);
                     }
                 };
                 statusMap[type]();
@@ -106,7 +111,7 @@
     }
     .know-manage-header{
         min-width:300px;
-        height: 70px;
+        height: 60px;
         padding: 0 50px;
     }
     .know-manage-split{

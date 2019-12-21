@@ -96,7 +96,19 @@ export function delete_string(url,params={}){
     })
   })
 }
-
+/**
+ *  封装 put json
+ */
+export function put_json(url,params={}){
+  return new Promise((resolve,reject)=>{
+    axios.put(url,JSON.stringify(params),{headers:{'Content-Type':'application/json;charset=UTF-8'}})
+    .then(res=>{
+      resolve(res.data);
+    }).catch(err=>{
+      reject(err);
+    })
+  })
+}
 
 /**
  * 请求拦截

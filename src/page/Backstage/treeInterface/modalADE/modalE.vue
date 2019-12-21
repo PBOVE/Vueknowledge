@@ -43,10 +43,11 @@
                 if(this.changeNameFlag === this.changeName||this.changeName === '')
                     return;
                 let url = 'node/'+ this.treeNodeId +'/name';
-                this.patch_json(url,{'name':this.changeName}).then(res=>{
+                let name = this.changeName.replace(/^\s+|\s+$/g,"");
+                this.patch_json(url,{'name':name}).then(res=>{
                     this.$emit('ExitNameS',3,res.data.name);
                 }).catch(() => {
-                    this.$Message.error('修改失败');
+                    this.$Message.error('编辑失败');
                 });
             },
             //监听 ctrl + ender 按键 执行函数

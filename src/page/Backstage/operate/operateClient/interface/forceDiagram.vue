@@ -73,7 +73,12 @@ export default {
         .select(this.$refs.knowForce)
         .append("svg")
         .attr("width", width)
-        .attr("height", height);
+        .attr("height", height)
+        .call(d3.zoom().on("zoom", function () {
+            g.attr("transform", d3.event.transform)
+            // g.attr('transform',"scale(" + d3.event.transform.k + "," + d3.event.transform.k + ")")
+            // console.log()
+        }));
       let g = svg.append("g");
       //设置一个color的颜色比例尺，为了让不同的扇形呈现不同的颜色
       let colorScale = d3
@@ -339,6 +344,10 @@ export default {
         }
         return sColor;
       }
+    },
+    //从新获取数据
+    setForce(){
+      this.getDataFlag = false;
     }
   },
   watch: {

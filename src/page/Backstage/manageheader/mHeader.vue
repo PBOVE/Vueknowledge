@@ -92,7 +92,7 @@
         display: flex;
         justify-content:space-between;
         align-items: center;
-        height: 70px;
+        height: 60px;
     }
     .know-header-left-logo{
         display: inline-block;
@@ -110,11 +110,11 @@
         text-indent: 0.2em;
     }
     .know-header-right{
-        line-height: 70px;
+        line-height: 60px;
     }
     .know-header-right-user{
         display: inline-block;
-        height: 70px;
+        height: 60px;
         padding: 0 20px;
         transition:  background-color 0.5s;
         cursor: pointer;

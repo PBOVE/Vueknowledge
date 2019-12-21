@@ -19,6 +19,7 @@
         :InnerHeight='InnerHeight'
         :treeNode="treeNode"
         :showSelectNum='showSelectNum'
+        @oMainCallback='oMainCallback'
         v-show="showClientFlag"></show-client>
     </div>
   </div>
@@ -50,6 +51,9 @@ export default {
         // 选择 视图
         1: () => {
           this.showSelectNum = val;
+        },
+        2: () =>{
+          this.$emit('MangageCallback',2,val);
         }
       };
       statusMap[type]();
@@ -58,6 +62,7 @@ export default {
   watch: {
     treeNode: {
       handler: function(val) {
+        // window.console.log(val)
         if (val === "") {
           this.treeNodename = "";
           this.showSelectNum = 0;
