@@ -6,7 +6,7 @@
 
 
 <template>
-  <div>
+  <div class="know-operate-details">
     <div class="know-operate-details-default">
       <div class="know-operate-details-title">属性&nbsp;:</div>
       <div class="know-details-name">
@@ -106,17 +106,17 @@
         </div>
         <div class="know-details-relation-II">
           <Icon type="md-git-commit" color="#808695" />
-            <input
-              type="text"
-              ref="RIII"
-              placeholder="请输入节点名称"
-              class="k-d-i relationadd"
-              @click="CShowInput"
-              @blur="BShowInput"
-            />
-            <!-- <div class="know-d">
-              32423423
-            </div> -->
+          <AutoComplete
+            v-model.lazy="RaNodeinput"
+            class="relationInput-II"
+            :data="searchdata"
+            @on-change='ChangeSearch'
+            @on-focus='CSerachshowInput'
+            @on-blur = 'CSerchBlurInput'
+            placeholder="请输入节点名称 "
+            element-id='relationadd-id'
+            size ='default'
+          ></AutoComplete>
         </div>
       </div>
     </div>
@@ -128,13 +128,20 @@ export default {
   props: ["treeNode", "showSelectNum"],
   data() {
     return {
+      // 获取输入框node数据
+      RaNodeinput: "",
+      //节点名称输入
+      InputNode: "",
       //请求数据标志位
       getDataFlag: false,
       // 点击inpul 获取val 防止输入空格
       oldAttrInputVal: "",
       // 获取 服务器数据
       AttrButeData: [],
-      relationData: []
+      relationData: [],
+      // 请求联想框数据
+      searchdata:[],
+
     };
   },
   methods: {
@@ -173,8 +180,28 @@ export default {
     CShowInput(e) {
       let target = e.target;
       let Ptarget = target.parentNode;
+      target.focus();
       Ptarget.style.outline = "1px solid #2db7f5";
       this.oldAttrInputVal = target.value;
+    },
+    // 搜索框点击事件
+    CSerachshowInput(e){
+      let target = e.target;
+      let Ptarget = target.parentNode.parentNode.parentNode.parentNode;
+      target.style.borderBottom = '1px solid #2db7f5'
+      Ptarget.style.outline = "1px solid #2db7f5";
+      this.searchdata = [];
+    },
+    // 搜索框失去焦点事件
+    CSerchBlurInput(e){
+      let target = e.target;
+      let Ptarget = target.parentNode.parentNode.parentNode.parentNode; 
+      target.style.borderBottom = '1px solid #e8eaec'
+      Ptarget.style.outline = "none";
+      // this.addrelation();
+       this.$nextTick(() => {
+         this.addrelation()
+       })
     },
     //失去焦点事件
     BShowInput(e) {
@@ -266,9 +293,9 @@ export default {
     // 添加 关系 数据
     addrelation() {
       let RII = this.$refs.RII;
-      let RIII = this.$refs.RIII;
+      let RIII = this.RaNodeinput;
       let Ival = RII.value.replace(/^\s+|\s+$/g, "");
-      let IIval = RIII.value.replace(/^\s+|\s+$/g, "");
+      let IIval = RIII.replace(/^\s+|\s+$/g, "");
       if (Ival !== "" && IIval !== "") {
         let url = "relation";
         let obj = {
@@ -288,7 +315,7 @@ export default {
               textId: data.node.id
             });
             RII.value = "";
-            RIII.value = "";
+            this.RaNodeinput = "";
             // 力导图 从新请求数据
             this.$emit("SClientCallback", 2);
           })
@@ -339,6 +366,27 @@ export default {
         .catch(() => {
           this.$Message.error("关系属性更新失败");
         });
+    },
+    // 根据节点 name 模糊匹配返回节点列表
+    getVagueName(val) {
+      let url = "node/name";
+      let obj = {
+        query: val,
+        size:6
+      };
+      this.get(url, obj).then(res => {
+        let data =  res.data.content;
+        this.searchdata = [];
+        data.forEach(item=>{
+          this.searchdata.push(item.name);
+        })
+      });
+    },
+    // 搜索框change事件时调用
+    ChangeSearch(){
+      let Ival = this.RaNodeinput.replace(/^\s+|\s+$/g, "");
+      if (Ival === "" ) return;
+      this.getVagueName(Ival);
     }
   },
   watch: {
@@ -346,6 +394,7 @@ export default {
       handler: function(newval, oldval) {
         if (newval === "" || newval.id === oldval.id) return;
         this.getDataFlag = false;
+        this.RaNodeinput = "";
         if (this.showSelectNum === 1) {
           this.getAttriBute();
         }
@@ -355,12 +404,16 @@ export default {
     showSelectNum(val) {
       if (val !== 1) return;
       this.getAttriBute();
-    }
+    },
+    
   }
 };
 </script>
 
-<style  scoped>
+<style>
+.know-operate-details {
+  position: relative;
+}
 .know-operate-details-default {
   margin-bottom: 20px;
   padding: 0 10px;
@@ -412,6 +465,21 @@ export default {
 .k-d-i::placeholder {
   color: #c3cbd6;
 }
+.relationInput-II .ivu-select-dropdown.ivu-auto-complete{
+  margin-left: -15px;
+}
+#relationadd-id{
+  font-size: 13px;
+  box-sizing: border-box;
+  height: 25px;
+  border-width: 0px;
+  border-radius: 0;
+  /* margin-bottom: 1px; */
+  border-bottom: 1px solid #e8eaec;
+}
+#relationadd-id:focus{
+  box-shadow:none;
+}
 .know-details-relation {
   border-bottom: 1px solid #e8eaec;
   margin-left: 5px;
@@ -429,4 +497,5 @@ export default {
 .know-details-relation .ivu-icon {
   line-height: 25px;
 }
+
 </style>
