@@ -110,8 +110,8 @@ export default {
 }
 .know-operate-mian-content {
   background-color: #fff;
-  border-radius: 5px;
-  padding: 10px;
+  border-radius: 10px;
+  padding: 0px;
   overflow: auto;
 }
 .know-operate-mian-content::-webkit-scrollbar {

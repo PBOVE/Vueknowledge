@@ -12,6 +12,7 @@
         :treeNode="treeNode"
         :showSelectNum = 'showSelectNum'
         @SClientCallback='SClientCallback'
+        class="know-Showclient-default"
         ></details-show>
     </div>
     <div v-show="showSelectNum === 2">
@@ -19,19 +20,25 @@
         ref = 'forcediagram'
         :InnerHeight='InnerHeight'
         :treeNode="treeNode"
-        :showSelectNum = 'showSelectNum'></force-diagram>
+        :showSelectNum = 'showSelectNum'
+        class="know-Showclient-default"
+        ></force-diagram>
     </div>
     <div v-show="showSelectNum === 3">
       <tree-diagram
         ref = 'treediagram'
         :InnerHeight='InnerHeight'
         :treeNode="treeNode"
-        :showSelectNum = 'showSelectNum'></tree-diagram>
+        :showSelectNum = 'showSelectNum'
+        class="know-Showclient-default"
+        ></tree-diagram>
     </div>
     <div v-show="showSelectNum === 4">
 			<journal-show
         :treeNode="treeNode"
-        :showSelectNum = 'showSelectNum'></journal-show>
+        :showSelectNum = 'showSelectNum'
+        class="know-Showclient-default"
+        ></journal-show>
 		</div>
     <div v-show="showSelectNum === 5">
       <rich-text
@@ -90,5 +97,8 @@ export default {
 <style  scoped>
 .know-Showclient{
   height: 100%;
+}
+.know-Showclient-default{
+  padding:10px;
 }
 </style>

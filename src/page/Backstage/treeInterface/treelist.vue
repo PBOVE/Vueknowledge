@@ -181,7 +181,7 @@ export default {
 }
 .know-tree-default {
   background-color: #f5f7f9;
-  border-radius: 5px;
+  border-radius: 10px;
 }
 .know-tree-header-button-title{
   display: inline-block;

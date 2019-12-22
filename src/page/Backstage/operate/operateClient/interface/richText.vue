@@ -6,45 +6,37 @@
 
 
 <template>
-  <div id='froala-editor'>
-   <editor id="tinymce" :init="init"></editor>
-  </div>
+  <div id="froala-editor"></div>
 </template>
 
 <script>
-import tinymce from 'tinymce/tinymce'
-import Editor from '@tinymce/tinymce-vue'
-import 'tinymce/themes/silver'
-// 编辑器插件plugins
-// 更多插件参考：https://www.tiny.cloud/docs/plugins/
-import 'tinymce/plugins/image'// 插入上传图片插件
-import 'tinymce/plugins/media'// 插入视频插件
-import 'tinymce/plugins/table'// 插入表格插件
-import 'tinymce/plugins/lists'// 列表插件
-import 'tinymce/plugins/wordcount'// 字数统计插件
+import FroalaEditor from "froala-editor";
+require("froala-editor/js/languages/zh_cn");
+require("froala-editor/css/froala_editor.pkgd.min.css");
+import 'froala-editor/js/plugins/align.min.js'
 
 export default {
   props: ["treeNode", "showSelectNum", "InnerHeight"],
-  components:{Editor},
   data() {
     return {
-			getDataFlag: false,
+      getDataFlag: false,
       //设置top高
-      TopHeight: 120
-		};
-	},
-	methods:{
-		//获取服务器数据
-		getExitText(){
-			if(this.getDataFlag)return;
-			this.getDataFlag = true;
-      window.console.log(132);
-      // es modules
-		}
+      TopHeight: 190
+    };
   },
-  mounted () {
-    tinymce.init({})
+  methods: {
+    //获取服务器数据
+    getExitText() {
+      if (this.getDataFlag) return;
+      this.getDataFlag = true;
+      new FroalaEditor("#froala-editor", {
+        height: this.InnerHeight - this.TopHeight,
+        language: "zh_cn",
+        toolbarButtons:[['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript'], ['fontFamily', 'fontSize', 'textColor', 'backgroundColor'], ['inlineClass', 'inlineStyle', 'clearFormatting']]
+      });
+    }
   },
+  mounted() {},
   watch: {
     treeNode: {
       handler: function(newval, oldval) {
@@ -64,5 +56,20 @@ export default {
 };
 </script>
 
-<style  scoped>
+<style>
+.fr-box.fr-basic .fr-element {
+  padding: 10px;
+  min-height: 0 !important;
+}
+.fr-box.fr-basic.fr-top .fr-wrapper {
+  box-sizing: border-box;
+}
+.fr-box.fr-basic.fr-top .fr-wrapper::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.fr-box.fr-basic.fr-top .fr-wrapper::-webkit-scrollbar-thumb {
+  background-color: #c5c8ce;
+  border-radius: 5px;
+}
 </style>

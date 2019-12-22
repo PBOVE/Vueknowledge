@@ -18,7 +18,9 @@ export default {
     return {
       getDataFlag: false,
       //设置top高
-      TopHeight: 120
+      TopHeight: 120,
+      //设置right宽度
+      RightWeight:20
     };
   },
   methods: {
@@ -89,7 +91,7 @@ export default {
     },
     //树图渲染数据
     CreateD3jsTree(dataset) {
-      let width = this.$refs.knowtree.offsetWidth;
+      let width = this.$refs.knowtree.offsetWidth - this.RightWeight;
       let height = this.$refs.knowtree.offsetHeight;
       let root = d3.hierarchy(dataset);
       let duration = 750; //时间
@@ -127,7 +129,6 @@ export default {
           })
         );
       width = width - marge.left - 100;
-      height = height - 50;
       let g = svg.append("g");
 
       let LinkAll = g.append("g");

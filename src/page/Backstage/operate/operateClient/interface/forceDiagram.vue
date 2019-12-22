@@ -19,7 +19,9 @@ export default {
       // 获取数据 标志位
       getDataFlag: false,
       //设置top高
-      TopHeight: 120
+      TopHeight: 120,
+      //设置right宽度
+      RightWeight:20
     };
   },
   methods: {
@@ -67,7 +69,7 @@ export default {
     },
     //创建 力导向图
     CreateDjsPower(nodes, edges) {
-      let width = this.$refs.knowForce.offsetWidth;
+      let width = this.$refs.knowForce.offsetWidth - this.RightWeight;
       let height = this.$refs.knowForce.offsetHeight;
       let svg = d3
         .select(this.$refs.knowForce)
