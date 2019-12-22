@@ -32,8 +32,7 @@ export default {
         .then(res => {
           if(this.$refs.knowForce.firstChild)
             this.$refs.knowForce.removeChild(this.$refs.knowForce.firstChild);
-          this.handleforceData(res.data);
-          window.console.log(res)
+            this.handleforceData(res.data);
         })
         .catch(() => {
           this.$Message.error("数据获取失败");

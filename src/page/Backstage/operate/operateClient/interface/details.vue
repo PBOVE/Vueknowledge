@@ -405,7 +405,6 @@ export default {
       if (val !== 1) return;
       this.getAttriBute();
     },
-    
   }
 };
 </script>

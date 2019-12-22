@@ -33,7 +33,13 @@
         :treeNode="treeNode"
         :showSelectNum = 'showSelectNum'></journal-show>
 		</div>
-    <div v-show="showSelectNum === 5">5</div>
+    <div v-show="showSelectNum === 5">
+      <rich-text
+        :InnerHeight='InnerHeight'
+        :treeNode="treeNode"
+        :showSelectNum = 'showSelectNum'
+      ></rich-text>
+    </div>
   </div>
 </template>
 
@@ -46,9 +52,11 @@ import journalShow from './interface/journal'
 import treeDiagram from './interface/treeDiagram'
 //导入力导图
 import forceDiagram from './interface/forceDiagram'
+//导入富文本
+import richText from './interface/richText'
 export default {
   props: ["treeNode", "showSelectNum",'InnerHeight'],
-  components: { detailsShow ,journalShow,treeDiagram,forceDiagram},
+  components: { detailsShow ,journalShow,treeDiagram,forceDiagram,richText},
   data() {
     return {};
   },
