@@ -135,16 +135,16 @@ axios.interceptors.response.use(response=> {
     router.replace({
       path:'/',
     })
-    return;
+    return Promise.reject('login');
   }
   return response;
 },error=>{
   // 对响应错误做点什么
-  if(error.response.status === 404){
-    router.replace({
-      path:'/',
-    })
-    return;
-  }
+  // if(error.response.status === 404){
+  //   router.replace({
+  //     path:'/',
+  //   })
+  //   return;
+  // }
   return Promise.reject(error);
 })

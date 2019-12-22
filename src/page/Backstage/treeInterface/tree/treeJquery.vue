@@ -19,8 +19,6 @@ export default {
   props: ["treelistVal"],
   data() {
     return {
-      // 树节点
-      ZNode: [],
       //设置 ztree 树
       selectTreeSetting: {
         view: {
@@ -36,10 +34,7 @@ export default {
           }
         },
         callback: {
-          beforeClick:this.beforeMouseUp,
-          // beforeMouseUp: this.beforeMouseUp,
-          beforeDblClick: this.showChildClik,
-          beforeExpand: this.showChildClik
+          beforeClick: this.beforeMouseUp
         }
       },
       //点击后ztree节点 id
@@ -53,25 +48,34 @@ export default {
   methods: {
     //获取服务器数据
     getTreeData() {
-      this.get("node")
+      let url = 'node';
+      let obj = {
+        size:100,
+      }
+      this.get(url,obj)
         .then(res => {
           let data = res.data.content;
-          let Arr = [];
-          this.$emit("selectNode", 9, data.length);
-          data.forEach(item => {
-            let obj = {
-              id: item.id,
-              name: item.name,
-              sortId: item.sortId,
-              childLen: item.childNodes.length,
-              isParent: item.childNodes.length ? true : false
-            };
-            Arr.push(obj);
-          });
-          this.ZNode = Arr;
-          this.createTree();
+          window.console.log(data);
+          this.createTree(BFSNode(data));
+          function BFSNode(node) {
+            let arrNode = [];
+            node.forEach(item => {
+              let childLen = item.childNodes.length;
+              let objnode = {
+                id: item.id,
+                name: item.name,
+                sortId: item.sortId,
+                childLen: childLen,
+              };
+              if(childLen){
+                objnode.children = BFSNode(item.childNodes);
+              }
+              arrNode.push(objnode);
+            });
+            return arrNode;
+          }
         })
-        .catch((err) => {
+        .catch(err => {
           window.console.log(err);
           this.$Message.error("数据获取失败");
         });
@@ -100,8 +104,8 @@ export default {
       else return 0;
     },
     //创建 树图 修改样式
-    createTree() {
-      $.fn.zTree.init($("#ztreeDemo"), this.selectTreeSetting, this.ZNode);
+    createTree(nodes) {
+      $.fn.zTree.init($("#ztreeDemo"), this.selectTreeSetting, nodes);
       this.zTree = $.fn.zTree.getZTreeObj("ztreeDemo");
     },
     //点击 节点响应函数
@@ -111,31 +115,6 @@ export default {
       this.StreeNode = treeNode;
       this.$emit("selectNode", 1, true);
       this.$emit("selectNode", 2, treeNode);
-    },
-    // 双击 节点 展开 节点 函数
-    showChildClik(treeId, treeNode) {
-      if (!treeNode) return;
-      if (!treeNode.isParent || treeNode.asyncParent) return 1;
-      //异步加载 防止重复加载
-      treeNode.asyncParent = true;
-      let url = "node/" + treeNode.id + "/child";
-      this.get(url)
-        .then(res => {
-          let data = res.data.sort(this.sortId);
-          let Arr = [];
-          data.forEach(item => {
-            Arr.push({
-              id: item.id,
-              name: item.name,
-              childLen: item.childNodes.length,
-              isParent: item.childNodes.length !== 0 ? true : false
-            });
-          });
-          this.zTree.addNodes(treeNode, Arr, false);
-        })
-        .catch(() => {
-          this.$Message.error("数据获取失败");
-        });
     }
   },
   watch: {
@@ -150,15 +129,11 @@ export default {
     "treelistVal.addName": {
       handler: function(val) {
         if (this.StreeNode) {
-          //判断 是否双击 点击过
-          if (this.showChildClik("", this.StreeNode) === 1) {
-            this.StreeNode.asyncParent = true;
-            this.zTree.addNodes(this.StreeNode, {
-              id: val.id,
-              name: val.name,
-              isParent: false
-            });
-          }
+          this.zTree.addNodes(this.StreeNode, {
+            id: val.id,
+            name: val.name,
+            isParent: false
+          });
         } else {
           this.zTree.addNodes(null, {
             id: val.id,

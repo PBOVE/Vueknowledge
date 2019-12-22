@@ -24,7 +24,7 @@ export default {
     getTreeData(){
       if (this.getDataFlag) return;
       this.getDataFlag = true;
-      let url = 'node/' + this.treeNode.id + '/child';
+      let url = 'node/' + this.treeNode.id + '/link';
       this.get(url).then(res=>{
           window.console.log(res);
       }).catch(()=>{
