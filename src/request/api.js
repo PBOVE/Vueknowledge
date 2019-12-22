@@ -131,6 +131,12 @@ axios.interceptors.request.use(
  */
 axios.interceptors.response.use(response=> {
   // 对响应数据做点什么
+  if(typeof response.data === 'string'){
+    router.replace({
+      path:'/',
+    })
+    return;
+  }
   return response;
 },error=>{
   // 对响应错误做点什么
@@ -140,7 +146,5 @@ axios.interceptors.response.use(response=> {
     })
     return;
   }
-  // window.console.log(error.response.status)
   return Promise.reject(error);
-
 })
