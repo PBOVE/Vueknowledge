@@ -71,7 +71,8 @@ export default {
           this.ZNode = Arr;
           this.createTree();
         })
-        .catch(() => {
+        .catch((err) => {
+          window.console.log(err);
           this.$Message.error("数据获取失败");
         });
     },

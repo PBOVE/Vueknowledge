@@ -401,7 +401,7 @@ export default {
   width: 100%;
   height: 25px;
   margin-left: 10px;
-  font-size: 12px;
+  font-size: 13px;
   box-sizing: border-box;
   border-width: 0px;
   outline: none;

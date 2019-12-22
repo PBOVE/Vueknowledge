@@ -29,7 +29,7 @@
           :class="{'know-tree-header-button-no-selete':!SeleteNodeFlag}"
           @click="TLCallback(6)"
         >
-          <Icon type="md-create" size="25" />
+          <Icon type="md-create" size="20" />
           <div class="know-tree-header-button-title">编辑</div>
         </div>
       </Header>
@@ -167,6 +167,7 @@ export default {
   min-width: 300px;
 }
 .know-tree-list-header-title {
+  text-align: center;
   font-weight: bold;
   font-size: 18px;
   line-height: 25px;

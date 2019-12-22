@@ -8,6 +8,7 @@ import {baseUrl} from './http'
 import axios from 'axios'
 import store from '../store'
 import qs from 'qs'
+import router from '../router'
 // 请求时间设置;
 axios.defaults.timeout = 10000;
 // 设置默认请求接口
@@ -133,7 +134,13 @@ axios.interceptors.response.use(response=> {
   return response;
 },error=>{
   // 对响应错误做点什么
-
+  if(error.response.status === 404){
+    router.replace({
+      path:'/',
+    })
+    return;
+  }
+  // window.console.log(error.response.status)
   return Promise.reject(error);
 
 })
