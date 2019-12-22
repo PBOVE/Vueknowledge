@@ -23,6 +23,8 @@
     </div>
     <div v-show="showSelectNum === 3">
       <tree-diagram
+        ref = 'treediagram'
+        :InnerHeight='InnerHeight'
         :treeNode="treeNode"
         :showSelectNum = 'showSelectNum'></tree-diagram>
     </div>
@@ -57,9 +59,16 @@ export default {
         1: () => {
          this.$emit('oMainCallback',2,val);
          this.$refs.forcediagram.setForce();
+         this.$refs.treediagram.setForce();
         },
+        // 关系节点添加
         2:()=>{
           this.$refs.forcediagram.setForce();
+        },
+        //  添加,删除,编辑 重新获取节点
+        3: () => {
+          this.$refs.forcediagram.setForce();
+          this.$refs.treediagram.setForce();
         }
       };
       statusMap[type]();

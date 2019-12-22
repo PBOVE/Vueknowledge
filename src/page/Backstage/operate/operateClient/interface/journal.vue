@@ -57,7 +57,6 @@ export default {
     },
     // 处理并且渲染 数据
     handleJournalData(data) {
-      window.console.log(data);
       data.forEach(item => {
         let dateStart = new Date(item.createTime);
         let dateEnd = new Date();

@@ -117,6 +117,7 @@ export default {
         3: () => {
           this.treeZ.ExitName = val;
           this.selectNodeName = val;
+          this.$emit("MangageCallback", 3, Math.random());
         },
         4: () => {
           this.buttonAddFlag = Math.random();
@@ -134,13 +135,16 @@ export default {
         // modal 创建 触发
         7: () => {
           this.treeZ.addName = val;
+          this.$emit("MangageCallback", 3, Math.random());
         },
         // modal 删除 触发
         8: () => {
           this.selectNodeName = "";
           this.treeNode = "";
           this.$emit("MangageCallback", 1, "");
+          this.$emit("MangageCallback", 3, Math.random());
           this.treeZ.delName = val;
+
         },
         //根节点 数量 获取
         9: () => {

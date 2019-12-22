@@ -316,7 +316,7 @@ export default {
             });
             RII.value = "";
             this.RaNodeinput = "";
-            // 力导图 从新请求数据
+            // 力导图 树图 从新请求数据
             this.$emit("SClientCallback", 2);
           })
           .catch(() => {
@@ -332,7 +332,7 @@ export default {
       this.delete_string(url)
         .then(() => {
           this.relationData.splice(index, 1);
-          // 力导图 从新请求数据
+          // 力导图 树图 从新请求数据
           this.$emit("SClientCallback", 2);
         })
         .catch(() => {
@@ -360,7 +360,7 @@ export default {
             text: data.node.name,
             textId: data.node.id
           });
-          // 力导图 从新请求数据
+          // 力导图 树图 从新请求数据
           this.$emit("SClientCallback", 2);
         })
         .catch(() => {

@@ -21,6 +21,7 @@
                 </div>
                 <div slot="right" class="know-manage-split-pane know-manage-split-pane-right" >
                     <operate-main
+                        ref = 'operatemain'
                         :InnerHeight='InnerHeight-HeaderHeight'
                         :treeNode='treeNode'
                         @MangageCallback='MangageCallback'
@@ -73,6 +74,10 @@
                     },
                     2: () =>{
                         this.$refs.treelist.TLCallback(3,val);
+                    },
+                    //  添加,删除,编辑 重新获取节点
+                    3:() =>{
+                        this.$refs.operatemain.oMainCallback(3,val);
                     }
                 };
                 statusMap[type]();

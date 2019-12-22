@@ -10,17 +10,20 @@
     <div class="know-operate-mian-header-title">名称&nbsp;:&nbsp;{{treeNodename}}</div>
     <div class="know-operate-mian-header-select">
       <selete-button
-        ref= 'OperateSelectBu'
+        ref="OperateSelectBu"
         :showClientFlag="showClientFlag"
-        @oMainCallback='oMainCallback'></selete-button>
+        @oMainCallback="oMainCallback"
+      ></selete-button>
     </div>
     <div class="know-operate-mian-content" :style="{height:setTreeClientHeight}">
       <show-client
-        :InnerHeight='InnerHeight'
+        ref = 'showclient'
+        :InnerHeight="InnerHeight"
         :treeNode="treeNode"
-        :showSelectNum='showSelectNum'
-        @oMainCallback='oMainCallback'
-        v-show="showClientFlag"></show-client>
+        :showSelectNum="showSelectNum"
+        @oMainCallback="oMainCallback"
+        v-show="showClientFlag"
+      ></show-client>
     </div>
   </div>
 </template>
@@ -42,7 +45,7 @@ export default {
       //展示 操作界面标志位
       showClientFlag: false,
       // 选择 视图
-      showSelectNum:0
+      showSelectNum: 0
     };
   },
   methods: {
@@ -52,8 +55,12 @@ export default {
         1: () => {
           this.showSelectNum = val;
         },
-        2: () =>{
-          this.$emit('MangageCallback',2,val);
+        2: () => {
+          this.$emit("MangageCallback", 2, val);
+        },
+        //  添加,删除,编辑 重新获取节点
+        3: () => {
+          this.$refs.showclient.SClientCallback(3,val);
         }
       };
       statusMap[type]();
@@ -69,9 +76,9 @@ export default {
           this.showClientFlag = false;
           return;
         }
-        if(this.showSelectNum === 0){
+        if (this.showSelectNum === 0) {
           this.$refs.OperateSelectBu.setSelectNum(1);
-           this.showSelectNum = 1;
+          this.showSelectNum = 1;
         }
         this.showClientFlag = true;
         this.treeNodename = val.name;
