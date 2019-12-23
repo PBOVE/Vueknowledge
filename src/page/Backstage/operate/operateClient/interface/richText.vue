@@ -246,7 +246,7 @@ export default {
 .uploadColor {
   color: #2d8cf0;
 }
-.fr-wrapper>div[style*='/* z-index:9999'] {
+.fr-wrapper>div[style*='z-index:9999'] {
     position: absolute;
     top: -10000px;
     opacity: 0;
@@ -254,7 +254,7 @@ export default {
 .fr-box.fr-basic .fr-element {
    margin-top: -41px;
 }
-.fr-box.fr-basic .fr-placeholder{
+/* .fr-box.fr-basic .fr-placeholder{
     margin-top: -41px!important;
-}
+} */
 </style>
