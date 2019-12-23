@@ -246,7 +246,7 @@ export default {
 .uploadColor {
   color: #2d8cf0;
 }
-.fr-wrapper>div[style*='z-index:9999'] {
+.fr-wrapper>div[style*='/* z-index:9999'] {
     position: absolute;
     top: -10000px;
     opacity: 0;
