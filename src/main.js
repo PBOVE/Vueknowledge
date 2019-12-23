@@ -10,16 +10,18 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-import {get,post_json, post_string,patch_string,post_text,patch_json,delete_string,put_json} from './request/api'
+import {get,post_json, post_string,patch_string,post_text,patch_json,delete_json,delete_string,put_json} from './request/api'
 
 Vue.prototype.get = get;
 Vue.prototype.post_json = post_json;
 Vue.prototype. post_string =  post_string;
+Vue.prototype.post_text = post_text;
 Vue.prototype.patch_string = patch_string;
 Vue.prototype.patch_json = patch_json;
 Vue.prototype.delete_string = delete_string;
+Vue.prototype.delete_json = delete_json
 Vue.prototype.put_json = put_json;
-Vue.prototype.post_text = post_text;
+
 
 
 Vue.config.productionTip = false

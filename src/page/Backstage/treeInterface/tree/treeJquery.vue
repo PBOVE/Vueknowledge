@@ -24,7 +24,7 @@ export default {
         view: {
           howLine: false,
           showIcon: false,
-          selectedMulti: false,
+          selectedMulti: true,
           dblClickExpand: true,
           addDiyDom: this.addDiyDom
         },
@@ -34,10 +34,11 @@ export default {
           }
         },
         callback: {
-          beforeClick:this.beforeMouseUp,
+          // beforeClick:this.beforeMouseUp,
           // beforeMouseUp: this.beforeMouseUp,
           beforeDblClick: this.showChildClik,
-          beforeExpand: this.showChildClik
+          beforeExpand: this.showChildClik,
+          onClick: this.zTreeOnClick
         }
       },
       //点击后ztree节点 id
@@ -68,7 +69,7 @@ export default {
           });
           this.createTree(Arr);
         })
-        .catch((err) => {
+        .catch(err => {
           window.console.log(err);
           this.$Message.error("数据获取失败");
         });
@@ -101,7 +102,7 @@ export default {
       $.fn.zTree.init($("#ztreeDemo"), this.selectTreeSetting, nodes);
       this.zTree = $.fn.zTree.getZTreeObj("ztreeDemo");
     },
-    //点击 节点响应函数
+    //点击 节点 前 响应函数
     beforeMouseUp(treeId, treeNode) {
       if (!treeNode) return;
       this.StreeId = treeNode.tId;
@@ -128,12 +129,25 @@ export default {
               isParent: item.childNodes.length !== 0 ? true : false
             });
           });
-          
+
           this.zTree.addNodes(treeNode, Arr, false);
         })
         .catch(() => {
           this.$Message.error("数据获取失败");
         });
+    },
+    // 点击 节点 后
+    zTreeOnClick(event, treeId, treeNode) {
+      if (!treeNode) return;
+      else if (event.ctrlKey) {
+        this.$emit("selectNode", 10,this.zTree.getSelectedNodes());
+      } else {
+        this.StreeId = treeNode.tId;
+        this.StreeNode = treeNode;
+        this.$emit("selectNode", 1, true);
+        this.$emit("selectNode", 2, treeNode);
+        this.$emit("selectNode", 11,[]);
+      }
     }
   },
   watch: {

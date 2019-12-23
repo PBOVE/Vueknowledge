@@ -10,7 +10,10 @@
     <div class="know-tree-list-header-title">类层次结构</div>
     <Layout>
       <Header class="know-tree-default know-tree-header-select">
-        <div class="know-tree-header-button know-tree-header-button-add" @click="TLCallback(4)">
+        <div class="know-tree-header-button know-tree-header-button-add" 
+          @click="TLCallback(4)"
+          :class="{'know-tree-header-button-no-selete':ctrlButtonFlag}"
+          >
           <Icon type="md-add" size="20" />
           <div class="know-tree-header-button-title">添加</div>
         </div>
@@ -26,7 +29,7 @@
 
         <div
           class="know-tree-header-button know-tree-header-button-exit"
-          :class="{'know-tree-header-button-no-selete':!SeleteNodeFlag}"
+          :class="{'know-tree-header-button-no-selete':!SeleteNodeFlag||ctrlButtonFlag}"
           @click="TLCallback(6)"
         >
           <Icon type="md-create" size="20" />
@@ -46,6 +49,7 @@
       :DelModalFlag="buttonDelFlag"
       :selectNodeName="selectNodeName"
       :treeNodeId="treeNode.id"
+      :selectNodes='selectNodes'
       @addNameS="TLCallback"
     ></modal-d>
     <modal-e
@@ -71,6 +75,8 @@ export default {
   props: ["InnerHeight"],
   data() {
     return {
+      // ctrl 点击标志 位
+      ctrlButtonFlag:false,
       // 点击 添加标志 位
       buttonAddFlag: "",
       // 点击 删除标志 位
@@ -92,7 +98,9 @@ export default {
         delName: ""
       },
       // 根节点数量
-      rootNodeNum: ""
+      rootNodeNum: "",
+      // 选择多个节点 id + name
+      selectNodes:[]
     };
   },
   methods: {
@@ -119,16 +127,20 @@ export default {
           this.selectNodeName = val;
           this.$emit("MangageCallback", 3, Math.random());
         },
+        // 点击 添加按键
         4: () => {
-          this.buttonAddFlag = Math.random();
+          if(!this.ctrlButtonFlag)
+            this.buttonAddFlag = Math.random();
         },
+        // 点击 删除 按键
         5: () => {
           if (this.SeleteNodeFlag) {
             this.buttonDelFlag = Math.random();
           }
         },
+        // 点击 编辑 按键
         6: () => {
-          if (this.SeleteNodeFlag) {
+          if (this.SeleteNodeFlag&&!this.ctrlButtonFlag) {
             this.buttonExitFlag = Math.random();
           }
         },
@@ -144,15 +156,26 @@ export default {
           this.$emit("MangageCallback", 1, "");
           this.$emit("MangageCallback", 3, Math.random());
           this.treeZ.delName = val;
-
         },
         //根节点 数量 获取
         9: () => {
           this.rootNodeNum = val;
+        },
+        //ctrl 按下标志位置
+        10: () => {
+          this.ctrlButtonFlag = true;
+          this.SeleteNodeFlag = true;
+          this.selectNodes = val;
+        },
+        //ctrl 抬起标志位置
+        11: () => {
+          this.ctrlButtonFlag = false;
+          this.selectNodes = val;
         }
       };
       statusMap[type]();
-    }
+    },
+ 
   },
   computed: {
     //设置 树 可视区 高度
@@ -164,7 +187,7 @@ export default {
 </script>
 
 <style  scoped>
-.ivu-layout-header{
+.ivu-layout-header {
   line-height: 0;
 }
 #know-tree-list {
@@ -183,7 +206,7 @@ export default {
   background-color: #f5f7f9;
   border-radius: 10px;
 }
-.know-tree-header-button-title{
+.know-tree-header-button-title {
   display: inline-block;
   height: 40px;
   line-height: 40px;
@@ -193,7 +216,7 @@ export default {
 .know-tree-header-select {
   display: flex;
   justify-content: flex-start;
-  align-items:center;
+  align-items: center;
   height: 50px;
   padding: 0;
 }
@@ -212,22 +235,22 @@ export default {
   background-color: #e8eaec;
   transition: all 0.5s;
 }
-.know-tree-header-button-add:hover .ivu-icon{
+.know-tree-header-button-add:hover .ivu-icon {
   color: #19be6b;
 }
-.know-tree-header-button-del:hover .ivu-icon{
+.know-tree-header-button-del:hover .ivu-icon {
   color: #f16643;
 }
-.know-tree-header-button-exit:hover .ivu-icon{
+.know-tree-header-button-exit:hover .ivu-icon {
   color: #2d8cf0;
 }
-.know-tree-header-button-add:active{
+.know-tree-header-button-add:active {
   color: #19be6b;
 }
-.know-tree-header-button-del:active{
+.know-tree-header-button-del:active {
   color: #f16643;
 }
-.know-tree-header-button-exit:active{
+.know-tree-header-button-exit:active {
   color: #2d8cf0;
 }
 .know-tree-main-content {

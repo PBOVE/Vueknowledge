@@ -90,7 +90,7 @@ export function patch_string(url, params = {}) {
 */
 export function patch_json(url, params = {}) {
   return new Promise((resolve, reject) => {
-    axios.patch(url, JSON.stringify(params), { headers: { 'Content-Type': 'application/json;charset=UTF-8' } })
+    axios.patch(url, (params), { headers: { 'Content-Type': 'application/json;charset=UTF-8' } })
       .then(res => {
         resolve(res.data);
       }).catch(err => {
@@ -104,6 +104,20 @@ export function patch_json(url, params = {}) {
 export function delete_string(url, params = {}) {
   return new Promise((resolve, reject) => {
     axios.delete(url, qs.stringify(params), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+      .then(res => {
+        resolve(res.data);
+      }).catch(err => {
+        reject(err);
+      })
+  })
+}
+/**
+ * 封装delete json
+ */
+export function delete_json(url, params = {}) {
+  return new Promise((resolve, reject) => {
+    window.console.log(JSON.stringify(params));
+    axios.delete(url, JSON.stringify(params), { headers: { 'Content-Type': 'application/json' } })
       .then(res => {
         resolve(res.data);
       }).catch(err => {

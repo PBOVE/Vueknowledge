@@ -7,7 +7,7 @@
 
 <template>
   <div id="know-fourzerofour">
-    <img src="../../assets/images/404.jpg" alt />
+    <a class='redbagclass' ondragstart='return false;' href='javascript:void(0);'><img src="../../assets/images/404.jpg" /></a>
   </div>
 </template>
 
@@ -27,13 +27,13 @@ export default {
   justify-content: center;
   align-content: center;
 }
-#know-fourzerofour img {
+#know-fourzerofour a {
   display: block;
   margin: auto;
+  user-select: none;
 }
 @media screen and (max-height: 650px) {
-  #know-fourzerofour img {
-    display: block;
+  #know-fourzerofour a {
     width: 100%;
     height: 100%;
   }
