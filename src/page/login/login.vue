@@ -236,8 +236,14 @@ export default {
         password: "",
         RepeatPassword: ""
       },
-      //防止 多次提交
-      submitFlag: false
+      //防止 多次注册提交
+      submitFlag: false,
+      //防止 多次登陆错误信息
+      repeatFrom: {
+        username: "",
+        password: "",
+        remeberMe: false
+      }
     };
   },
   methods: {
@@ -252,7 +258,13 @@ export default {
         case 1:
           this.formlogin = {
             username: "",
-            password: ""
+            password: "",
+            remeberMe: false
+          };
+          this.repeatFrom = {
+            username: "",
+            password: "",
+            remeberMe: false
           };
           this.showLoginRegister = true;
           break;
@@ -291,14 +303,29 @@ export default {
         this.showpasswordwarn = true;
         return;
       }
-      if (this.submitFlag) return;
-      this.submitFlag = true;
+      if (
+        this.repeatFrom.username === this.formlogin.username &&
+        this.repeatFrom.password === this.formlogin.password &&
+        this.repeatFrom.remeberMe === this.formlogin.remeberMe
+      ) {
+        this.$Message.warning({
+          content: "请不要重复提交!",
+          duration: 2
+        });
+        return;
+      }
+      this.repeatFrom = {
+        username: this.formlogin.username,
+        password: this.formlogin.password,
+        remeberMe: this.formlogin.remeberMe
+      };
       let register = {
         username: this.formlogin.username,
         password: this.formlogin.password,
         "remember-me": this.formlogin.remeberMe ? "on" : "off"
       };
-      this.post_string("user/login", register)
+      let url = "user/login";
+      this.post_string(url, register)
         .then(res => {
           if (res.code === 0 && res.msg === "Success") {
             // this.$store.getters.getToken
@@ -310,10 +337,8 @@ export default {
             let data = res.data;
             this.$store.commit("setUserData", data);
           });
-        })
-        .catch(() => {
-          this.submitFlag = false;
-          this.error();
+        }).catch(()=>{
+
         });
     },
     // 注册
@@ -348,7 +373,6 @@ export default {
         })
         .catch(() => {
           this.submitFlag = false;
-          this.$Message.error("注册错误");
         });
     },
     //检测 信息 有误 change
@@ -485,14 +509,7 @@ export default {
           let data = res.data;
           this.$store.commit("setUserData", data);
         }
-      });
-    },
-    // 账号 或 密码 错误
-    error() {
-      this.$Notice.error({
-        title: "错误",
-        desc: "账号或密码 错误<br/>请重新输入正确的账号或密码"
-      });
+      }).catch(()=>{});
     }
   },
   mounted() {

@@ -171,10 +171,8 @@ export default {
               });
             });
           });
+        }).catch(()=>{
         })
-        .catch(() => {
-          this.$Message.error("数据获取失败");
-        });
     },
     //点击 事件
     CShowInput(e) {
@@ -232,10 +230,8 @@ export default {
         this.patch_json(url, { name: Ival })
           .then(res => {
             this.$emit("SClientCallback", 1, res.data.name);
-          })
-          .catch(() => {
-            this.$Message.error("更新名称失败");
-          });
+          }).catch(()=>{
+        })
       }
     },
     // 添加 属性
@@ -249,10 +245,8 @@ export default {
       this.put_json(url, obj)
         .then(() => {
           target.value = "";
+        }).catch(()=>{
         })
-        .catch(() => {
-          this.$Message.error("添加属性失败");
-        });
     },
     //改变属性名称
     changExit(Ival, target) {
@@ -269,7 +263,6 @@ export default {
         .then(() => {})
         .catch(() => {
           this.$set(this.AttrButeData, id, oldVal);
-          this.$Message.error("编辑属性失败");
         });
     },
     // 删除属性数据
@@ -287,7 +280,6 @@ export default {
         .then(() => {})
         .catch(() => {
           this.AttrButeData.splice(id, 0, oldAttr);
-          this.$Message.error("删除属性失败");
         });
     },
     // 添加 关系 数据
@@ -318,10 +310,8 @@ export default {
             this.RaNodeinput = "";
             // 力导图 树图 从新请求数据
             this.$emit("SClientCallback", 2);
-          })
-          .catch(() => {
-            this.$Message.error("关系添加失败");
-          });
+          }).catch(()=>{
+        })
       }
     },
     // 删除 关系 数据
@@ -334,10 +324,7 @@ export default {
           this.relationData.splice(index, 1);
           // 力导图 树图 从新请求数据
           this.$emit("SClientCallback", 2);
-        })
-        .catch(() => {
-          this.$Message.error("关系删除失败");
-        });
+        }).catch(()=>{})
     },
     // 更新 关系 属性
     putRelationAttr(Ival, target) {
@@ -362,10 +349,8 @@ export default {
           });
           // 力导图 树图 从新请求数据
           this.$emit("SClientCallback", 2);
+        }).catch(()=>{
         })
-        .catch(() => {
-          this.$Message.error("关系属性更新失败");
-        });
     },
     // 根据节点 name 模糊匹配返回节点列表
     getVagueName(val) {
@@ -380,7 +365,8 @@ export default {
         data.forEach(item=>{
           this.searchdata.push(item.name);
         })
-      });
+      }).catch(()=>{
+        });
     },
     // 搜索框change事件时调用
     ChangeSearch(){

@@ -9,10 +9,34 @@ import axios from 'axios'
 import store from '../store'
 import qs from 'qs'
 import router from '../router'
+import {Message} from 'view-design'
+
 // 请求时间设置;
 axios.defaults.timeout = 10000;
 // 设置默认请求接口
 axios.defaults.baseURL = baseUrl;
+
+const showStatus =  (err) =>{
+  switch (err) {
+    case 400:
+      notify('error', '请确认输入的密码!');
+      break;
+    case 401:
+      notify('error', '账号或密码错误');
+      break;
+    case 6003:
+      notify('error','登录失效,请重新登录');
+      break;
+    default :
+      notify('error', '错误 请输入');
+      break;
+    }
+}
+const notify = (type, msg, duration = 3) => {
+  Message[type]({content:msg, duration:duration});
+};
+
+
 
 
 /**
@@ -164,19 +188,14 @@ axios.interceptors.response.use(response => {
   if (typeof data === 'string') {
     router.replace({
       path: '/',
-    })
-    return Promise.reject('error');
+    });
+    showStatus(6003)
+    return Promise.reject();
   }else if(data.code === 0 && data.msg === 'Success'){
     return response;
   }
-  else return Promise.reject('error');
+  else return Promise.reject();
 }, error => {
-  // 对响应错误做点什么
-  // if(error.response.status === 404){
-  //   router.replace({
-  //     path:'/',
-  //   })
-  //   return;
-  // }
-  return Promise.reject(error);
+  showStatus(error.response.status)
+  return Promise.reject();
 })

@@ -106,10 +106,7 @@ export default {
         this.delete_json(url, obj)
           .then(() => {
             this.$emit("addNameS", 12, Math.random());
-          })
-          .catch(() => {
-            this.$Message.error("删除失败");
-          });
+          }).catch(()=>{})
       }
     },
     //监听 ctrl + ender 按键 执行函数

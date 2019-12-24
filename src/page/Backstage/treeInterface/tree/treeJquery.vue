@@ -68,11 +68,7 @@ export default {
             Arr.push(obj);
           });
           this.createTree(Arr);
-        })
-        .catch(err => {
-          window.console.log(err);
-          this.$Message.error("数据获取失败");
-        });
+        }).catch(()=>{})
     },
     //添加节点 修改样式
     addDiyDom(treeId, treeNode) {
@@ -131,10 +127,7 @@ export default {
           });
 
           this.zTree.addNodes(treeNode, Arr, false);
-        })
-        .catch(() => {
-          this.$Message.error("数据获取失败");
-        });
+        }).catch(()=>{})
     },
     // 点击 节点 后
     zTreeOnClick(event, treeId, treeNode) {

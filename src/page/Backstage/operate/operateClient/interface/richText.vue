@@ -159,10 +159,7 @@ export default {
           this.post_text(url, getHtmlEdit)
             .then(() => {
               this.uploadSuccesss();
-            })
-            .catch(() => {
-              this.$Message.error("富文本内容保存失败");
-            });
+            }).catch(()=>{})
         }
       });
     },
@@ -174,10 +171,7 @@ export default {
           if (res.data) {
             this.editor.html.insert(res.data);
           }
-        })
-        .catch(() => {
-          this.$Message.error("富文本内容获取失败");
-        });
+        }).catch(()=>{})
     },
     //设置上传成功
     uploadSuccesss() {

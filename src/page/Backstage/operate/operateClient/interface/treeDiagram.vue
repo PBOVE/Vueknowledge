@@ -43,10 +43,7 @@ export default {
               this.$refs.knowtree.removeChild(this.$refs.knowtree.firstChild);
             this.CreateD3jsTree(treeData);
           });
-        })
-        .catch(() => {
-          this.$Message.error("数据获取失败");
-        });
+        }).catch(()=>{})
     },
     //子节点处理
     ChildNodeProcessing(child) {

@@ -7,9 +7,6 @@
 
 <template>
   <Modal v-model="modalCPFalg" width="32%" :styles="{top: '25%'}" :mask-closable="false">
-    <Spin fix  v-show="spinShow">
-      <div>{{spinShowTips}}</div> 
-    </Spin>
     <p slot="header" style="color:#2d8cf0;text-align:center">
       <Icon type="ios-information-circle"></Icon>
       <span>&nbsp;&nbsp;&nbsp;密码修改</span>
@@ -28,7 +25,7 @@
           :class="{'K-H-C-P-I-W':changeoldPass}"
           @on-change="changeModalInput(1)"
           @on-blur="blurModalInput(1)"
-          @on-enter='submitChange'
+          @on-enter="submitChange"
         />
         <div class="k-h-C-P-W" v-show="changeoldPass">
           <Icon type="ios-information-circle" size="17" color="#f5222d" />&nbsp;&nbsp;&nbsp;请输入旧密码!
@@ -48,7 +45,7 @@
             :class="{'K-H-C-P-I-W':changenewPass}"
             @on-change="changeModalInput(2)"
             @on-blur="blurModalInput(2)"
-            @on-enter='submitChange'
+            @on-enter="submitChange"
           />
           <div slot="content">
             <div class="k-h-C-P-I-C">
@@ -79,7 +76,7 @@
           :class="{'K-H-C-P-I-W':changerepeatPassr}"
           @on-change="changeModalInput(3)"
           @on-blur="blurModalInput(3)"
-          @on-enter='submitChange'
+          @on-enter="submitChange"
         />
         <div class="k-h-C-P-W" v-show="changerepeatPassr">
           <Icon type="ios-information-circle" size="17" color="#f5222d" />
@@ -99,10 +96,8 @@ export default {
   props: ["modalCFalg"],
   data() {
     return {
-      // 加载框标志符号
-      spinShow:false,
       //加载框标志信息
-      spinShowTips: 'Loading...',
+      spinShowTips: "Loading...",
       //修改密码 遮罩层 标志位
       modalCPFalg: false,
       //修改 旧密码 标志位
@@ -145,7 +140,12 @@ export default {
       //展示错误文字信息
       changehowPassword: "请输入新密码!",
       //展示 重复 密码 标志位
-      changeRepeatPasswordFalg: false
+      changeRepeatPasswordFalg: false,
+      // 防止重复 提交
+      repeatFrom: {
+        oldPass: "",
+        newPass: "",
+      }
     };
   },
   methods: {
@@ -161,26 +161,32 @@ export default {
         this.changerepeatPassr = true;
         this.changeRepeatPasswordFalg = false;
       }
-
       if (this.changeoldPass || this.changenewPass || this.changerepeatPassr) {
         return;
       }
-      this.spinShow = true;
+      if(this.repeatFrom.oldPass === this.fromCPass.oldPass && this.repeatFrom.newPass === this.fromCPass.newPass){
+        this.$Message.warning({
+          content:'请不要重复提交!',
+          duration:2
+        })
+        return;
+      }
+      this. repeatFrom = {
+        oldPass: this.fromCPass.oldPass,
+        newPass: this.fromCPass.newPass,
+      }
       let userJson = this.$store.state.user;
       let userId = JSON.parse(userJson).id;
-      this.patch_string("user/" + userId + "/password", {
+      let url = "user/" + userId + "/password";
+      let obj = {
         srcPassword: this.fromCPass.oldPass,
         password: this.fromCPass.newPass
-      }).then(() => {
-        this.modalCPFalg = false;
-        this.spinShow = false;
-      }).catch(() =>{
-        setTimeout(()=>{
-          this.spinShowTips = 'Loading...';
-          this.spinShow = false;
-        },3000)
-        this.spinShowTips = '旧密码错误';
-      })
+      }
+      this.patch_string(url, obj)
+        .then(() => {
+          this.modalCPFalg = false;
+        }).catch(()=>{
+        })
     },
     //change 事件改变
     changeModalInput(val) {
@@ -309,6 +315,10 @@ export default {
         newPass: "",
         RepeatPass: ""
       };
+      this.repeatFrom = {
+        oldPass: "",
+        newPass: "",
+      };
       this.changeoldPass = false;
       this.changenewPass = false;
       this.changerepeatPassr = false;
@@ -325,11 +335,12 @@ export default {
 .k-h-C-P {
   margin-top: 20px;
 }
-.k-h-C-P .ivu-poptip,.k-h-C-P  .ivu-poptip-rel{
+.k-h-C-P .ivu-poptip,
+.k-h-C-P .ivu-poptip-rel {
   width: 100%;
 }
 .k-h-C-P-I {
-  width:100%;
+  width: 100%;
 }
 .k-h-C-P-I-C {
   text-align: left;

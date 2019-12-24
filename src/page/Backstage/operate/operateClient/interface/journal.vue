@@ -45,10 +45,7 @@ export default {
       this.get(url)
         .then(res => {
           this.handleJournalData(res.data.content);
-        })
-        .catch(() => {
-          this.$Message.error("数据获取失败");
-        });
+        }).catch(()=>{})
     },
     // 设置重新获取数据
     setJournal() {
