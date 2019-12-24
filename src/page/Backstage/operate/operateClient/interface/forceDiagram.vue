@@ -88,7 +88,6 @@ export default {
           "#f9320c",
           "#00b9f1",
           "#f9c00c",
-          "#71226e",
           "#c886e5",
           "#bd83ce",
           "#EC6A5C",
@@ -126,10 +125,10 @@ export default {
         .attr("id", "resolved")
         .attr("markerUnits", "userSpaceOnUse")
         .attr("viewBox", "0 -5 10 10") //坐标系的区域
-        .attr("refX", 33) //箭头坐标
+        .attr("refX", 22) //箭头坐标
         .attr("refY", 0)
-        .attr("markerWidth", 10) //标识的大小
-        .attr("markerHeight", 10)
+        .attr("markerWidth", 15) //标识的大小
+        .attr("markerHeight", 15)
         .attr("orient", "auto") //绘制方向，可设定为：auto（自动确认方向）和 角度值
         .attr("stroke-width", 10) //箭头宽度
         .append("path")
@@ -140,10 +139,10 @@ export default {
         .attr("id", "resolvedI")
         .attr("markerUnits", "userSpaceOnUse")
         .attr("viewBox", "0 -5 10 10") //坐标系的区域
-        .attr("refX", -24) //箭头坐标
+        .attr("refX", -10) //箭头坐标
         .attr("refY", 0)
-        .attr("markerWidth", 10) //标识的大小
-        .attr("markerHeight", 10)
+        .attr("markerWidth", 15) //标识的大小
+        .attr("markerHeight", 15)
         .attr("orient", "auto") //绘制方向，可设定为：auto（自动确认方向）和 角度值
         .attr("stroke-width", 3) //箭头宽度
         .append("path")
@@ -161,7 +160,7 @@ export default {
         })
         .attr("stroke", "#8B8989")
         .style("pointer-events", "none")
-        .attr("stroke-width", 1)
+        .attr("stroke-width", 5)
         .attr("marker-end", function(d) {
           return d.relation === "parent-relation" ? "" : "url(#resolved)";
         })
@@ -175,11 +174,11 @@ export default {
         .data(edges)
         .enter()
         .append("g")
-        .attr("fill", "#fff")
+        .style("fill", "#fff")
         .append("text")
         .style("pointer-events", "none")
         .attr("dx", 50)
-        .attr("dy", 8);
+        .attr("dy", -8);
 
       linksText
         .append("textPath")
@@ -229,7 +228,7 @@ export default {
           let randomColor = d.PNid !== undefined ? d.PNid + 1 : 0;
           return colorRgba(colorScale(randomColor), 1);
         })
-        .style("stroke-width", 5)
+        .style("stroke-width", 10)
         .style("cursor", "pointer")
         .attr("stroke", function(d) {
           let randomColor = d.PNid !== undefined ? d.PNid + 1 : 0;
@@ -241,31 +240,39 @@ export default {
         });
       //文字
       gs.append("text")
-        .attr("dy", 4)
+        .attr("dy", function(d,i){
+          return i===0?5:4;
+        })
         .attr("dx", function(d, j) {
           let lenStr = 0;
-          for (let i = 0; i < d.name.length; i++) {
+          let Chinese = 10;
+          let English = 3;
+          let Namelength = d.name.length;
+          for (let i = 0; i < Namelength; i++) {
             let c = d.name.charCodeAt(i);
-            if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f))
-              lenStr = lenStr + 3;
-            else lenStr += 10;
-            if (i + 1 != d.name.length && i == 3) {
-              if (lenStr > 20) lenStr -= 0;
-              else {
-                lenStr += 8;
+            if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)){
+              lenStr = lenStr + English;
+            }else {
+              if(j === 0){
+                lenStr += Chinese + 5;
+              }else {
+                lenStr += Chinese ;
               }
+            }
+            if (i + 1 != d.name.length && i === 3) {
+              lenStr += 0
               break;
             }
           }
 
-          return j === 0 ? (-1 * (lenStr + 10)) / 2 : (-1 * lenStr) / 2;
+          return (-1 * lenStr) / 2;
         })
         .style("fill", "#fdfdfd")
         .style("font-size", function(d, i) {
           return i === 0 ? "15px" : "10px";
         })
         .text(function(d) {
-          return d.name.length > 4 ? d.name.substr(0, 3) + "..." : d.name;
+          return d.name.length > 4 ? d.name.substr(0, 3) + "...." : d.name;
         })
         .style("cursor", "pointer")
         .append("title")

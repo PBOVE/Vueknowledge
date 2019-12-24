@@ -212,13 +212,12 @@ export default {
           .attr("y", -5)
           .attr("dy", 10)
           .text(function(d) {
-            if (d.parent != null && d.x == d.parent.x) {
-              if (d.Strlen > d.y - d.parent.y + 20) {
-                // console.log(d)
-                return d.data.name.substr(0, 5) + "...";
-              }
-            }
-            return d.data.name;
+            // if (d.parent != null && d.x == d.parent.x) {
+            //   if (d.Strlen > d.y - d.parent.y + 20) {
+            //     return d.data.name.substr(0, 5) + "...";
+            //   }
+            // }
+             return d.data.name.length>5?d.data.name.substr(0, 5) + "...":d.data.name;
           })
           .append("title")
           .text(function(d) {

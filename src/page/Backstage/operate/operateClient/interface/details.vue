@@ -479,6 +479,15 @@ export default {
 #relationadd-id:focus{
   box-shadow:none;
 }
+.ivu-select-dropdown.ivu-auto-complete{
+  max-width: 80%;
+}
+.ivu-select-dropdown.ivu-auto-complete .ivu-select-item{
+  overflow: hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis; 
+  overflow:hidden;
+}
 .know-details-relation {
   border-bottom: 1px solid #e8eaec;
   margin-left: 5px;

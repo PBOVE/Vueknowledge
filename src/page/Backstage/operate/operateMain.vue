@@ -97,6 +97,9 @@ export default {
 
 <style  scoped>
 .know-operate-mian-header-title {
+  white-space:nowrap;
+  text-overflow:ellipsis; 
+  overflow:hidden;
   font-weight: bold;
   font-size: 18px;
   line-height: 25px;

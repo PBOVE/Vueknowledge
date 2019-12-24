@@ -23,7 +23,7 @@
       <p
         class="know-modal-text-center"
         v-show="selectNodesFlag"
-      >{{selectNodeName.length>20?selectNodeName.substr(0,20):selectNodeName}}</p>
+      >{{selectNodeName.length>20?selectNodeName.substr(0,15)+'...':selectNodeName}}</p>
       <p
         class="know-modal-text-nodes"
         v-show="!selectNodesFlag"
@@ -62,7 +62,7 @@ export default {
       let NodesLen = this.selectNodes.length;
       // 判断 是ctrl 按下 还是 单个节点
       if (NodesLen) {
-        // 对节点
+        // 多节点
         let arr = [];
         let arrId = [];
         this.selectNodes.forEach(item => {
@@ -76,8 +76,8 @@ export default {
         this.Nodes = arr.sort(this.sortId);
         this.selectNodesFlag = false;
         this.modalWidth =
-          this.Nodes[NodesLen - 1].name.length * 2 * 30 < 300
-            ? 300
+          this.Nodes[NodesLen - 1].name.length * 2 * 30 < 400
+            ? 400
             : this.Nodes[NodesLen - 1].name.length * 2 * 30;
       } else {
         this.selectNodesFlag = true;
