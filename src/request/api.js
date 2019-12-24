@@ -28,7 +28,7 @@ const showStatus =  (err) =>{
       notify('error','登录失效,请重新登录');
       break;
     default :
-      notify('error', '错误 请输入');
+      notify('error', '错误');
       break;
     }
 }
@@ -189,6 +189,7 @@ axios.interceptors.response.use(response => {
     router.replace({
       path: '/',
     });
+    store.commit('delToken');
     showStatus(6003)
     return Promise.reject();
   }else if(data.code === 0 && data.msg === 'Success'){
