@@ -6,7 +6,7 @@
 
 
 <template>
-  <Modal v-model="modalFlag" :width="modalWidth" :mask-closable="false">
+  <Modal v-model="modalFlag" width="500" :mask-closable="false">
     <p slot="header" class="know-modal-header">
       <Icon type="ios-information-circle"></Icon>
       <span>&nbsp;&nbsp;删&nbsp;除&nbsp;节&nbsp;点</span>
@@ -23,13 +23,13 @@
       <p
         class="know-modal-text-center"
         v-show="selectNodesFlag"
-      >{{selectNodeName.length>20?selectNodeName.substr(0,15)+'...':selectNodeName}}</p>
+      >{{selectNodeName}}</p>
       <p
         class="know-modal-text-nodes"
         v-show="!selectNodesFlag"
         v-for="(item,index) in Nodes"
-        :key="item.sortId"
-      >{{index + 1}}.&nbsp;{{item.name}}</p>
+        :key="index"
+      >{{index + 1}}.&nbsp;{{item}}</p>
     </div>
     <div slot="footer">
       <Button type="info" @click="modalFlag=false">取&nbsp;消</Button>
@@ -47,8 +47,6 @@ export default {
       modalFlag: false,
       // 多节点按下 标志位
       selectNodesFlag: false,
-      // modal 宽度
-      modalWidth: 300,
       // 多节点
       Nodes: "",
       // 多节点 id
@@ -66,22 +64,14 @@ export default {
         let arr = [];
         let arrId = [];
         this.selectNodes.forEach(item => {
-          arr.push({
-            name: item.name,
-            id: item.id
-          });
+          arr.push(item.name);
           arrId.push(item.id);
         });
         this.NodeId = arrId;
         this.Nodes = arr.sort(this.sortId);
         this.selectNodesFlag = false;
-        this.modalWidth =
-          this.Nodes[NodesLen - 1].name.length * 2 * 30 < 400
-            ? 400
-            : this.Nodes[NodesLen - 1].name.length * 2 * 30;
       } else {
         this.selectNodesFlag = true;
-        this.modalWidth = 300;
       }
     },
     // 监听 modalflag = true
@@ -113,10 +103,9 @@ export default {
       } else {
 				let url = "node";
 				let obj = this.NodeId
-				window.console.log(obj);
         this.delete_json(url, obj)
-          .then(res => {
-            window.console.log(res);
+          .then(() => {
+            this.$emit("addNameS", 12, Math.random());
           })
           .catch(() => {
             this.$Message.error("删除失败");
@@ -131,8 +120,8 @@ export default {
     },
     // 排序
     sortId(ObjA, ObjB) {
-      let valA = ObjA.name.length;
-      let valB = ObjB.name.length;
+      let valA = ObjA.length;
+      let valB = ObjB.length;
       if (valA < valB) return -1;
       else if (valA > valB) return 1;
       else return 0;

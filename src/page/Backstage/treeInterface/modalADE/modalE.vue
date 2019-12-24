@@ -6,7 +6,7 @@
 
 
 <template>
-    <Modal v-model="modalFlag" width="360" :mask-closable='false'>
+    <Modal v-model="modalFlag" width="500" :mask-closable='false'>
         <p slot="header" class="know-modal-header">
             <Icon type="ios-information-circle"></Icon>
             <span>&nbsp;&nbsp;编&nbsp;辑&nbsp;节&nbsp;点</span>

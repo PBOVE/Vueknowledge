@@ -61,9 +61,9 @@ export function post_string(url, params = {}) {
 /**
  * 封装 post text 方法
  */
-export function post_text(url,params = {}){
+export function post_text(url, params = {}) {
   return new Promise((resolve, reject) => {
-    axios.post(url, (params), { headers: { 'Content-Type': 'text/plain'} })
+    axios.post(url, (params), { headers: { 'Content-Type': 'text/plain' } })
       .then(res => {
         resolve(res.data);
       })
@@ -85,7 +85,7 @@ export function patch_string(url, params = {}) {
       })
   })
 }
-/** 
+/**
  * 封装 patch json
 */
 export function patch_json(url, params = {}) {
@@ -116,8 +116,7 @@ export function delete_string(url, params = {}) {
  */
 export function delete_json(url, params = {}) {
   return new Promise((resolve, reject) => {
-    window.console.log(JSON.stringify(params));
-    axios.delete(url, JSON.stringify(params), { headers: { 'Content-Type': 'application/json' } })
+    axios.delete(url, { data:JSON.stringify(params),headers: { 'Content-Type': 'application/json;'} })
       .then(res => {
         resolve(res.data);
       }).catch(err => {
@@ -125,6 +124,8 @@ export function delete_json(url, params = {}) {
       })
   })
 }
+
+
 /**
  *  封装 put json
  */
@@ -159,13 +160,16 @@ axios.interceptors.request.use(
  */
 axios.interceptors.response.use(response => {
   // 对响应数据做点什么
-  if (typeof response.data === 'string') {
+  let data = response.data;
+  if (typeof data === 'string') {
     router.replace({
       path: '/',
     })
-    return Promise.reject('login');
+    return Promise.reject('error');
+  }else if(data.code === 0 && data.msg === 'Success'){
+    return response;
   }
-  return response;
+  else return Promise.reject('error');
 }, error => {
   // 对响应错误做点什么
   // if(error.response.status === 404){

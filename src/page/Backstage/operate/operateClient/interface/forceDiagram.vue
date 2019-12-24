@@ -125,10 +125,10 @@ export default {
         .attr("id", "resolved")
         .attr("markerUnits", "userSpaceOnUse")
         .attr("viewBox", "0 -5 10 10") //坐标系的区域
-        .attr("refX", 22) //箭头坐标
+        .attr("refX", 25) //箭头坐标
         .attr("refY", 0)
-        .attr("markerWidth", 15) //标识的大小
-        .attr("markerHeight", 15)
+        .attr("markerWidth", 12) //标识的大小
+        .attr("markerHeight", 12)
         .attr("orient", "auto") //绘制方向，可设定为：auto（自动确认方向）和 角度值
         .attr("stroke-width", 10) //箭头宽度
         .append("path")
@@ -139,10 +139,10 @@ export default {
         .attr("id", "resolvedI")
         .attr("markerUnits", "userSpaceOnUse")
         .attr("viewBox", "0 -5 10 10") //坐标系的区域
-        .attr("refX", -10) //箭头坐标
+        .attr("refX", -14) //箭头坐标
         .attr("refY", 0)
-        .attr("markerWidth", 15) //标识的大小
-        .attr("markerHeight", 15)
+        .attr("markerWidth", 12) //标识的大小
+        .attr("markerHeight", 12)
         .attr("orient", "auto") //绘制方向，可设定为：auto（自动确认方向）和 角度值
         .attr("stroke-width", 3) //箭头宽度
         .append("path")
@@ -160,7 +160,7 @@ export default {
         })
         .attr("stroke", "#8B8989")
         .style("pointer-events", "none")
-        .attr("stroke-width", 5)
+        .attr("stroke-width", 3)
         .attr("marker-end", function(d) {
           return d.relation === "parent-relation" ? "" : "url(#resolved)";
         })

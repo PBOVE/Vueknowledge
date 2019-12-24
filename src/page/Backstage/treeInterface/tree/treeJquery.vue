@@ -186,6 +186,26 @@ export default {
         this.StreeNode = "";
         this.$emit("selectNode", 1, false);
       }
+    },
+    "treelistVal.delNodes": {
+      handler: function() {
+        let Nodes = this.zTree.getSelectedNodes();
+        // window.console.log(this.StreeNode);
+        Nodes.forEach((item)=>{
+          if(this.StreeNode.id === item.id){
+            this.StreeNode = "";
+            this.$emit("selectNode", 1, false);
+            this.$emit("selectNode", 13);
+          }
+          this.zTree.removeNode(item, false);
+        })
+        if(this.StreeNode){
+          this.zTree.selectNode(this.StreeNode);
+          this.$emit("selectNode", 1, true);
+        }
+        this.$emit("selectNode", 11,[]);
+
+      }
     }
   },
   mounted() {

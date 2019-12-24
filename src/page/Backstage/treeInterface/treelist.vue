@@ -95,7 +95,8 @@ export default {
       treeZ: {
         ExitName: "",
         addName: "",
-        delName: ""
+        delName: "",
+        delNodes:""
       },
       // 根节点数量
       rootNodeNum: "",
@@ -171,11 +172,21 @@ export default {
         11: () => {
           this.ctrlButtonFlag = false;
           this.selectNodes = val;
+        },
+        //删除 多节点 标志位
+        12 :() =>{
+          this.treeZ.delNodes = val;
+        },
+        //删除 多节点 包括选中 treeNode
+        13 :() =>{
+          this.selectNodeName = "";
+          this.treeNode = "";
+          this.$emit("MangageCallback", 1, "");
+          this.$emit("MangageCallback", 3, Math.random());
         }
       };
       statusMap[type]();
     },
- 
   },
   computed: {
     //设置 树 可视区 高度
