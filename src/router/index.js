@@ -51,6 +51,7 @@ if (sessionStorage.getItem('token')) {
  * 路由 跳转
  */
 let router = new vueRouter({
+    mode: 'history',
     routes:[
         {
             path:'/',
