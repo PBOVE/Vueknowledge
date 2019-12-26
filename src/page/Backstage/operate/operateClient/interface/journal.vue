@@ -15,12 +15,15 @@
       </div>
       <div class="know-journal-content">
         <div class="know-journal-content-title">
-         <span class="know-journal-strong">{{item.nickName}}</span>&nbsp;在&nbsp;{{item.dateValue}}前&nbsp;操作了
-          <span class="know-journal-strong">{{item.nodeName}}</span>&nbsp;节点
-          &nbsp;节点
+          <span class="know-journal-strong">{{item.nickName}}</span>
+          &nbsp;在&nbsp;{{item.dateValue}}前&nbsp;操作了
+          <span
+            class="know-journal-strong"
+          >{{item.nodeName}}</span>&nbsp;节点
         </div>
         <div class="know-journal-content-user">
-          <span class="know-journal-strong">{{item.nodeName}}</span>&nbsp;节点,&nbsp;{{item.operator}}
+          <span class="know-journal-strong">{{item.nodeName}}</span>
+          &nbsp;节点,&nbsp;{{item.operator}}
         </div>
         <div class="know-journal-content-green">{{item.operatorCrux}}</div>
       </div>
@@ -184,7 +187,7 @@ export default {
             if (nextDataLabel) {
               let len = labels.length;
               let nextLen = nextDataLabel.length;
-              let oldName , newName;
+              let oldName, newName;
               if (nextDataLabel.length === labels.length) {
                 for (let i = 0; i < len; i++) {
                   if (nextDataLabel[i] !== labels[i]) {
@@ -193,19 +196,23 @@ export default {
                     break;
                   }
                 }
-                  operatorCrux = "修改 属性";
-                  operator = '"' + oldName + '"修改属性名称为" ' + newName + '"';
-                
-               
+                operatorCrux = "修改 属性";
+                operator = '"' + oldName + '"修改属性名称为" ' + newName + '"';
               } else if (nextDataLabel.length < labels.length) {
                 operatorCrux = "添加 属性";
-                newName = labels[len - 1];
+                for (let i = 0; i < len; i++) {
+                  if (nextDataLabel.indexOf(labels[i]) === -1) {
+                    newName = labels[i];
+                    break;
+                  }
+                }
+
                 operatorCrux = "添加 属性";
                 operator = '添加新的属性名称 " ' + newName + ' "';
               } else {
                 operatorCrux = "删除 属性";
                 for (let i = 0; i < nextLen; i++) {
-                  if (nextDataLabel[i] !== labels[i]) {
+                  if (labels.indexOf(nextDataLabel[i]) === -1) {
                     oldName = nextDataLabel[i];
                     break;
                   }
@@ -222,7 +229,13 @@ export default {
           };
         },
         ADD_NODE_PROPERTY: () => {
-          operator = '" '+contentObj.startNode +' " 节点与 " '+contentObj.endNode+' " 节点产生新的关系,关系为: '+contentObj.property.type;
+          operator =
+            '" ' +
+            contentObj.startNode +
+            ' " 节点与 " ' +
+            contentObj.endNode +
+            ' " 节点产生新的关系,关系为: ' +
+            contentObj.property.type;
           operatorCrux = "添加节点关系";
           return {
             operator,
@@ -240,7 +253,14 @@ export default {
           };
         },
         UPDATE_NODE_PROPERTY: () => {
-          operator = '" '+contentObj.startNode +' " 节点与 " '+contentObj.endNode+' " 节点的关系值改变为 " '+contentObj.property.type +' "';
+          operator =
+            '" ' +
+            contentObj.startNode +
+            ' " 节点与 " ' +
+            contentObj.endNode +
+            ' " 节点的关系值改变为 " ' +
+            contentObj.property.type +
+            ' "';
           operatorCrux = "修改 节点关系";
           window.console.log(contentObj);
           return {
