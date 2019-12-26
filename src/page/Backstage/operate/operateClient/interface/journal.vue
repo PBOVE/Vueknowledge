@@ -15,12 +15,11 @@
       </div>
       <div class="know-journal-content">
         <div class="know-journal-content-title">
-          {{item.Time}}&nbsp;
+         <span class="know-journal-strong">{{item.nickName}}</span>&nbsp;{{item.Time}}&nbsp;
           <span class="know-journal-strong">{{item.nodeName}}</span>
           &nbsp;节点&nbsp;,&nbsp;{{item.operator}}
         </div>
         <div class="know-journal-content-user">
-          <span class="know-journal-strong">{{item.nickName}}</span>
           &nbsp;{{item.dateValue}}前&nbsp;操作此节点
         </div>
         <div class="know-journal-content-green">{{item.operatorCrux}}</div>
