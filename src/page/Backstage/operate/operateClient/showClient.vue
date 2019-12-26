@@ -35,6 +35,7 @@
     </div>
     <div v-show="showSelectNum === 4">
 			<journal-show
+        ref = 'journalog'
         :treeNode="treeNode"
         :showSelectNum = 'showSelectNum'
         class="know-Showclient-default"
@@ -84,6 +85,10 @@ export default {
         3: () => {
           this.$refs.forcediagram.setForce();
           this.$refs.treediagram.setForce();
+        },
+        // 添加属性 重新获取日志
+        4: () =>{
+          this.$refs.journalog.setJournal();
         }
       };
       statusMap[type]();

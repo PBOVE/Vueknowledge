@@ -245,6 +245,8 @@ export default {
       this.put_json(url, obj)
         .then(() => {
           target.value = "";
+          // 重新 获取日志
+          this.$emit("SClientCallback", 4)
         }).catch(()=>{
         })
     },
@@ -260,8 +262,12 @@ export default {
         labels: this.AttrButeData
       };
       this.put_json(url, obj)
-        .then(() => {})
+        .then(() => { 
+          // 重新 获取日志
+          this.$emit("SClientCallback", 4)
+        })
         .catch(() => {
+         
           this.$set(this.AttrButeData, id, oldVal);
         });
     },
@@ -277,8 +283,12 @@ export default {
         labels: this.AttrButeData
       };
       this.put_json(url, obj)
-        .then(() => {})
+        .then(() => {
+          // 重新 获取日志
+          this.$emit("SClientCallback", 4)
+        })
         .catch(() => {
+          
           this.AttrButeData.splice(id, 0, oldAttr);
         });
     },

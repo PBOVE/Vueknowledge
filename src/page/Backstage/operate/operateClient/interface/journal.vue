@@ -8,12 +8,22 @@
 <template>
   <ul class="know-journal-ul">
     <li v-for="(item ,index) in JournalData" v-bind:key="item.randomId" class="know-journal-li">
-      <div class="know-journal-title" v-if='index===0||item.dateLog!==JournalData[index-1].dateLog'><Icon type="ios-ionic" color='#19be6b
-' /><span class="know-journal-title-span">时间&nbsp;:&nbsp;{{item.dateLog}}</span></div>
+      <div class="know-journal-title" v-if="index===0||item.dateLog!==JournalData[index-1].dateLog">
+        <Icon type="ios-ionic" color="#19be6b
+" />
+        <span class="know-journal-title-span">时间&nbsp;:&nbsp;{{item.dateLog}}</span>
+      </div>
       <div class="know-journal-content">
-        <div class="know-journal-content-title">{{item.Time}}&nbsp;<span class="know-journal-strong">{{treeNode.name}}</span>&nbsp;节点&nbsp;&nbsp;{{Logtype[item.operator]}}</div>
-        <div class="know-journal-content-user"><span class="know-journal-strong">{{item.nickName}}</span>&nbsp;{{item.dateValue}}前&nbsp;操作此节点</div>
-        <div class="know-journal-content-green">{{Logtype[item.operator].split(' ')[0]}}</div>
+        <div class="know-journal-content-title">
+          {{item.Time}}&nbsp;
+          <span class="know-journal-strong">{{treeNode.name}}</span>
+          &nbsp;节点&nbsp;&nbsp;{{item.operator}}
+        </div>
+        <div class="know-journal-content-user">
+          <span class="know-journal-strong">{{item.nickName}}</span>
+          &nbsp;{{item.dateValue}}前&nbsp;操作此节点
+        </div>
+        <div class="know-journal-content-green">{{item.operator}}</div>
       </div>
     </li>
   </ul>
@@ -29,8 +39,9 @@ export default {
       getDataFlag: false,
       //请求 数据 类型操作
       Logtype: {
-        UPDATE: "更新 属性",
-        ADD: "添加 新属性"
+        UPDATE_NODE_PROPER: "更新 属性",
+        ADD_NODE: "添加 新属性",
+        UPDATE_NODE_NAME: "更新节点名称"
       },
       //请求的日志数据
       JournalData: []
@@ -42,13 +53,31 @@ export default {
       if (this.getDataFlag) return;
       this.getDataFlag = true;
       let url = "record/node/" + this.treeNode.id;
-      this.get(url)
+      let obj = {
+        size: 100
+      };
+      this.get(url, obj)
         .then(res => {
+          let data = res.data.content;
+          window.console.log(data);
+
+          // data.forEach(item => {
+          //   if (item.operator !== "UPDATE_NODE_NAME") {
+          //     let msg = item.message;
+          //     // window.console.log(item)
+          //     window.console.log(JSON.parse(msg.match(/\[.+\]/g)));
+          //   }
+          // });
+
           this.handleJournalData(res.data.content);
-        }).catch(()=>{})
+        })
+        .catch(err => {
+          window.console.log(err);
+        });
     },
     // 设置重新获取数据
     setJournal() {
+      window.console.log(3432);
       this.getDataFlag = false;
       this.JournalData = [];
     },
@@ -88,6 +117,15 @@ export default {
             break;
           }
         }
+        let msg;
+        if (item.operator !== "UPDATE_NODE_NAME") {
+          msg = item.message;
+          // msgBObj = JSON.parse(msg.match(/\[.+\]/g));
+          msg = '更新节点'
+        }else {
+          msg = '更新节点名称'
+        }
+
         this.JournalData.push({
           randomId: Math.random(),
           dateLog: YY + "-" + MM + "-" + DD,
@@ -98,8 +136,8 @@ export default {
             DateFlite(dateStart.getMinutes()) +
             ":" +
             DateFlite(dateStart.getSeconds()),
-          operator: item.operator,
-          nickName: item.user.nickName
+          operator: msg,
+          nickName: item.nickName
         });
         function DateFlite(date) {
           return date < 10 ? "0" + date : date;
@@ -109,8 +147,8 @@ export default {
   },
   watch: {
     treeNode: {
-      handler: function(newval,oldval) {
-        if (newval === "" ||newval.id === oldval.id) return;
+      handler: function(newval, oldval) {
+        if (newval === "" || newval.id === oldval.id) return;
         this.getDataFlag = false;
         this.JournalData = [];
         if (this.showSelectNum === 4) {
@@ -127,41 +165,41 @@ export default {
 
 
 <style scoped>
-.know-journal-ul{
+.know-journal-ul {
   list-style: none;
 }
-.know-journal-title{
-   color: #9a9a9a;
+.know-journal-title {
+  color: #9a9a9a;
 }
-.know-journal-title-span{
+.know-journal-title-span {
   display: inline-block;
   text-indent: 1em;
   font-size: 16px;
 }
-.know-journal-content-title{
+.know-journal-content-title {
   margin-bottom: 5px;
 }
-.know-journal-strong{
+.know-journal-strong {
   color: #2395f1;
   cursor: pointer;
 }
-.know-journal-content{
+.know-journal-content {
   padding: 5px;
-  margin-left:5px;
+  margin-left: 5px;
   padding-left: 40px;
   border-left: 1px solid #f8f8f9;
 }
-.know-journal-content:hover{
+.know-journal-content:hover {
   background-color: #f8f8f9;
   border-radius: 10px;
   box-shadow: 0 0 5px #f8f8f9;
   transition: all 0.5s;
 }
-.know-journal-content-user{
+.know-journal-content-user {
   color: #9a9a9a;
   margin-bottom: 5px;
 }
-.know-journal-content-green{
+.know-journal-content-green {
   border-top: 1px solid #f0f0f0;
   text-indent: 1em;
 }
