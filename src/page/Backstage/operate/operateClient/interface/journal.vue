@@ -15,12 +15,12 @@
       </div>
       <div class="know-journal-content">
         <div class="know-journal-content-title">
-         <span class="know-journal-strong">{{item.nickName}}</span>&nbsp;{{item.Time}}&nbsp;
-          <span class="know-journal-strong">{{item.nodeName}}</span>
-          &nbsp;节点&nbsp;,&nbsp;{{item.operator}}
+         <span class="know-journal-strong">{{item.nickName}}</span>&nbsp;在&nbsp;{{item.dateValue}}前&nbsp;操作了
+          <span class="know-journal-strong">{{item.nodeName}}</span>&nbsp;节点
+          &nbsp;节点
         </div>
         <div class="know-journal-content-user">
-          &nbsp;{{item.dateValue}}前&nbsp;操作此节点
+          <span class="know-journal-strong">{{item.nodeName}}</span>&nbsp;节点,&nbsp;{{item.operator}}
         </div>
         <div class="know-journal-content-green">{{item.operatorCrux}}</div>
       </div>
@@ -51,8 +51,8 @@ export default {
       };
       this.get(url, obj)
         .then(res => {
-          let data = res.data.content;
-          window.console.log(data);
+          // let data = res.data.content;
+          // window.console.log(data);
           this.handleJournalData(res.data.content);
         })
         .catch(err => {
@@ -193,13 +193,9 @@ export default {
                     break;
                   }
                 }
-                if(oldName&&newName){
-                   operatorCrux = "修改 属性";
-                   operator = '"' + oldName + '"修改属性名称为" ' + newName + '"';
-                }else{
-                  operatorCrux = "更新属性";
-                   operator = '更新属性';
-                }
+                  operatorCrux = "修改 属性";
+                  operator = '"' + oldName + '"修改属性名称为" ' + newName + '"';
+                
                
               } else if (nextDataLabel.length < labels.length) {
                 operatorCrux = "添加 属性";
@@ -214,7 +210,7 @@ export default {
                     break;
                   }
                 }
-                operator = '属性 " ' + oldName + ' "被删除';
+                operator = '属性 " ' + oldName + ' " 被删除';
               }
             }
           }
@@ -312,6 +308,7 @@ export default {
 .know-journal-content-user {
   color: #9a9a9a;
   margin-bottom: 5px;
+  letter-spacing: 0.1em;
 }
 .know-journal-content-green {
   border-top: 1px solid #f0f0f0;
