@@ -52,8 +52,8 @@ export default {
       };
       this.get(url, obj)
         .then(res => {
-          // let data = res.data.content;
-          // window.console.log(data);
+          let data = res.data.content;
+          window.console.log(data);
           this.handleJournalData(res.data.content);
         })
         .catch(err => {
@@ -185,7 +185,7 @@ export default {
             if (nextDataLabel) {
               let len = labels.length;
               let nextLen = nextDataLabel.length;
-              let oldName, newName;
+              let oldName , newName;
               if (nextDataLabel.length === labels.length) {
                 for (let i = 0; i < len; i++) {
                   if (nextDataLabel[i] !== labels[i]) {
@@ -194,8 +194,14 @@ export default {
                     break;
                   }
                 }
-                operatorCrux = "修改 属性";
-                operator = '"' + oldName + '"修改属性名称为" ' + newName + '"';
+                if(oldName&&newName){
+                   operatorCrux = "修改 属性";
+                   operator = '"' + oldName + '"修改属性名称为" ' + newName + '"';
+                }else{
+                  operatorCrux = "更新属性";
+                   operator = '更新属性';
+                }
+               
               } else if (nextDataLabel.length < labels.length) {
                 operatorCrux = "添加 属性";
                 newName = labels[len - 1];
@@ -221,8 +227,8 @@ export default {
           };
         },
         ADD_NODE_PROPERTY: () => {
-          operator = "添加节点关系";
-          operatorCrux = "添加 节点关系";
+          operator = '" '+contentObj.startNode +' " 节点与 " '+contentObj.endNode+' " 节点产生新的关系,关系为: '+contentObj.property.type;
+          operatorCrux = "添加节点关系";
           return {
             operator,
             nodeName,
@@ -239,8 +245,9 @@ export default {
           };
         },
         UPDATE_NODE_PROPERTY: () => {
-          operator = "修改节点关系";
+          operator = '" '+contentObj.startNode +' " 节点与 " '+contentObj.endNode+' " 节点的关系值改变为 " '+contentObj.property.type +' "';
           operatorCrux = "修改 节点关系";
+          window.console.log(contentObj);
           return {
             operator,
             nodeName,
