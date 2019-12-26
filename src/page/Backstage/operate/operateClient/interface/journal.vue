@@ -16,14 +16,14 @@
       <div class="know-journal-content">
         <div class="know-journal-content-title">
           {{item.Time}}&nbsp;
-          <span class="know-journal-strong">{{treeNode.name}}</span>
-          &nbsp;节点&nbsp;&nbsp;{{item.operator}}
+          <span class="know-journal-strong">{{item.nodeName}}</span>
+          &nbsp;节点&nbsp;,&nbsp;{{item.operator}}
         </div>
         <div class="know-journal-content-user">
           <span class="know-journal-strong">{{item.nickName}}</span>
           &nbsp;{{item.dateValue}}前&nbsp;操作此节点
         </div>
-        <div class="know-journal-content-green">{{item.operator}}</div>
+        <div class="know-journal-content-green">{{item.operatorCrux}}</div>
       </div>
     </li>
   </ul>
@@ -37,12 +37,6 @@ export default {
     return {
       //请求数据标志位
       getDataFlag: false,
-      //请求 数据 类型操作
-      Logtype: {
-        UPDATE_NODE_PROPER: "更新 属性",
-        ADD_NODE: "添加 新属性",
-        UPDATE_NODE_NAME: "更新节点名称"
-      },
       //请求的日志数据
       JournalData: []
     };
@@ -60,15 +54,6 @@ export default {
         .then(res => {
           let data = res.data.content;
           window.console.log(data);
-
-          // data.forEach(item => {
-          //   if (item.operator !== "UPDATE_NODE_NAME") {
-          //     let msg = item.message;
-          //     // window.console.log(item)
-          //     window.console.log(JSON.parse(msg.match(/\[.+\]/g)));
-          //   }
-          // });
-
           this.handleJournalData(res.data.content);
         })
         .catch(err => {
@@ -83,66 +68,121 @@ export default {
     },
     // 处理并且渲染 数据
     handleJournalData(data) {
-      data.forEach(item => {
-        let dateStart = new Date(item.createTime);
-        let dateEnd = new Date();
-        let YY = dateStart.getFullYear();
-        let MM = dateStart.getMonth() + 1;
-        let DD = dateStart.getDate();
-        let dateValue = dateEnd - dateStart;
-        let DateValue = [1000, 60, 60, 24, 30, 12, Infinity];
-        for (var i = 0; i < DateValue.length - 1; i++) {
-          dateValue /= DateValue[i];
-          if (dateValue < DateValue[i + 1]) {
-            switch (i) {
-              case 0:
-                dateValue = parseInt(dateValue) + " 秒";
-                break;
-              case 1:
-                dateValue = parseInt(dateValue) + " 分钟";
-                break;
-              case 2:
-                dateValue = parseInt(dateValue) + " 小时";
-                break;
-              case 3:
-                dateValue = parseInt(dateValue) + " 天";
-                break;
-              case 4:
-                dateValue = parseInt(dateValue) + " 个月";
-                break;
-              case 5:
-                dateValue = parseInt(dateValue) + " 年";
-                break;
-            }
-            break;
-          }
+      let dataLen = data.length;
+      data.forEach((item, index) => {
+        let Dateobj = this.handleTime(item.createTime);
+        let nodeitem = "";
+        if (index < dataLen) {
+          nodeitem = data[index + 1];
         }
-        let msg;
-        if (item.operator !== "UPDATE_NODE_NAME") {
-          msg = item.message;
-          // msgBObj = JSON.parse(msg.match(/\[.+\]/g));
-          msg = '更新节点'
-        }else {
-          msg = '更新节点名称'
-        }
+        let Megobj = this.handleMessage(item.operator, item.message, nodeitem);
 
         this.JournalData.push({
           randomId: Math.random(),
-          dateLog: YY + "-" + MM + "-" + DD,
-          dateValue: dateValue,
+          dateLog: Dateobj.YY + "-" + Dateobj.MM + "-" + Dateobj.DD,
+          dateValue: Dateobj.dateValue,
+          nodeName: Megobj.nodeName,
           Time:
-            DateFlite(dateStart.getHours()) +
+            DateFlite(Dateobj.dateStart.getHours()) +
             ":" +
-            DateFlite(dateStart.getMinutes()) +
+            DateFlite(Dateobj.dateStart.getMinutes()) +
             ":" +
-            DateFlite(dateStart.getSeconds()),
-          operator: msg,
-          nickName: item.nickName
+            DateFlite(Dateobj.dateStart.getSeconds()),
+          operator: Megobj.operator,
+          nickName: item.nickName,
+          operatorCrux:Megobj.operatorCrux
         });
         function DateFlite(date) {
           return date < 10 ? "0" + date : date;
         }
       });
+    },
+    // 处理响应 时间
+    handleTime(dateVal) {
+      let dateStart = new Date(dateVal);
+      let dateEnd = new Date();
+      let YY = dateStart.getFullYear();
+      let MM = dateStart.getMonth() + 1;
+      let DD = dateStart.getDate();
+      let dateValue = dateEnd - dateStart;
+      let DateValue = [1000, 60, 60, 24, 30, 12, Infinity];
+      for (var i = 0; i < DateValue.length - 1; i++) {
+        dateValue /= DateValue[i];
+        if (dateValue < DateValue[i + 1]) {
+          switch (i) {
+            case 0:
+              dateValue = parseInt(dateValue) + " 秒";
+              break;
+            case 1:
+              dateValue = parseInt(dateValue) + " 分钟";
+              break;
+            case 2:
+              dateValue = parseInt(dateValue) + " 小时";
+              break;
+            case 3:
+              dateValue = parseInt(dateValue) + " 天";
+              break;
+            case 4:
+              dateValue = parseInt(dateValue) + " 个月";
+              break;
+            case 5:
+              dateValue = parseInt(dateValue) + " 年";
+              break;
+          }
+          break;
+        }
+      }
+      return {
+        YY,
+        MM,
+        DD,
+        dateStart,
+        dateValue
+      };
+    },
+    // 处理message 信息
+    handleMessage(type, val,nextNode) {
+
+      const statusMap = {
+        UPDATE_NODE_NAME: () => {
+          let operator = '',operatorCrux = '修改节点名称',msgName,nodeName,nextNodeObj;
+          msgName = val.match(/\[.+\]/g)[0];
+          nodeName = msgName.substr(1, msgName.length - 2);
+          if(nextNode){
+            nextNodeObj = this.handleMessage(nextNode.operator,nextNode.message);
+            operator = "\" "+nextNodeObj.nodeName +" \" 节点名称修改为 \" "+nodeName+" \"";
+          }
+          window.console.log(msgName.substr(1, msgName.length - 2));
+          window.console.log(nextNodeObj)
+          return {
+            operator,
+            nodeName,
+            operatorCrux
+          }
+        },
+        ADD_NODE: () => {
+          let operator = "创建节点", operatorCrux = '创建';
+          let msgName = val.match(/\[.+\]/g)[0];
+          let nodeName = msgName.substr(1, msgName.length - 2);
+          return {
+            operator,
+            nodeName,
+            operatorCrux
+          }
+        },
+        UPDATE_NODE_PROPER: () => {
+          let operator = "更新属性",operatorCrux = '更新';
+          let msgObj = JSON.parse(val.match(/\[.+\]/g))[0];
+          let nodeName = msgObj.name;
+           window.console.log(msgObj);
+          return {
+            operator,
+            nodeName,
+            operatorCrux
+          }
+        }
+      };
+      return statusMap[type]();
     }
   },
   watch: {
@@ -188,6 +228,7 @@ export default {
   margin-left: 5px;
   padding-left: 40px;
   border-left: 1px solid #f8f8f9;
+  height: 100px;
 }
 .know-journal-content:hover {
   background-color: #f8f8f9;
@@ -202,5 +243,6 @@ export default {
 .know-journal-content-green {
   border-top: 1px solid #f0f0f0;
   text-indent: 1em;
+  letter-spacing: 0.1em;
 }
 </style>
