@@ -279,12 +279,14 @@ export default {
   vertical-align: -0.125em;
   text-align: center;
 }
+.ztree li span.button.root_close::before,
 .ztree li span.button.roots_close::before,
 .ztree li span.button.bottom_close::before,
 .ztree li span.button.center_close::before {
   content: "\f11f";
   font-size: 15px;
 }
+.ztree li span.button.root_open::before,
 .ztree li span.button.roots_open::before,
 .ztree li span.button.bottom_open::before,
 .ztree li span.button.center_open::before {

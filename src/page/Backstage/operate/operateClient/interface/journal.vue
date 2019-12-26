@@ -52,8 +52,8 @@ export default {
       };
       this.get(url, obj)
         .then(res => {
-          let data = res.data.content;
-          window.console.log(data);
+          // let data = res.data.content;
+          // window.console.log(data);
           this.handleJournalData(res.data.content);
         })
         .catch(err => {
@@ -62,7 +62,6 @@ export default {
     },
     // 设置重新获取数据
     setJournal() {
-      window.console.log(3432);
       this.getDataFlag = false;
       this.JournalData = [];
     },
@@ -75,7 +74,7 @@ export default {
         if (index < dataLen) {
           nodeitem = data[index + 1];
         }
-        let Megobj = this.handleMessage(item.operator, item.message, nodeitem);
+        let Megobj = this.handleMessage(item.operator, item.content, nodeitem);
 
         this.JournalData.push({
           randomId: Math.random(),
@@ -90,7 +89,7 @@ export default {
             DateFlite(Dateobj.dateStart.getSeconds()),
           operator: Megobj.operator,
           nickName: item.nickName,
-          operatorCrux:Megobj.operatorCrux
+          operatorCrux: Megobj.operatorCrux
         });
         function DateFlite(date) {
           return date < 10 ? "0" + date : date;
@@ -141,45 +140,112 @@ export default {
       };
     },
     // 处理message 信息
-    handleMessage(type, val,nextNode) {
-
+    handleMessage(type, val, nextNodeData) {
+      let contentObj, operator, operatorCrux, labels, nodeName, nextDataLabel;
+      contentObj = JSON.parse(val);
+      labels = contentObj.labels;
+      nodeName = contentObj.name || this.treeNode.name;
       const statusMap = {
         UPDATE_NODE_NAME: () => {
-          let operator = '',operatorCrux = '修改节点名称',msgName,nodeName,nextNodeObj;
-          msgName = val.match(/\[.+\]/g)[0];
-          nodeName = msgName.substr(1, msgName.length - 2);
-          if(nextNode){
-            nextNodeObj = this.handleMessage(nextNode.operator,nextNode.message);
-            operator = "\" "+nextNodeObj.nodeName +" \" 节点名称修改为 \" "+nodeName+" \"";
+          operator = "修改节点名称";
+          operatorCrux = "修改 节点名称";
+          if (nextNodeData) {
+            let nextDataName = this.handleMessage(
+              nextNodeData.operator,
+              nextNodeData.content
+            ).nodeName;
+            operator =
+              '" ' + nextDataName + ' "节点名称修改为" ' + nodeName + ' "';
           }
-          window.console.log(msgName.substr(1, msgName.length - 2));
-          window.console.log(nextNodeObj)
+
           return {
             operator,
             nodeName,
             operatorCrux
-          }
+          };
         },
         ADD_NODE: () => {
-          let operator = "创建节点", operatorCrux = '创建';
-          let msgName = val.match(/\[.+\]/g)[0];
-          let nodeName = msgName.substr(1, msgName.length - 2);
+          operator = "添加节点";
+          operatorCrux = "添加 节点";
+
           return {
             operator,
             nodeName,
             operatorCrux
-          }
+          };
         },
         UPDATE_NODE_PROPER: () => {
-          let operator = "更新属性",operatorCrux = '更新';
-          let msgObj = JSON.parse(val.match(/\[.+\]/g))[0];
-          let nodeName = msgObj.name;
-           window.console.log(msgObj);
+          operator = "更新节点属性";
+          operatorCrux = "更新属性";
+          if (nextNodeData) {
+            nextDataLabel = this.handleMessage(
+              nextNodeData.operator,
+              nextNodeData.content
+            ).labels;
+            if (nextDataLabel) {
+              let len = labels.length;
+              let nextLen = nextDataLabel.length;
+              let oldName, newName;
+              if (nextDataLabel.length === labels.length) {
+                for (let i = 0; i < len; i++) {
+                  if (nextDataLabel[i] !== labels[i]) {
+                    newName = labels[i];
+                    oldName = nextDataLabel[i];
+                    break;
+                  }
+                }
+                operatorCrux = "修改 属性";
+                operator = '"' + oldName + '"修改属性名称为" ' + newName + '"';
+              } else if (nextDataLabel.length < labels.length) {
+                operatorCrux = "添加 属性";
+                newName = labels[len - 1];
+                operatorCrux = "添加 属性";
+                operator = '添加新的属性名称 " ' + newName + ' "';
+              } else {
+                operatorCrux = "删除 属性";
+                for (let i = 0; i < nextLen; i++) {
+                  if (nextDataLabel[i] !== labels[i]) {
+                    oldName = nextDataLabel[i];
+                    break;
+                  }
+                }
+                operator = '属性 " ' + oldName + ' "被删除';
+              }
+            }
+          }
+          return {
+            labels,
+            operator,
+            nodeName,
+            operatorCrux
+          };
+        },
+        ADD_NODE_PROPERTY: () => {
+          operator = "添加节点关系";
+          operatorCrux = "添加 节点关系";
           return {
             operator,
             nodeName,
             operatorCrux
-          }
+          };
+        },
+        DELETE_NODE_RELATION: () => {
+          operator = "删除节点关系";
+          operatorCrux = "删除 节点关系";
+          return {
+            operator,
+            nodeName,
+            operatorCrux
+          };
+        },
+        UPDATE_NODE_PROPERTY: () => {
+          operator = "修改节点关系";
+          operatorCrux = "修改 节点关系";
+          return {
+            operator,
+            nodeName,
+            operatorCrux
+          };
         }
       };
       return statusMap[type]();
@@ -218,6 +284,7 @@ export default {
 }
 .know-journal-content-title {
   margin-bottom: 5px;
+  letter-spacing: 0.1em;
 }
 .know-journal-strong {
   color: #2395f1;

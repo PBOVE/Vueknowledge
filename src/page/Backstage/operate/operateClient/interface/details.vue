@@ -235,8 +235,7 @@ export default {
       }
     },
     // 添加 属性
-    addLabels(Ival, target) {
-      this.AttrButeData.push(Ival);
+    addLabels(Ival, target) { 
       let url = "node/" + this.treeNode.id;
       let obj = {
         name: this.treeNode.name,
@@ -245,6 +244,7 @@ export default {
       this.put_json(url, obj)
         .then(() => {
           target.value = "";
+          this.AttrButeData.push(Ival);
           // 重新 获取日志
           this.$emit("SClientCallback", 4)
         }).catch(()=>{

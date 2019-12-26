@@ -30,7 +30,6 @@ import axios from 'axios'
  */
 import login from '../page/login/login'
 import manage from '../page/Backstage/manage'
-import nofound from '../page/404/fourZeroFour.vue'
 
 Vue.use(Vuex)
 Vue.use(ViewUI);
@@ -63,17 +62,6 @@ let router = new vueRouter({
             name:'manage',
             component:manage,
             meta:{requireAuth:true}
-        },
-        {
-            path:'/nofound',
-            name:'nofound',
-            component:nofound
-        },
-        {
-            path:'*',
-            redirect: '/nofound',
-            name:'nofound',
-            component:nofound
         }
     ]
 })
