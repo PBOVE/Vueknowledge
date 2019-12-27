@@ -229,6 +229,8 @@ export default {
         let url = "node/" + this.treeNode.id + "/name";
         this.patch_json(url, { name: Ival })
           .then(res => {
+            // 重新 获取日志
+            this.$emit("SClientCallback", 4)
             this.$emit("SClientCallback", 1, res.data.name);
           }).catch(()=>{
         })
@@ -321,6 +323,9 @@ export default {
             this.RaNodeinput = "";
             // 力导图 树图 从新请求数据
             this.$emit("SClientCallback", 2);
+            // 重新 获取日志
+            this.$emit("SClientCallback", 4)
+            
           }).catch(()=>{
         })
       }
@@ -335,6 +340,8 @@ export default {
           this.relationData.splice(index, 1);
           // 力导图 树图 从新请求数据
           this.$emit("SClientCallback", 2);
+          // 重新 获取日志
+          this.$emit("SClientCallback", 4)
         }).catch(()=>{})
     },
     // 更新 关系 属性
@@ -360,6 +367,8 @@ export default {
           });
           // 力导图 树图 从新请求数据
           this.$emit("SClientCallback", 2);
+          // 重新 获取日志
+          this.$emit("SClientCallback", 4)
         }).catch(()=>{
         })
     },
