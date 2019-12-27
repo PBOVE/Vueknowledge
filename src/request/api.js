@@ -16,29 +16,6 @@ axios.defaults.timeout = 10000;
 // 设置默认请求接口
 axios.defaults.baseURL = baseUrl;
 
-const showStatus =  (err) =>{
-  switch (err) {
-    case 400:
-      notify('error', '请确认输入的密码!');
-      break;
-    case 401:
-      notify('error', '账号或密码错误');
-      break;
-    case 6003:
-      notify('error','登录失效,请重新登录');
-      break;
-    default :
-      notify('error', '错误');
-      break;
-    }
-}
-const notify = (type, msg, duration = 3) => {
-  Message[type]({content:msg, duration:duration});
-};
-
-
-
-
 /**
  * 封装 get 方法
  */
@@ -164,6 +141,40 @@ export function put_json(url, params = {}) {
   })
 }
 
+
+/**
+ * 状态码处理函数
+ */
+
+const showStatus =  (err) =>{
+  switch (err) {
+    case 400:
+      notify('error', '请确认输入的密码!');
+      break;
+    case 401:
+      notify('error', '账号或密码错误');
+      break;
+    case 404:
+      router.replace({
+        path: '/',
+      });
+      store.commit('delToken');
+      break;
+    case 6003:
+      notify('error','登录失效,请重新登录');
+      break;
+    default :
+      notify('error', '错误');
+      break;
+    }
+}
+const notify = (type, msg, duration = 3) => {
+  Message[type]({content:msg, duration:duration});
+};
+
+
+
+
 /**
  * 请求拦截
  */
@@ -200,3 +211,6 @@ axios.interceptors.response.use(response => {
   showStatus(error.response.status)
   return Promise.reject();
 })
+
+
+

@@ -45,7 +45,7 @@
         data() {
             return {
                 // 初始化 面板分割
-                splitinit: 0.25,
+                splitinit: 0.5,
                 // 获取 innerHeight
                 InnerHeight:'',
                 // 获取 innerWidth
@@ -84,7 +84,6 @@
             }
         },
         mounted(){
-
             this.InnerHeight = window.innerHeight;
             this.InnerWidth= window.innerWidth;
             window.addEventListener('resize',this.getInner);
@@ -101,8 +100,8 @@
                     this.splitMax = '40px';
                     this.splitinit = 1;
                 }else{
-                     this.splitMax = '500px';
-                     this.splitinit = 0.25;
+                    this.splitMax = '500px';
+                    this.splitinit = parseInt(this.splitMin)/this.InnerWidth;
                 }
             }
         }

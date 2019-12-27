@@ -43,7 +43,7 @@ export default {
       //请求的日志数据
       JournalData: [],
       //请求数据数量
-      dataSize: 5,
+      dataSize: 10,
       // 分页起始位置
       dataPage: 0,
       //分页终点位置
