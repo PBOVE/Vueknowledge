@@ -163,7 +163,7 @@ export default {
         },
         ADD_NODE: () => {
           operator = "添加节点";
-          operatorCrux = "添加 节点";
+          operatorCrux = "添加节点";
 
           return {
             operator,
@@ -191,17 +191,16 @@ export default {
                     break;
                   }
                 }
-                operatorCrux = "修改 属性";
+                operatorCrux = "修改属性";
                 operator = '"' + oldName + '"修改属性名称为" ' + newName + '"';
               } else if (nextDataLabel.length < labels.length) {
-                operatorCrux = "添加 属性";
+                operatorCrux = "添加属性";
                 for (let i = 0; i < len; i++) {
                   if (nextDataLabel.indexOf(labels[i]) === -1) {
                     newName = labels[i];
                     break;
                   }
                 }
-
                 operatorCrux = "添加属性";
                 operator = '添加新的属性名称 " ' + newName + ' "';
               } else {
@@ -308,7 +307,7 @@ export default {
   cursor: pointer;
 }
 .know-journal-content {
-  padding: 15px 5px 5px 40px;
+  padding: 25px 5px 5px 40px;
   margin-left: 5px;
   border-left: 1px solid #f8f8f9;
   height: 100px;
