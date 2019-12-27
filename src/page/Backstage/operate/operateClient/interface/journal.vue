@@ -9,23 +9,18 @@
   <ul class="know-journal-ul">
     <li v-for="(item ,index) in JournalData" v-bind:key="item.randomId" class="know-journal-li">
       <div class="know-journal-title" v-if="index===0||item.dateLog!==JournalData[index-1].dateLog">
-        <Icon type="ios-ionic" color="#19be6b
-" />
-        <span class="know-journal-title-span">时间&nbsp;:&nbsp;{{item.dateLog}}</span>
+        <Icon type="ios-ionic" color="#19be6b" />
+        <span class="know-journal-title-span">时间：{{item.dateLog}}</span>
       </div>
       <div class="know-journal-content">
         <div class="know-journal-content-title">
           <span class="know-journal-strong">{{item.nickName}}</span>
-          &nbsp;在&nbsp;{{item.dateValue}}前&nbsp;操作了
-          <span
-            class="know-journal-strong"
-          >{{item.nodeName}}</span>&nbsp;节点
+          在{{item.dateValue}}前，操作了
+          <span class="know-journal-strong">{{item.nodeName}}</span> 节点，「{{item.operatorCrux}}」
         </div>
         <div class="know-journal-content-user">
-          <span class="know-journal-strong">{{item.nodeName}}</span>
-          &nbsp;节点,&nbsp;{{item.operator}}
+          <span class="know-journal-strong">{{item.nodeName}}</span> 节点，{{item.operator}} 
         </div>
-        <div class="know-journal-content-green">{{item.operatorCrux}}</div>
       </div>
     </li>
   </ul>
@@ -150,7 +145,7 @@ export default {
       const statusMap = {
         UPDATE_NODE_NAME: () => {
           operator = "修改节点名称";
-          operatorCrux = "修改 节点名称";
+          operatorCrux = "修改节点名称";
           if (nextNodeData) {
             let nextDataName = this.handleMessage(
               nextNodeData.operator,
@@ -207,10 +202,10 @@ export default {
                   }
                 }
 
-                operatorCrux = "添加 属性";
+                operatorCrux = "添加属性";
                 operator = '添加新的属性名称 " ' + newName + ' "';
               } else {
-                operatorCrux = "删除 属性";
+                operatorCrux = "删除属性";
                 for (let i = 0; i < nextLen; i++) {
                   if (labels.indexOf(nextDataLabel[i]) === -1) {
                     oldName = nextDataLabel[i];
@@ -245,7 +240,7 @@ export default {
         },
         DELETE_NODE_RELATION: () => {
           operator = "删除节点关系";
-          operatorCrux = "删除 节点关系";
+          operatorCrux = "删除节点关系";
           return {
             operator,
             nodeName,
@@ -261,7 +256,7 @@ export default {
             ' " 节点的关系值改变为 " ' +
             contentObj.property.type +
             ' "';
-          operatorCrux = "修改 节点关系";
+          operatorCrux = "修改节点关系";
           window.console.log(contentObj);
           return {
             operator,
