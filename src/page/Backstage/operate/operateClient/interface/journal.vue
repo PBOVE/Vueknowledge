@@ -313,11 +313,11 @@ export default {
   cursor: pointer;
 }
 .know-journal-content {
-  padding: 5px;
+  padding: 15px 5px 5px 40px;
   margin-left: 5px;
-  padding-left: 40px;
   border-left: 1px solid #f8f8f9;
   height: 100px;
+
 }
 .know-journal-content:hover {
   background-color: #f8f8f9;

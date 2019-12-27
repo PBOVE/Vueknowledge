@@ -22,6 +22,7 @@
                 <Dropdown @on-click='clickListevent'>
                     <span class="know-header-right-user-name">{{username}}</span>
                     <DropdownMenu slot="list" class="know-header-right-list">
+                        <DropdownItem name='2'>个人中心</DropdownItem>
                         <DropdownItem name='1'>密码修改</DropdownItem>
                         <DropdownItem name='0' divided>退出登录</DropdownItem>
                     </DropdownMenu>
