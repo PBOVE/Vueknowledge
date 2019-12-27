@@ -106,6 +106,7 @@ export default {
   padding: 5px 10px 3px 10px;
   border-bottom: 1px solid #dcdee2;
   background-color: #dcdee2;
+  height: 40px;
 }
 .know-operate-mian-header-select {
   height: 50px;

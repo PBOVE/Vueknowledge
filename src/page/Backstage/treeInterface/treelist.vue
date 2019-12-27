@@ -14,7 +14,7 @@
           @click="TLCallback(4)"
           :class="{'know-tree-header-button-no-selete':ctrlButtonFlag}"
           >
-          <Icon type="md-add" size="20" />
+         <Icon type="md-add-circle" size = 20 />
           <div class="know-tree-header-button-title">添加</div>
         </div>
 
@@ -23,7 +23,7 @@
           :class="{'know-tree-header-button-no-selete':!SeleteNodeFlag}"
           @click="TLCallback(5)"
         >
-          <Icon type="md-remove" size="20" />
+          <Icon type="ios-close-circle" size=20 />
           <div class="know-tree-header-button-title">删除</div>
         </div>
 
@@ -32,7 +32,7 @@
           :class="{'know-tree-header-button-no-selete':!SeleteNodeFlag||ctrlButtonFlag}"
           @click="TLCallback(6)"
         >
-          <Icon type="md-create" size="20" />
+          <Icon type="ios-create" size =22 />
           <div class="know-tree-header-button-title">编辑</div>
         </div>
       </Header>
@@ -212,6 +212,7 @@ export default {
   padding: 5px 10px 3px 10px;
   border-bottom: 1px solid #dcdee2;
   background-color: #dcdee2;
+  height: 40px;
 }
 .know-tree-default {
   background-color: #f5f7f9;
@@ -222,11 +223,11 @@ export default {
   height: 40px;
   line-height: 40px;
   font-size: 16px;
-  text-indent: 0.3em;
+  text-indent: 0.4em;
 }
 .know-tree-header-select {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   align-items: center;
   height: 50px;
   padding: 0;
