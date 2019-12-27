@@ -15,7 +15,7 @@
       <div class="know-journal-content">
         <div class="know-journal-content-title">
           <span class="know-journal-strong">{{item.nickName}}</span>
-          在{{item.dateValue}}前，操作了
+          在 {{item.dateValue}} 前，操作了
           <span class="know-journal-strong">{{item.nodeName}}</span> 节点，「{{item.operatorCrux}}」
         </div>
         <div class="know-journal-content-user">
