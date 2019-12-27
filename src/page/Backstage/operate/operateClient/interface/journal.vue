@@ -16,13 +16,19 @@
         <div class="know-journal-content-title">
           <span class="know-journal-strong">{{item.nickName}}</span>
           在 {{item.dateValue}} 前，操作了
-          <span class="know-journal-strong">{{item.nodeName}}</span> 节点，「{{item.operatorCrux}}」
+          <span class="know-journal-strong">{{item.nodeName}}</span>
+          节点，「{{item.operatorCrux}}」
         </div>
         <div class="know-journal-content-user">
-          <span class="know-journal-strong">{{item.nodeName}}</span> 节点，{{item.operator}} 
+          <span class="know-journal-strong">{{item.nodeName}}</span>
+          节点，{{item.operator}}
         </div>
       </div>
     </li>
+    <div class="know-journal-item-load" v-show="!(dataPage === dataEndPage)">
+      <Icon type="md-snow" size="16" :class="{'know-journal-item-load-icon':requestFlag}" />
+      <span class="know-journal-item-load-button" @click="getPageLogData">&nbsp;查看更多&nbsp;</span>
+    </div>
   </ul>
 </template>
 
@@ -35,7 +41,15 @@ export default {
       //请求数据标志位
       getDataFlag: false,
       //请求的日志数据
-      JournalData: []
+      JournalData: [],
+      //请求数据数量
+      dataSize: 5,
+      // 分页起始位置
+      dataPage: 0,
+      //分页终点位置
+      dataEndPage: 1,
+      //请求标志位
+      requestFlag: false
     };
   },
   methods: {
@@ -43,18 +57,32 @@ export default {
     getJournalData() {
       if (this.getDataFlag) return;
       this.getDataFlag = true;
+      this.dataPage = 1;
+      this.getServerData(0);
+    },
+    // 分页点击加载 请求服务器数据 数据
+    getPageLogData() {
+      this.getServerData(this.dataPage++);
+    },
+    // 请求 服务器 数据
+    getServerData(Pageval) {
+      if (this.requestFlag) return;
+      this.requestFlag = true;
       let url = "record/node/" + this.treeNode.id;
       let obj = {
-        size: 100
+        size: this.dataSize,
+        page: Pageval
       };
       this.get(url, obj)
         .then(res => {
-          // let data = res.data.content;
-          // window.console.log(data);
-          this.handleJournalData(res.data.content);
+          if (this.showSelectNum === 4) {
+            this.requestFlag = false;
+            this.dataEndPage = res.data.totalPages;
+            this.handleJournalData(res.data.content);
+          }
         })
-        .catch(err => {
-          window.console.log(err);
+        .catch(() => {
+          this.requestFlag = false;
         });
     },
     // 设置重新获取数据
@@ -184,15 +212,19 @@ export default {
               let nextLen = nextDataLabel.length;
               let oldName, newName;
               if (nextDataLabel.length === labels.length) {
-                for (let i = 0; i < len; i++) {
-                  if (nextDataLabel[i] !== labels[i]) {
-                    newName = labels[i];
-                    oldName = nextDataLabel[i];
-                    break;
-                  }
-                }
+                let a = nextDataLabel;
+                let b = labels;
+                let c = a
+                  .filter(v => {
+                    return !(b.indexOf(v) > -1);
+                  })
+                  .concat(
+                    b.filter(v => {
+                      return !(a.indexOf(v) > -1);
+                    })
+                  );
                 operatorCrux = "修改属性";
-                operator = '"' + oldName + '"修改属性名称为" ' + newName + '"';
+                operator = '"' + c[0] + '"修改属性名称为" ' + c[1] + '"';
               } else if (nextDataLabel.length < labels.length) {
                 operatorCrux = "添加属性";
                 for (let i = 0; i < len; i++) {
@@ -311,7 +343,6 @@ export default {
   margin-left: 5px;
   border-left: 1px solid #f8f8f9;
   height: 100px;
-
 }
 .know-journal-content:hover {
   background-color: #f8f8f9;
@@ -328,5 +359,37 @@ export default {
   border-top: 1px solid #f0f0f0;
   text-indent: 1em;
   letter-spacing: 0.1em;
+}
+.know-journal-item-load {
+  margin: 10px 0 10px 40px;
+  color: #2395f1;
+  border-radius: 10px;
+  padding-left: 30px;
+  height: 40px;
+  line-height: 40px;
+  background-color: #f8f8f9;
+}
+.know-journal-item-load-button {
+  position: relative;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.know-journal-item-load-button:hover {
+  color: #19be6b;
+}
+.know-journal-item-load-icon {
+  animation: ani-demo-spin 1s linear infinite;
+}
+@keyframes ani-demo-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

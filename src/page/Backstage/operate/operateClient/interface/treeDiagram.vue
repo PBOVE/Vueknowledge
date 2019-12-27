@@ -20,7 +20,7 @@ export default {
       //设置top高
       TopHeight: 120,
       //设置right宽度
-      RightWeight:20
+      RightWeight: 20
     };
   },
   methods: {
@@ -38,12 +38,18 @@ export default {
         .then(childdata => {
           let url = "node/" + this.treeNode.id + "/link";
           this.get(url).then(res => {
-            let treeData = this.parentNodeProcessing(childdata,res.data.parent);
-            if (this.$refs.knowtree.firstChild)
-              this.$refs.knowtree.removeChild(this.$refs.knowtree.firstChild);
-            this.CreateD3jsTree(treeData);
+            if (this.showSelectNum === 3) {
+              let treeData = this.parentNodeProcessing(
+                childdata,
+                res.data.parent
+              );
+              if (this.$refs.knowtree.firstChild)
+                this.$refs.knowtree.removeChild(this.$refs.knowtree.firstChild);
+              this.CreateD3jsTree(treeData);
+            }
           });
-        }).catch(()=>{})
+        })
+        .catch(() => {});
     },
     //子节点处理
     ChildNodeProcessing(child) {
@@ -214,7 +220,9 @@ export default {
             //     return d.data.name.substr(0, 5) + "...";
             //   }
             // }
-             return d.data.name.length>5?d.data.name.substr(0, 5) + "...":d.data.name;
+            return d.data.name.length > 5
+              ? d.data.name.substr(0, 5) + "..."
+              : d.data.name;
           })
           .append("title")
           .text(function(d) {

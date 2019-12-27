@@ -21,7 +21,7 @@ export default {
       //设置top高
       TopHeight: 120,
       //设置right宽度
-      RightWeight:20
+      RightWeight: 20
     };
   },
   methods: {
@@ -32,10 +32,13 @@ export default {
       let url = "node/" + this.treeNode.id + "/graph";
       this.get(url)
         .then(res => {
-          if(this.$refs.knowForce.firstChild)
-            this.$refs.knowForce.removeChild(this.$refs.knowForce.firstChild);
+          if (this.showSelectNum === 2) {
+            if (this.$refs.knowForce.firstChild)
+              this.$refs.knowForce.removeChild(this.$refs.knowForce.firstChild);
             this.handleforceData(res.data);
-        }).catch(()=>{})
+          }
+        })
+        .catch(() => {});
     },
     //处理 数据 并且 渲染
     handleforceData(data) {
@@ -73,9 +76,11 @@ export default {
         .append("svg")
         .attr("width", width)
         .attr("height", height)
-        .call(d3.zoom().on("zoom", function () {
-            g.attr("transform", d3.event.transform)
-        }));
+        .call(
+          d3.zoom().on("zoom", function() {
+            g.attr("transform", d3.event.transform);
+          })
+        );
       let g = svg.append("g");
       //设置一个color的颜色比例尺，为了让不同的扇形呈现不同的颜色
       let colorScale = d3
@@ -237,8 +242,8 @@ export default {
         });
       //文字
       gs.append("text")
-        .attr("dy", function(d,i){
-          return i===0?5:4;
+        .attr("dy", function(d, i) {
+          return i === 0 ? 5 : 4;
         })
         .attr("dx", function(d, j) {
           let lenStr = 0;
@@ -247,17 +252,17 @@ export default {
           let Namelength = d.name.length;
           for (let i = 0; i < Namelength; i++) {
             let c = d.name.charCodeAt(i);
-            if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)){
+            if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)) {
               lenStr = lenStr + English;
-            }else {
-              if(j === 0){
+            } else {
+              if (j === 0) {
                 lenStr += Chinese + 5;
-              }else {
-                lenStr += Chinese ;
+              } else {
+                lenStr += Chinese;
               }
             }
             if (i + 1 != d.name.length && i === 3) {
-              lenStr += 0
+              lenStr += 0;
               break;
             }
           }
@@ -350,7 +355,7 @@ export default {
       }
     },
     //从新获取数据
-    setForce(){
+    setForce() {
       this.getDataFlag = false;
       if (this.showSelectNum !== 2) return;
       this.getforceData();
