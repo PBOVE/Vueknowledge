@@ -80,7 +80,7 @@
             class="know-login-user-land-button"
             size="large"
             @click="Submitlanding"
-          >登&nbsp;录</Button>
+          >登 录</Button>
         </div>
       </div>
 
@@ -99,7 +99,7 @@
             />
             <transition name="knowerror">
               <div class="know-login-warn" v-show="registerusername">
-                <Icon type="ios-information-circle" size="17" color="#f5222d" />请输入账号!
+                <Icon type="ios-information-circle" size="17" color="#f5222d" />请输入用户名！
               </div>
             </transition>
           </div>
@@ -124,10 +124,10 @@
                   <Icon :type="regexPassword.space" size="17" :color="regexPassword.Scolor" />&nbsp;&nbsp;&nbsp; 不能包括空格
                 </div>
                 <div :class="{'know-login-user-password-tips-d':true}">
-                  <Icon :type="regexPassword.number" size="17" :color="regexPassword.Ncolor" />&nbsp;&nbsp;&nbsp;长度为6-32个字符
+                  <Icon :type="regexPassword.number" size="17" :color="regexPassword.Ncolor" />&nbsp;&nbsp;&nbsp;长度为 6-32 个字符
                 </div>
                 <div :class="{'know-login-user-password-tips-d':true}">
-                  <Icon :type="regexPassword.different" size="17" :color="regexPassword.Dcolor" />&nbsp;&nbsp;&nbsp;必须包含字母、数字、符号中至少2种
+                  <Icon :type="regexPassword.different" size="17" :color="regexPassword.Dcolor" />&nbsp;&nbsp;&nbsp;必须包含字母、数字、符号中至少 2 种
                 </div>
               </div>
             </transition>
@@ -156,7 +156,7 @@
               <div class="know-login-warn" v-show="registerRepeatPassword">
                 <Icon type="ios-information-circle" size="17" color="#f5222d" />
                 &nbsp;&nbsp;&nbsp;
-                {{registerRepeatPasswordFalg?'两次输入的密码不匹配!':'请确认密码!'}}
+                {{registerRepeatPasswordFalg?'两次输入的密码不匹配！':'请确认密码!'}}
               </div>
             </transition>
           </div>
@@ -167,7 +167,7 @@
             class="know-login-user-land-button"
             size="large"
             @click="SubmitRegister"
-          >注&nbsp;册</Button>
+          >注 册</Button>
         </div>
       </div>
     </div>
@@ -192,7 +192,7 @@ export default {
       //注册 密码 警告 标志位
       registerPassword: false,
       //注册 密码 显示 语句
-      registerShowPassword: "请输入密码!",
+      registerShowPassword: "请输入密码！",
       //注册 密码 显示 提示
       registerPasswordShowTips: false,
       //注册 密码 正则 标志位
@@ -309,7 +309,11 @@ export default {
         this.repeatFrom.remeberMe === this.formlogin.remeberMe
       ) {
         this.$Message.warning({
+<<<<<<< HEAD
           content: "请不要重复提交",
+=======
+          content: "请不要重复提交！",
+>>>>>>> 9890607dd157b7906b4c1be3c17cbc02254b4b54
           duration: 2
         });
         return;
@@ -471,11 +475,11 @@ export default {
         this.registerPasswordShowTips = false;
         if (this.formRegister.password === "") {
           this.registerPassword = true;
-          this.registerShowPassword = "请输入密码!";
+          this.registerShowPassword = "请输入密码！";
         } else {
           if (!this.regexPassword.Sflag) {
             this.registerPassword = true;
-            this.registerShowPassword = "不能包括空格!";
+            this.registerShowPassword = "不能包括空格！";
           } else if (!this.regexPassword.Nflag) {
             this.registerPassword = true;
             this.registerShowPassword = "长度为6-32个字符";
