@@ -309,11 +309,7 @@ export default {
         this.repeatFrom.remeberMe === this.formlogin.remeberMe
       ) {
         this.$Message.warning({
-<<<<<<< HEAD
-          content: "请不要重复提交",
-=======
           content: "请不要重复提交！",
->>>>>>> 9890607dd157b7906b4c1be3c17cbc02254b4b54
           duration: 2
         });
         return;
