@@ -8,6 +8,11 @@
 <template>
   <div id="loginBox">
     <Spin size="large" fix v-if="spinShow"></Spin>
+    <div class="know-login-icon">
+      <router-link to='/'>
+        <Icon type="md-apps" />
+      </router-link>
+    </div>
     <div class="know-login-box">
       <div class="know-login-title">
         <div class="know-login-title-en">
@@ -662,6 +667,21 @@ export default {
 }
 #loginBox .know-login-show-tips {
   background-color: #f0f2f5;
+}
+#loginBox .know-login-icon{
+  height: 60px;
+  line-height: 60px;
+  font-size: 24px;
+  text-align:right;
+  padding:0  120px;
+}
+#loginBox .know-login-icon i{
+  cursor: pointer;
+  color: #808695;
+  transition: color 0.5s;
+}
+#loginBox .know-login-icon i:hover{
+  color: rgba(128,134,149,0.8);
 }
 @keyframes namepasswordWarn {
   0% {

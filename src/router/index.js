@@ -53,8 +53,7 @@ if (sessionStorage.getItem('token')) {
  */
 let router = new vueRouter({
     mode: 'history',
-    routes: [
-        {
+    routes: [{
             path: '/',
             name: 'search',
             component: search
@@ -68,7 +67,9 @@ let router = new vueRouter({
             path: '/manage',
             name: 'manage',
             component: manage,
-            meta: { requireAuth: true }
+            meta: {
+                requireAuth: true
+            }
         },
         {
             path: '*',
@@ -83,19 +84,20 @@ let router = new vueRouter({
  *  路由 守卫 函数
  */
 router.beforeEach((to, from, next) => {
-
-    let token = sessionStorage.getItem('token');
-    if (to.matched.some(r => r.meta.requireAuth)) {
-        if (token) {
-            next();
-        } else {
-            next('/login');
-        }
-    } else {
+    if (to.path === '/') {
         next();
+    } else {
+        let token = sessionStorage.getItem('token');
+        if (to.matched.some(r => r.meta.requireAuth)) {
+            if (token) {
+                next();
+            } else {
+                next('/login');
+            }
+        } else {
+            next();
+        }
     }
-
-
 })
 
 

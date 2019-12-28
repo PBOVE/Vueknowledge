@@ -13,7 +13,7 @@
     </div>
     <div class="know-header-right">
       <router-link to="/" class="know-header-right-link">
-        <Icon type="ios-search" class="know-header-right-user-icon" />
+        <Icon type="md-apps" class="know-header-right-user-icon"/>
       </router-link>
       <Dropdown @on-click="clickListevent">
         <span class="know-header-right-user-logo" ref="userLogo"></span>
@@ -143,13 +143,13 @@ know-header-right-list .know-header-right-user:hover {
 }
 .know-header-right-user-icon {
   margin-right: 15px;
-  font-size: 20px;
-  line-height: 20px;
+  font-size: 24px;
+  color: #808695;
+  transition: color 0.5s;
   cursor: pointer;
 }
 .know-header-right-user-icon:hover {
-  color: #5cadff;
-  font-weight: bold;
+  color: rgba(128,134,149,0.8);
 }
 .k-h-r-s-d {
   display: inline-block;
