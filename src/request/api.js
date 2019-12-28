@@ -159,9 +159,10 @@ const showStatus =  (err) =>{
         path: '/',
       });
       store.commit('delToken');
-      break;
-    case 6003:
       notify('error','登录失效,请重新登录');
+      break;
+    case 502:
+      notify('error','网络错误');
       break;
     default :
       notify('error', '错误');
@@ -197,11 +198,7 @@ axios.interceptors.response.use(response => {
   // 对响应数据做点什么
   let data = response.data;
   if (typeof data === 'string') {
-    router.replace({
-      path: '/',
-    });
-    store.commit('delToken');
-    showStatus(6003)
+    showStatus(404);
     return Promise.reject();
   }else if(data.code === 0 && data.msg === 'Success'){
     return response;

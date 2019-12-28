@@ -89,7 +89,7 @@
           <div class="know-login-user">
             <Input
               v-model="formRegister.username"
-              placeholder="账号"
+              placeholder="用户名"
               prefix="ios-paw-outline"
               size="large"
               :class="{'know-login-error':registerusername}"
@@ -309,7 +309,7 @@ export default {
         this.repeatFrom.remeberMe === this.formlogin.remeberMe
       ) {
         this.$Message.warning({
-          content: "请不要重复提交!",
+          content: "请不要重复提交",
           duration: 2
         });
         return;

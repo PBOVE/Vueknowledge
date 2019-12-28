@@ -30,7 +30,8 @@ import axios from 'axios'
  */
 import login from '../page/login/login'
 import manage from '../page/Backstage/manage'
-import nofound from '../page/404/nofound.vue'
+import nofound from '../page/noFound/nofound'
+import search from '../page/search/search'
 
 Vue.use(Vuex)
 Vue.use(ViewUI);
@@ -42,7 +43,7 @@ Vue.prototype.axios = axios;
  */
 if (sessionStorage.getItem('token')) {
     store.commit('setToken', sessionStorage.getItem('token'));
-    store.commit('setUser',sessionStorage.getItem('user'));
+    store.commit('setUser', sessionStorage.getItem('user'));
 }
 
 
@@ -52,22 +53,27 @@ if (sessionStorage.getItem('token')) {
  */
 let router = new vueRouter({
     mode: 'history',
-    routes:[
+    routes: [
         {
-            path:'/',
-            name:'login',
-            component:login
+            path: '/',
+            name: 'search',
+            component: search
         },
         {
-            path:'/manage',
-            name:'manage',
-            component:manage,
-            meta:{requireAuth:true}
+            path: '/login',
+            name: 'login',
+            component: login
         },
         {
-            path:'*',
-            name:'nofound',
-            component:nofound
+            path: '/manage',
+            name: 'manage',
+            component: manage,
+            meta: { requireAuth: true }
+        },
+        {
+            path: '*',
+            name: 'nofound',
+            component: nofound
         }
     ]
 })
@@ -76,18 +82,21 @@ let router = new vueRouter({
 /**
  *  路由 守卫 函数
  */
-router.beforeEach((to, from, next)=> {
-    let token  = sessionStorage.getItem('token');
-    if(to.matched.some(r => r.meta.requireAuth)){
-        if(token){
+router.beforeEach((to, from, next) => {
+
+    let token = sessionStorage.getItem('token');
+    if (to.matched.some(r => r.meta.requireAuth)) {
+        if (token) {
             next();
-        }else{
-            next('/');
+        } else {
+            next('/login');
         }
-    }else{
+    } else {
         next();
     }
+
+
 })
 
 
-export default  router
+export default router
