@@ -156,7 +156,7 @@ const showStatus =  (err) =>{
       break;
     case 404:
       router.replace({
-        path: '/',
+        path: '/login',
       });
       store.commit('delToken');
       notify('error','登录失效,请重新登录');

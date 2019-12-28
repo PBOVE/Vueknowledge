@@ -7,8 +7,10 @@
 
 <template>
   <div class="know-search">
-    <header class="know-search-header">
-      <Icon type="md-apps" class="know-search-header-icon" />
+    <header class="know-search-header" ref="knowSearchHeader">
+      <router-link to="/manage">
+        <Icon type="md-apps" class="know-search-header-icon" />
+      </router-link>
       <router-link to="/login" v-show="!userStatusFlag">
         <span class="know-search-header-login">登录</span>
       </router-link>
@@ -22,23 +24,33 @@
       <div class="know-search-box-title-cn" ref="knowSearchBoxCn">知识图谱搜索</div>
       <div class="know-search-box-input">
         <AutoComplete
+          element-id="know-search-box-input-In"
           v-model="InSearchMeg"
           :data="searchData"
           icon="ios-search"
           @on-focus="SearchInFocus"
+          @on-change="SearchChangeOrselect(true)"
+          @on-select="SearchSelectShow"
           size="large"
         ></AutoComplete>
       </div>
     </div>
-    <div class="know-search-header-logo" ref='knowSearchHeaderLogo'>
+    <div class="know-search-header-logo" ref="knowSearchHeaderLogo">
       <span></span>
       <span>Knowledge&nbsp;Graph</span>
     </div>
+    <search-content
+      :style="{height:setClientHeight}"
+      :reqShowDataFlag="reqShowDataFlag"
+      :InSearchMeg="InSearchMeg"
+    ></search-content>
   </div>
 </template>
 
 <script>
+import searchContent from "./searchContent/searchContent";
 export default {
+  components: { searchContent },
   data() {
     return {
       // 判断用户是否登录 标志位
@@ -56,12 +68,25 @@ export default {
         "#56A902"
       ],
       //联想 请求的数据
-      searchData: [1, 2, 3],
+      searchData: [],
       //用户输入的数据
-      InSearchMeg: ""
+      InSearchMeg: "",
+      // 获取 innerHeight
+      InnerHeight: "",
+      // 获取 innerWidth
+      InnerWidth: "",
+      // 距离顶部的高度
+      TopHeight: 60,
+      // 视图数据请求标志
+      reqShowDataFlag: ""
     };
   },
   methods: {
+    //获取 浏览器 高度
+    getInner() {
+      this.InnerHeight = window.innerHeight;
+      this.InnerWidth = window.innerWidth;
+    },
     //判断用户是否登录
     judgementUser() {
       let user = this.$store.state.user;
@@ -75,18 +100,77 @@ export default {
       this.$refs.userLogo.style.backgroundColor = this.color[
         Math.floor(Math.random() * 7)
       ];
-      window.console.log(username);
     },
     // 搜索框 获取焦点触发的函数
-    SearchInFocus() {
+    SearchInFocus() { 
       this.$refs.knowSearchBoxCn.style.display = "none";
       this.$refs.knowSearchBoxEn.style.display = "none";
       this.$refs.knowSearchBox.classList.add("know-search-box-focus");
-      this.$refs.knowSearchHeaderLogo.classList.add('know-search-header-logo-focus');
+      this.$refs.knowSearchHeaderLogo.classList.add(
+        "know-search-header-logo-focus"
+      );
+      this.$refs.knowSearchHeader.classList.add("know-search-header-focus");
+    },
+    //input change select 改变时 触发的函数
+    SearchChangeOrselect(val) {
+      if (this.InSearchMeg === "") {
+        this.searchData = [];
+        return;
+      }
+      let url = "search";
+      let obj = {
+        q: this.InSearchMeg,
+        tips: val
+      };
+      this.get(url, obj)
+        .then(res => {
+          this.SearchLists(res.data.content);
+        })
+        .catch(() => {});
+        
+    },
+    //下拉列表搜索显示的
+    SearchLists(data) {
+      this.searchData = [];
+      data.forEach(item => {
+        this.searchData.push(item.name);
+      });
+    },
+    // 请求 数据 展示 向 main 传数据
+    SearchSelectShow() {
+      if (this.InSearchMeg === "") {
+        return;
+      }
+      this.reqShowDataFlag = Math.random();
+    },
+    // 回车请求数据
+    SearchReqData(event) {
+      if (event.keyCode !== 13) {
+        return;
+      }
+      this.SearchSelectShow();
+    },
+    // 绑定 enter 监听事件
+    MonitoringlAddInput() {
+      let InP = document.querySelector("#know-search-box-input-In");
+      InP.addEventListener("keyup", this.SearchReqData);
     }
   },
   mounted() {
     this.judgementUser();
+    this.MonitoringlAddInput();
+    this.InnerHeight = window.innerHeight;
+    this.InnerWidth = window.innerWidth;
+    window.addEventListener("resize", this.getInner);
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.getInner);
+  },
+  computed: {
+    //设置 树 可视区 高度
+    setClientHeight() {
+      return this.InnerHeight - this.TopHeight + "px";
+    }
   }
 };
 </script>
@@ -103,6 +187,10 @@ export default {
   display: flex;
   justify-content: flex-end;
   align-items: center;
+}
+.know-search-header-focus {
+  border-bottom: 1px solid #dcdee2;
+  background-color: #f8f8f9;
 }
 .know-search-header-login {
   display: inline-block;
@@ -206,14 +294,13 @@ export default {
   position: absolute;
   font-family: Georgia;
   left: 20px;
-  top:40px;
+  top: 40px;
   opacity: 0;
 }
-.know-search-header-logo-focus{
+.know-search-header-logo-focus {
   transition: top 0.5s;
   top: 15px;
   opacity: 1;
-  
 }
 .know-search-header-logo span:nth-of-type(1) {
   display: inline-block;
@@ -226,6 +313,34 @@ export default {
 .know-search-header-logo span:nth-of-type(2) {
   font-size: 20px;
   margin-left: 10px;
+}
+.know-search-box-input i {
+  right: inherit;
+}
 
+#know-search-box-input-In {
+  padding-left: 32px;
+  padding-right: 0;
+}
+@media screen and (max-width: 850px) {
+  .know-search-header {
+    padding: 0;
+  }
+  .know-search-header-logo {
+    left: 0;
+  }
+  .know-search-box-focus {
+    left: 200px;
+  }
+}
+@media screen and (max-width: 800px) {
+  .know-search {
+    width: 800px;
+  }
+}
+@media screen and (max-height: 300px) {
+  .know-search-box {
+    transform: translate(-50%, 0);
+  }
 }
 </style>

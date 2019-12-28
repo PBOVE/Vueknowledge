@@ -101,7 +101,7 @@
                     this.splitinit = 1;
                 }else{
                     this.splitMax = '500px';
-                    this.splitinit = parseInt(this.splitMin)/this.InnerWidth;
+                    this.splitinit = (parseInt(this.splitMin)+50)/this.InnerWidth;
                 }
             }
         }
@@ -116,7 +116,7 @@
     .know-manage-header{
         min-width:300px;
         height: 60px;
-        padding: 0 50px;
+        padding: 0 55px;
     }
     .know-manage-split{
         height: 200px;

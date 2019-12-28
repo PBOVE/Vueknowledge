@@ -113,12 +113,10 @@ export default {
   display: flex;
   align-items: center;
   height: 60px;
-  padding: 0 20px;
+  /* padding: 0 20px;  */
   transition: background-color 0.5s;
 }
-.know-header-right:hover {
-  background-color: #dcdee2;
-}
+
 know-header-right-list .know-header-right-user:hover {
   background-color: #e8eaec;
 }

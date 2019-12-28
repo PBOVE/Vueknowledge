@@ -220,9 +220,10 @@ export default {
             //     return d.data.name.substr(0, 5) + "...";
             //   }
             // }
-            return d.data.name.length > 5
-              ? d.data.name.substr(0, 5) + "..."
-              : d.data.name;
+            // return d.data.name.length > 5
+            //   ? d.data.name.substr(0, 5) + "..."
+            //   : d.data.name;
+            return d.data.name;
           })
           .append("title")
           .text(function(d) {

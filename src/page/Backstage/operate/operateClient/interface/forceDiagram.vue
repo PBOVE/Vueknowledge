@@ -247,13 +247,17 @@ export default {
         })
         .attr("dx", function(d, j) {
           let lenStr = 0;
-          let Chinese = 10;
-          let English = 3;
+          let Chinese = 9;
+          let English = 5;
           let Namelength = d.name.length;
           for (let i = 0; i < Namelength; i++) {
             let c = d.name.charCodeAt(i);
             if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)) {
-              lenStr = lenStr + English;
+              if (j === 0) {
+                lenStr += English + 2;
+              } else {
+                lenStr += English;
+              }
             } else {
               if (j === 0) {
                 lenStr += Chinese + 5;
