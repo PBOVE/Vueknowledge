@@ -325,7 +325,6 @@ export default {
             this.$emit("SClientCallback", 2);
             // 重新 获取日志
             this.$emit("SClientCallback", 4)
-            
           }).catch(()=>{
         })
       }

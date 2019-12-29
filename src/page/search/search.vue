@@ -43,6 +43,7 @@
       :style="{height:setClientHeight}"
       :reqShowDataFlag="reqShowDataFlag"
       :InSearchMeg="InSearchMeg"
+      :InnerHeight='InnerHeight'
     ></search-content>
   </div>
 </template>
@@ -127,7 +128,6 @@ export default {
           this.SearchLists(res.data.content);
         })
         .catch(() => {});
-        
     },
     //下拉列表搜索显示的
     SearchLists(data) {

@@ -8,31 +8,34 @@
 <template>
   <div class="know-s-c" v-show="searchFocus">
     <div class="know-s-c-m">
-      <div class="know-s-c-m-h">
-        <div class="know-s-c-m-ht">
-          <div class="know-s-c-m-htt">{{ShowSMeg}}</div>
-          <div class="know-s-c-m-htt-s">实体</div>
-        </div>
-        <div class="know-s-c-m-htn" title="总数据量">{{totalElements}}</div>
-      </div>
-      <div class="know-s-c-m-attr">
-        <div class="know-s-c-m-attr-tittle">属性</div>
-        <div class="know-s-c-m-attr-d know-s-c-m-attr-c">
-          <span v-for="item in LabelData" :key="item" class="know-s-c-m-attr-d-list">
-            “
-            <span>{{item}}</span>”
-          </span>
-        </div>
-      </div>
+      <content-mheader
+        :reqSuccessFlag='reqSuccessFlag'
+        :ShowSMeg="ShowSMeg"
+        :totalElements="totalElements"
+        :handleShowData="handleShowData"
+        :reqShowData="reqShowData"
+        :totalPages ='totalPages'
+        :pageNum ='pageNum'
+        @contentCallback = 'contentCallback'
+      ></content-mheader>
     </div>
-    <div class="know-s-c-a">sdfasd</div>
+    <div class="know-s-c-a">
+      <content-aside
+        ref='contentaside'
+        :InnerHeight='InnerHeight'
+        :reqShowData = reqShowData
+      ></content-aside>
+    </div>
   </div>
 </template>
 
 
 <script>
+import contentMheader from "./contentMheader";
+import contentAside from './contentAside'
 export default {
-  props: ["reqShowDataFlag", "InSearchMeg"],
+  props: ["reqShowDataFlag", "InSearchMeg",'InnerHeight'],
+  components: { contentMheader,contentAside },
   data() {
     return {
       //用户输入的数据
@@ -42,17 +45,22 @@ export default {
       // 当前请求的第几页
       pageNum: 0,
       // 一页可以展示的数据有多少
-      pageSize: 10,
+      pageSize: 8,
       // 总的数据有多少
       totalElements: "",
       // 请求的数据
       reqShowData: [],
       // 获取焦点标志位
       searchFocus: false,
-      // 请求的数据属性
-      LabelData: [],
+      // 处理过的请求数据
+      handleShowData: {
+        // 属性
+        LabelData: []
+      },
       // 防止请求的属性重复
-      LabelDataFlag: new Set()
+      LabelDataFlag: new Set(),
+      // 数据加载成功标志为
+      reqSuccessFlag:''
     };
   },
   methods: {
@@ -60,28 +68,42 @@ export default {
     getServerData() {
       let url = "search";
       let obj = {
+        size:this.pageSize,
         q: this.InSearchMeg,
         page: this.pageNum
       };
       this.get(url, obj)
         .then(res => {
           this.handleServerData(res.data);
+          this.reqSuccessFlag  = Math.random();
         })
-        .catch(() => {});
+        .catch(err => {
+          window.console.log(err);
+        });
     },
     // 处理请求的数据
     handleServerData(data) {
       this.searchFocus = true;
       this.totalElements = data.totalElements;
       this.ShowSMeg = this.InSearchMeg;
+      this.totalPages =  data.totalPages
       let content = data.content;
-
+      let reg = new RegExp(this.ShowSMeg, "gi");
       content.forEach(item => {
-        window.console.log(item);
-        Object.keys(item).forEach(val => {
-          let labels = item[val].node.labels;
-          this.handleServerLabel(labels);
+        this.reqShowData.push({
+          info: item.info,
+          node: item.node,
+          text:  this.html2Escape(item.text).replace(
+            reg,
+            '<span class="s-c-m-c-t-u">' + this.ShowSMeg + "</span>"
+          ),
+          user: item.user,
+          nodeName: this.html2Escape(item.node.name).replace(
+            reg,
+            '<span class="s-c-m-c-t-u">' + this.ShowSMeg + "</span>"
+          )
         });
+        this.handleServerLabel(item.node.labels);
       });
     },
     // 处理属性 数据
@@ -90,15 +112,37 @@ export default {
       data.forEach(val => {
         if (!this.LabelDataFlag.has(val)) {
           this.LabelDataFlag.add(val);
-          this.LabelData.push(val);
+          this.handleShowData.LabelData.push(val);
         }
       });
+    },
+    //HTML标签转义（< -> &lt;）
+    html2Escape(sHtml) {
+      return sHtml.replace(/[<>&"]/g, c => {
+        return { "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c];
+      });
+    },
+    //content 回调函数
+    contentCallback(type,val){
+      const statusMap ={
+        1: ()=>{
+          this.pageNum++;
+          this.getServerData();
+        },
+        2:()=>{
+          this.$refs.contentaside.CAsideCallback(1,val)
+        }
+      }
+      statusMap[type]();
     }
   },
   watch: {
     reqShowDataFlag() {
       this.pageNum = 0;
-      this.LabelData = [];
+      this.handleShowData = {
+        LabelData: []
+      };
+      this.reqShowData = [];
       this.LabelDataFlag.clear();
       this.getServerData();
     }
@@ -110,7 +154,7 @@ export default {
 <style scoped>
 .know-s-c {
   height: 100%;
-  padding: 10px 50px 10px 50px;
+  padding: 10px 10px 10px 50px;
   display: flex;
   overflow: auto;
 }
@@ -123,67 +167,10 @@ export default {
   border-radius: 5px;
 }
 .know-s-c-m {
-  border: 1px solid #dcdee2;
-  border-radius: 5px;
   width: 670px;
-  padding: 8px;
 }
-.know-s-c-m-h {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #dcdee2;
-}
-.know-s-c-m-ht {
-  padding: 0px 0 5px 10px;
-  flex: 1;
-}
-.know-s-c-m-htt {
-  font-size: 18px;
-  color: #17233d;
-}
-.know-s-c-m-htt-s {
-  margin-top: 3px;
-  font-size: 12px;
-  color: #808695;
-}
-.know-s-c-m-htn {
-  border: 2px solid #19be6b;
-  width: 30px;
-  height: 30px;
-  text-align: center;
-  line-height: 25px;
-  border-radius: 15px;
-  cursor: Default;
-  user-select: none;
-}
-.know-s-c-m-attr-tittle {
-  padding: 5px 0 5px 10px;
-  font-size: 13px;
-  font-weight: bold;
-  color: #14181c;
-}
-.know-s-c-m-attr-d-list {
-  display: inline-block;
-  font-size: 14px;
-
-  margin: 5px 5px 2px 3px;
-  cursor: default;
-  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
-    "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
-}
-.know-s-c-m-attr-d-list span {
-  display: inline-block;
-  border-bottom: 1.2px solid #28a745;
-  padding: 0 5px 2px 5px;
-}
-.know-s-c-m-attr-footr {
-  text-align: center;
-}
-
-.know-s-c-m-attr-footr-icon {
-  font-size: 16px;
-  color: #808695;
-  cursor: pointer;
+.know-s-c-a{
+  flex:1;
+  padding: 10px;
 }
 </style>

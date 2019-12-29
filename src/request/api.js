@@ -161,6 +161,9 @@ const showStatus =  (err) =>{
       store.commit('delToken');
       notify('error','登录失效,请重新登录');
       break;
+    case 500:
+      notify('error','系统正在维护中,请稍等');
+      break;
     case 502:
       notify('error','网络错误');
       break;
