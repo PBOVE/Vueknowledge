@@ -26,13 +26,11 @@
       </div>
     </div>
     <div class="know-s-c-m-c">
-      <div v-for="(item,index) in reqShowData" :key="item.node.id" class="know-s-c-m-c-f">
-        <div class="s-c-m-c-title"
-          v-html="item.nodeName"
-          @click="getNodeInmes(index)"
-          ></div>
-        <div class="know-s-c-m-c-user">编辑者: {{item.user}}</div>
-        <div class="s-c-m-c-text" v-html="item.text+'...'"></div>
+      <div v-for="(item) in reqShowData" :key="item.node.id" class="know-s-c-m-c-f">
+        <router-link :to="{name:'searchid', params: {id:item.node.id}}">
+          <div class="s-c-m-c-title" v-html="item.nodeName"></div>
+        </router-link>
+        <div class="s-c-m-c-text" v-html="item.text?item.text+'...':'没有此节点信息。'"></div>
       </div>
     </div>
     <div
@@ -74,14 +72,14 @@ export default {
       }
     },
     // 点击获取节点信息
-    getNodeInmes(index){
-      this.$emit("contentCallback", 2,index);
+    getNodeInmes(index) {
+      this.$emit("contentCallback", 2, index);
     }
   },
   watch: {
     reqSuccessFlag() {
       this.loadMsg = "加载更多";
-      window.console.log(this.reqShowData)
+      window.console.log(this.reqShowData);
       if (this.pageNum + 1 === this.totalPages || this.totalPages === 0) {
         this.loadFlag = false;
       } else {
@@ -96,6 +94,12 @@ export default {
 .s-c-m-c-t-u {
   color: #2d8cf0;
 }
+.know-s-c-m-c-user {
+  display: inline;
+  color: #808695;
+  font-size: 12px;
+  margin-left: 20px;
+}
 </style>
 <style  scoped>
 .s-c-m-b {
@@ -107,7 +111,6 @@ export default {
   width: 100%;
   display: flex;
   align-items: center;
-  
 }
 .know-s-c-m-ht {
   padding: 0px 0 5px 10px;
@@ -132,7 +135,7 @@ export default {
   cursor: Default;
   user-select: none;
 }
-.know-s-c-m-attr{
+.know-s-c-m-attr {
   border-top: 1px solid #dcdee2;
 }
 .know-s-c-m-attr-tittle {
@@ -169,20 +172,22 @@ export default {
 }
 .s-c-m-c-title {
   display: inline;
-  font-size: 16px;
+  font-size: 18px;
   color: #14181c;
   cursor: pointer;
 }
 
 .s-c-m-c-text {
-  text-indent: 2em;
+  margin-top: 8px;
+  /* text-indent: 2em; */
+}
+.know-s-c-m-c-f:first-of-type {
+  margin-top: 10px;
 }
 .know-s-c-m-c-f {
-  margin-top: 15px;
+  margin-top: 25px;
 }
-.know-s-c-m-c-user {
-  color: #808695;
-}
+
 .know-s-c-m-footer {
   background-color: #e8eaec;
   border-radius: 4px;

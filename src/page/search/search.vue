@@ -56,8 +56,6 @@ export default {
     return {
       // 判断用户是否登录 标志位
       userStatusFlag: false,
-      //用户信息
-      userName: "",
       //随机背景颜色
       color: [
         "#ff4e50",

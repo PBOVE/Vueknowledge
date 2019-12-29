@@ -20,11 +20,7 @@
       ></content-mheader>
     </div>
     <div class="know-s-c-a">
-      <content-aside
-        ref='contentaside'
-        :InnerHeight='InnerHeight'
-        :reqShowData = reqShowData
-      ></content-aside>
+
     </div>
   </div>
 </template>
@@ -32,10 +28,9 @@
 
 <script>
 import contentMheader from "./contentMheader";
-import contentAside from './contentAside'
 export default {
   props: ["reqShowDataFlag", "InSearchMeg",'InnerHeight'],
-  components: { contentMheader,contentAside },
+  components: { contentMheader },
   data() {
     return {
       //用户输入的数据
@@ -101,7 +96,7 @@ export default {
           nodeName: this.html2Escape(item.node.name).replace(
             reg,
             '<span class="s-c-m-c-t-u">' + this.ShowSMeg + "</span>"
-          )
+          )+'<div class="know-s-c-m-c-user">编辑者: <span class="know-s-c-m-c-username">'+item.user+'</span></div>'
         });
         this.handleServerLabel(item.node.labels);
       });

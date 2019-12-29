@@ -32,6 +32,7 @@ import login from '../page/login/login'
 import manage from '../page/Backstage/manage'
 import nofound from '../page/noFound/nofound'
 import search from '../page/search/search'
+import searchid from '../page/searchIdshow/searchid'
 
 Vue.use(Vuex)
 Vue.use(ViewUI);
@@ -70,6 +71,11 @@ let router = new vueRouter({
             meta: {
                 requireAuth: true
             }
+        },
+        {
+            path: '/search/:id',
+            name: 'searchid',
+            component: searchid,
         },
         {
             path: '*',
