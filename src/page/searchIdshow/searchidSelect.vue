@@ -29,7 +29,7 @@
       @click="clickButton(3,selectNum)"
     >
       <Icon type="ios-paper-outline " size="20" class="know-searchid-Button-icon" />
-      <div class="know-searchid-Button-titlt">力导图</div>
+      <div class="know-searchid-Button-titlt">富文本</div>
     </div>
   </div>
 </template>
