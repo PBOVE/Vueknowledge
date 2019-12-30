@@ -23,8 +23,8 @@ export default {
   methods: {
     //处理传来的数据
     handleforceData(Nodes, Links) {
-      window.console.log(Nodes);
-      window.console.log(Links);
+      // window.console.log(Nodes);
+      // window.console.log(Links);
       if (this.$refs.knowForce.firstChild)
 				this.$refs.knowForce.removeChild(this.$refs.knowForce.firstChild);
 			this.CreateDjsPower(Nodes,Links)

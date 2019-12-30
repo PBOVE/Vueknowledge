@@ -72,8 +72,8 @@ export default {
           this.handleServerData(res.data);
           this.reqSuccessFlag  = Math.random();
         })
-        .catch(err => {
-          window.console.log(err);
+        .catch(() => {
+     
         });
     },
     // 处理请求的数据

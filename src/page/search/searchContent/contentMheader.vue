@@ -79,7 +79,7 @@ export default {
   watch: {
     reqSuccessFlag() {
       this.loadMsg = "加载更多";
-      window.console.log(this.reqShowData);
+      // window.console.log(this.reqShowData);
       if (this.pageNum + 1 === this.totalPages || this.totalPages === 0) {
         this.loadFlag = false;
       } else {
