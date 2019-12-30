@@ -17,11 +17,38 @@ export default {
 	props:['RightWeight'],
   data() {
     return {
-
+      msg:234
 		};
   },
   methods: {
-    //处理传来的数据
+    //处理 组件传来的 数据 
+    handlecomponentsforceData(data) {
+      let hashMap = {}; //映射
+      let hashnumI = 0; // 映射计数器
+      let Nodes = [];
+      let Links = [];
+      data.nodes.forEach((item, i) => {
+        Nodes.push({
+          name: item.name,
+          id: i,
+          Tid: item.id
+        });
+        hashMap[item.id] = hashnumI++;
+      });
+      data.links.forEach(function(item) {
+        Links.push({
+          relation: item.property.type || item.property.relation,
+          source: hashMap[item.source],
+          target: hashMap[item.target]
+        });
+        if (item.property.relation) {
+          Nodes[hashMap[item.target]]["Pid"] = item.source;
+          Nodes[hashMap[item.target]]["PNid"] = hashMap[item.source];
+        }
+      });
+      this.handleforceData(Nodes, Links);
+    },
+    //处理 渲染
     handleforceData(Nodes, Links) {
       // window.console.log(Nodes);
       // window.console.log(Links);
@@ -182,7 +209,9 @@ export default {
             .on("start", started)
             .on("drag", dragged)
             .on("end", ended)
-        );
+        ).on('click', (d)=>{
+          this.$emit('callback',d);
+        })
       //绘制节点
       gs.append("circle")
         .attr("r", function(d, i) {

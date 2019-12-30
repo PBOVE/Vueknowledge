@@ -42,15 +42,20 @@ export default {
   data() {
     return {
       // 选中的视图
-			selectNum: 1,
+			selectNum:parseInt(this.$route.query.q)||1,
     };
   },
   methods: {
     // 按钮点击事件
     clickButton(newval, oldval) {
+      
       if (newval === oldval) return;
       this.selectNum = newval;
       this.$emit("searchIdCallback", 1, newval);
+    },
+    //设置按键颜色
+    setselectNum(val){
+      this.selectNum = val;
     }
   }
 };

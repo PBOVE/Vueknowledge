@@ -21,10 +21,12 @@ export default {
   methods: {
     //处理传来的数据
     handletreeData(treeData) {
-      // window.console.log(treeData);
+     
       if (this.$refs.knowtree.firstChild)
         this.$refs.knowtree.removeChild(this.$refs.knowtree.firstChild);
+
       this.CreateD3jsTree(treeData);
+     
     },
     //树图渲染数据
     CreateD3jsTree(dataset) {
@@ -67,7 +69,7 @@ export default {
         );
       width = width - marge.left - 100;
       let g = svg.append("g");
-
+     
       let LinkAll = g.append("g");
       let NodeAll = g.append("g");
       //创建一个树状图
@@ -94,8 +96,8 @@ export default {
         let Nodes = tree(root).descendants();
         let Links = tree(root).links();
         Nodes[0].y = Nodes[0].Strlen + 10;
-        // console.log(Nodes);
-        // console.log(Links);
+        // window.console.log(Nodes);
+        // window.console.log(Links);
         //有了节点和边集的数据后，我们就可以开始绘制了，
         //绘制边
         let link = LinkAll.selectAll("path").data(Links, function(d) {

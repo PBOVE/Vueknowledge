@@ -6,7 +6,6 @@
 
 
 <template>
-  <!-- <div class="know-treeDiagram" ref="knowtree" ></div> -->
   <tree-chart 
     :TopHeight='TopHeight'
     :RightWeight='RightWeight'
@@ -48,7 +47,6 @@ export default {
                 childdata,
                 res.data.parent
               );
-              // this.CreateD3jsTree(treeData);
               this.$refs.treechart.handletreeData(treeData);
             }
           });

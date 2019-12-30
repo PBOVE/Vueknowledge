@@ -8,11 +8,13 @@
 <template>
   <header class="know-public-header" ref="knowSearchHeader">
     <div class="know-public-header-left">
-      <span class="know-public-logo"></span>
-      <span class="know-public-title">Knowledge Graph</span>
+      <router-link to="/">
+        <span class="know-public-logo"></span>
+        <span class="know-public-title">Knowledge Graph</span>
+      </router-link>
     </div>
     <div class="know-public-header-right">
-      <router-link to="/manage">
+      <router-link :to="routerTO?routerTO:'/manage'">
         <Icon type="md-apps" class="know-public-header-icon" />
       </router-link>
       <router-link to="/login" v-show="!userStatusFlag">
@@ -26,6 +28,7 @@
 
 <script>
 export default {
+  props: ["routerTO"],
   data() {
     return {
       // 判断用户是否登录 标志位
@@ -77,7 +80,7 @@ export default {
 }
 .know-public-logo {
   display: inline-block;
-	background-image: url('../assets/images/logo.png');
+  background-image: url("../assets/images/logo.png");
   background-size: 20px 20px;
   background-repeat: no-repeat;
   background-position: 0 5px;
@@ -89,6 +92,7 @@ export default {
   font-family: Georgia;
   font-size: 20px;
   text-indent: 0.2em;
+  color: #515a6e;
 }
 .know-public-header-icon {
   font-size: 24px;
@@ -132,9 +136,9 @@ export default {
   user-select: none;
   cursor: pointer;
 }
-.know-public-header-right{
-	display: flex;
-	justify-content: center;
-	align-items: center;
+.know-public-header-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

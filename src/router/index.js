@@ -73,7 +73,7 @@ let router = new vueRouter({
             }
         },
         {
-            path: '/search/:id',
+            path: '/search',
             name: 'searchid',
             component: searchid,
         },

@@ -6,7 +6,6 @@
 
 
 <template>
-  <!-- <div class="know-force" ref="knowForce" :style="{height:SetHeight}"></div> -->
   <force-chart  
     :style="{height:SetHeight}"
     :RightWeight='RightWeight'
@@ -39,37 +38,11 @@ export default {
       this.get(url)
         .then(res => {
           if (this.showSelectNum === 2) {
-            this.handleforceData(res.data);
+            this.$refs.forcechart.handlecomponentsforceData(res.data);
           }
         })
         .catch(() => {});
-    },
-    //处理 数据 并且 渲染
-    handleforceData(data) {
-      let hashMap = {}; //映射
-      let hashnumI = 0; // 映射计数器
-      let Nodes = [];
-      let Links = [];
-      data.nodes.forEach((item, i) => {
-        Nodes.push({
-          name: item.name,
-          id: i,
-          Tid: item.id
-        });
-        hashMap[item.id] = hashnumI++;
-      });
-      data.links.forEach(function(item) {
-        Links.push({
-          relation: item.property.type || item.property.relation,
-          source: hashMap[item.source],
-          target: hashMap[item.target]
-        });
-        if (item.property.relation) {
-          Nodes[hashMap[item.target]]["Pid"] = item.source;
-          Nodes[hashMap[item.target]]["PNid"] = hashMap[item.source];
-        }
-      });
-      this.$refs.forcechart.handleforceData(Nodes, Links);
+        
     },
     //从新获取数据
     setForce() {

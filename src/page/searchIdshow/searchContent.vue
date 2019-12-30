@@ -7,20 +7,34 @@
 
 <template>
   <div class="know-selectid-content" :style="{height:setClientHeight}">
-    <div v-show="showSelectNum===1">132</div>
-    <div v-show="showSelectNum===2">1323242</div>
-    <div v-show="showSelectNum===3">123423132</div>
+    <div v-show="showSelectNum === 1">
+      <force-diagram :InnerHeight="InnerHeight" :showSelectNum="showSelectNum" :nodeId='nodeId'></force-diagram>
+    </div>
+    <div v-show="showSelectNum===2">
+      <tree-diagram :InnerHeight="InnerHeight" :showSelectNum="showSelectNum" :nodeId='nodeId'></tree-diagram>
+    </div>
+    <div v-show="showSelectNum===3">
+      <rich-text :InnerHeight="InnerHeight" :showSelectNum="showSelectNum" :nodeId='nodeId'></rich-text>
+    </div>
   </div>
 </template>
 
 
 <script>
+//导入力导图
+import forceDiagram from "./interface/forceDiagram";
+//导入 树图
+import treeDiagram from "./interface/treeDiagram";
+//导入 富文本
+import richText from "./interface/richText";
+
 export default {
-  props: ["InnerHeight", "showSelectNum"],
+  components: { forceDiagram, treeDiagram ,richText},
+  props: ["InnerHeight", "showSelectNum",'nodeId'],
   data() {
     return {
       //设置top高
-      TopHeight: 170
+      TopHeight: 100
     };
   },
   computed: {
@@ -36,5 +50,17 @@ export default {
 <style scoped>
 .know-selectid-content {
   background-color: #fff;
+  border-radius: 10px;
+  padding: 10px;
+  overflow: auto;
+}
+
+.know-selectid-content::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.know-selectid-content::-webkit-scrollbar-thumb {
+  background-color: #c5c8ce;
+  border-radius: 5px;
 }
 </style>

@@ -27,7 +27,7 @@
     </div>
     <div class="know-s-c-m-c">
       <div v-for="(item) in reqShowData" :key="item.node.id" class="know-s-c-m-c-f">
-        <router-link :to="{name:'searchid', params: {id:item.node.id}}">
+        <router-link :to="{path:'/search', query: {id:item.node.id,name:item.node.name}}">
           <div class="s-c-m-c-title" v-html="item.nodeName"></div>
         </router-link>
         <div class="s-c-m-c-text" v-html="item.text?item.text+'...':'没有此节点信息。'"></div>
