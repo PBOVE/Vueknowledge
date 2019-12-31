@@ -15,13 +15,13 @@
           prefix="ios-paw-outline"
           :icon="registerUserIcon"
           size="large"
-          :class="{'know-login-error':registerusername}"
+          :class="{'know-login-error':registerusernameFlag}"
           @on-change="checkIswarn(3)"
           @on-blur="blurIswarn(3)"
           @on-enter="SubmitRegister"
         />
         <transition name="knowerror">
-          <div class="know-login-warn" v-show="registerusername">
+          <div class="know-login-warn" v-show="registerusernameFlag">
             <Icon type="ios-information-circle" size="17" color="#f5222d" />请输入用户名！
           </div>
         </transition>
@@ -88,9 +88,15 @@
       <Button
         type="primary"
         class="know-login-user-land-button"
+         :class="{'know-register-user-land-load':submitFlag}"
         size="large"
         @click="SubmitRegister"
-      >注 册</Button>
+      >
+        <Icon
+          type="ios-sync"
+          :class="{'know-register-icon-load':submitFlag,'know-register-icon-load-default':!submitFlag}"
+        />注 册
+      </Button>
     </div>
   </div>
 </template>
@@ -101,7 +107,7 @@ export default {
   data() {
     return {
       //注册 用户名 警告 标志位
-      registerusername: false,
+      registerusernameFlag: false,
       //注册 密码 警告 标志位
       registerPassword: false,
       //注册 密码 显示 语句
@@ -149,15 +155,17 @@ export default {
       registerUserIcon: "",
       // 判断用户存在 class
       registeruserClass: "",
-      // 请求 标志 符号
-      registeruserFlag:''
+      // 判断用户存在 请求 延迟 标志 符号
+      registerdelayuserFlag: false,
+      //判断用户存在 请求 延迟 纪录
+      registerdelayusername: ""
     };
   },
   methods: {
     // 注册
     SubmitRegister() {
       if (this.formRegister.username === "") {
-        this.registerusername = true;
+        this.registerusernameFlag = true;
       }
       if (this.formRegister.password === "") {
         this.registerPassword = true;
@@ -167,7 +175,7 @@ export default {
         this.registerRepeatPasswordFalg = false;
       }
       if (
-        this.registerusername ||
+        this.registerusernameFlag ||
         this.registerPassword ||
         this.registerRepeatPassword ||
         this.registeruserClass !== "register-success"
@@ -175,6 +183,7 @@ export default {
         return;
       if (this.submitFlag) return;
       this.submitFlag = true;
+
       this.post_json("register", {
         userName: this.formRegister.username,
         password: this.formRegister.password
@@ -182,7 +191,7 @@ export default {
         .then(res => {
           this.submitFlag = false;
           if (res.code === 0 && res.msg === "Success") {
-            this.showLoginRegister = !this.showLoginRegister;
+            this.$emit('mainCallback',1,true);
           }
         })
         .catch(() => {
@@ -191,13 +200,11 @@ export default {
     },
     //判断用户名是否存在
     IsregisterUser(userName) {
-      //空格正则
-      let regSpace = /(^\s+)|(\s+$)|\s+/g;
-      if (regSpace.test(userName)) {
-        this.registerUserIcon = "md-alert";
-        this.registeruserClass = "register-warning";
+      if (this.registeruserFlag) {
+        this.registerdelayusername = userName;
         return;
       }
+      this.registeruserFlag = true;
       this.registerUserIcon = "md-refresh";
       this.registeruserClass = "register-wait";
       let url = "register/query";
@@ -206,22 +213,42 @@ export default {
       };
       this.get(url, obj)
         .then(res => {
-          if (res.data) {
-            this.registerUserIcon = "md-alert";
-            this.registeruserClass = "register-warning";
+          this.registeruserFlag = false;
+          if (this.registerdelayusername !== "") {
+            let registerName = this.registerdelayusername;
+            this.registerdelayusername = "";
+            this.IsregisterUser(registerName);
+          } else if (this.formRegister.username === "") {
+            this.registerUserIcon = "";
+            this.registeruserClass = "";
           } else {
-            this.registerUserIcon = "md-checkmark-circle";
-            this.registeruserClass = "register-success";
+            if (res.data) {
+              this.registerUserIcon = "md-alert";
+              this.registeruserClass = "register-warning";
+            } else {
+              this.registerUserIcon = "md-checkmark-circle";
+              this.registeruserClass = "register-success";
+            }
           }
         })
         .catch(() => {});
     },
     //检测 信息 有误 change
     checkIswarn(val) {
+      //空格正则
+      let regSpace = /(^\s+)|(\s+$)|\s+/g;
+      //密码强度正则  包含字母、数字、符号中至少2种
+      let regDifferent = /(?=.*[a-zA-Z])(?=.*\d)|(?=.*[a-zA-Z])(?=.*[-+=|,!@#$%^&*?_`.~/(){}[\]<>])|(?=.*\d)(?=.*[-+=|,!@#$%^&*?_`.~/(){}[\]<>])/;
+
       if (val === 3) {
         if (this.formRegister.username !== "") {
-          this.registerusername = false;
-          this.IsregisterUser(this.formRegister.username);
+          this.registerusernameFlag = false;
+          if (regSpace.test(this.formRegister.username)) {
+            this.registerUserIcon = "md-alert";
+            this.registeruserClass = "register-warning";
+          } else {
+            this.IsregisterUser(this.formRegister.username);
+          }
         } else {
           this.registerUserIcon = "";
           this.registeruserClass = "";
@@ -238,10 +265,7 @@ export default {
             }
           }
         }
-        //空格正则
-        let regSpace = /(^\s+)|(\s+$)|\s+/g;
-        //密码强度正则  包含字母、数字、符号中至少2种
-        let regDifferent = /(?=.*[a-zA-Z])(?=.*\d)|(?=.*[a-zA-Z])(?=.*[-+=|,!@#$%^&*?_`.~/(){}[\]<>])|(?=.*\d)(?=.*[-+=|,!@#$%^&*?_`.~/(){}[\]<>])/;
+
         // 匹配是否有空格
         if (regSpace.test(password)) {
           this.regexPassword.space = this.information;
@@ -288,11 +312,11 @@ export default {
     blurIswarn(val) {
       if (val === 3) {
         if (this.formRegister.username === "") {
-          this.registerusername = true;
+          this.registerusernameFlag = true;
           this.registerUserIcon = "";
           this.registeruserClass = "";
         } else {
-          this.registerusername = false;
+          this.registerusernameFlag = false;
         }
       } else if (val === 4) {
         this.registerPasswordShowTips = false;
@@ -323,18 +347,21 @@ export default {
           }
         }
       }
-    }
-  },
-  watch: {
-    showLoginRegister() {
-      this.registerusername = false;
+    },
+    // 初始化 函数
+    Initvariable() {
+      this.registerusernameFlag = false;
       this.registerPassword = false;
       this.registerRepeatPassword = false;
+      this.registerdelayuserFlag = false;
+      this.registerdelayusername = "";
       this.formRegister = {
         username: "",
         password: "",
         RepeatPassword: ""
       };
+      this.registerUserIcon = "";
+      this.registeruserClass = "";
       this.regexPassword = {
         space: "md-checkmark-circle",
         Scolor: "#19be6b",
@@ -347,6 +374,11 @@ export default {
         Dflag: false
       };
       this.registerShowPassword = "请输入密码!";
+    }
+  },
+  watch: {
+    showLoginRegister() {
+      this.Initvariable();
     }
   }
 };
@@ -372,6 +404,24 @@ export default {
   .ivu-icon.ivu-input-icon.ivu-input-icon-normal {
   color: #19be6b;
   font-size: 20px;
+}
+#know-register .know-register-icon-load {
+  display: inline-block;
+  font-size: 16px;
+  margin-right: 5px;
+  color: #fff;
+  animation: ani-demo-spin 1s linear infinite;
+}
+#know-register .know-register-icon-load-default {
+  font-size: 16px;
+  margin-right: 5px;
+  color: #fff;
+  display: none;
+}
+#know-register .know-login-user-land-button.know-register-user-land-load{
+    background-color: rgba(24, 144, 255, 0.5);
+  border-color: rgba(24, 144, 255, 0.5);
+  cursor: default;
 }
 @keyframes ani-demo-spin {
   from {

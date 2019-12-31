@@ -9,7 +9,7 @@
   <div id="loginBox">
     <Spin size="large" fix v-if="spinShow"></Spin>
     <div class="know-login-icon">
-      <router-link to='/'>
+      <router-link to="/">
         <Icon type="md-apps" />
       </router-link>
     </div>
@@ -38,10 +38,10 @@
         </span>
       </div>
       <div v-show="showLoginRegister">
-        <login-content :showLoginRegister='showLoginRegister'></login-content>
+        <login-content :showLoginRegister="showLoginRegister"></login-content>
       </div>
       <div v-show="!showLoginRegister">
-        <register-content :showLoginRegister='showLoginRegister'></register-content>
+        <register-content :showLoginRegister="showLoginRegister" @mainCallback='mainCallback'></register-content>
       </div>
     </div>
   </div>
@@ -49,45 +49,55 @@
 
 
 <script>
-import loginContent from './login/login'
-import registerContent from './register/register'
+import loginContent from "./login/login";
+import registerContent from "./register/register";
 export default {
-  components:{loginContent,registerContent},
+  components: { loginContent, registerContent },
   data() {
     return {
       //设置免密登录加载
       spinShow: true,
       // 登陆 和 注册 之间 跳转
-      showLoginRegister: true,
-
+      showLoginRegister: true
     };
   },
   methods: {
     //登录 注册 切换 函数
     loginRegister(val) {
-
       switch (val) {
         case 1:
           this.showLoginRegister = true;
           break;
         case 2:
-           this.showLoginRegister = false;
+          this.showLoginRegister = false;
           break;
       }
     },
+    // 回调函数
+    mainCallback(type,val) {
+      window.console.log(12)
+      const statusMap = {
+        1: () => {
+          this.showLoginRegister = val;
+        }
+      };
+      statusMap[type]();
+    },
     // 获取  token
     getuserToken() {
-      this.get("user/me").then(res => {
-        // window.console.log(res);
-        this.spinShow = false;
-        // this.$store.commit('setToken',res.data._csrf.token);
-        if (!res.data.me) {
-          this.$store.commit("setToken", res.data._csrf.token);
-        } else {
-          let data = res.data;
-          this.$store.commit("setUserData", data);
-        }
-      }).catch(()=>{});
+      this.get("user/me")
+        .then(res => {
+          // window.console.log(res);
+          this.spinShow = false;
+          // this.$store.commit('setToken',res.data._csrf.token);
+          if (!res.data.me) {
+            this.$store.commit("setToken", res.data._csrf.token);
+          } else {
+            let data = res.data;
+            this.$store.commit("setUserData", data);
+          }
+        })
+        .catch(() => {});
     }
   },
   mounted() {
@@ -240,20 +250,20 @@ export default {
 #loginBox .know-login-show-tips {
   background-color: #f0f2f5;
 }
-#loginBox .know-login-icon{
+#loginBox .know-login-icon {
   height: 60px;
   line-height: 60px;
   font-size: 24px;
-  text-align:right;
-  padding:0  120px;
+  text-align: right;
+  padding: 0 120px;
 }
-#loginBox .know-login-icon i{
+#loginBox .know-login-icon i {
   cursor: pointer;
   color: #808695;
   transition: color 0.5s;
 }
-#loginBox .know-login-icon i:hover{
-  color: rgba(128,134,149,0.8);
+#loginBox .know-login-icon i:hover {
+  color: rgba(128, 134, 149, 0.8);
 }
 @keyframes namepasswordWarn {
   0% {

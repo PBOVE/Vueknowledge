@@ -31,7 +31,7 @@
           prefix="ios-lock-outline"
           type="password"
           password
-          placeholder="密   码"
+          placeholder="密码"
           size="large"
           @on-change="checkIswarn(2)"
           @on-blur="blurIswarn(2)"
@@ -105,17 +105,23 @@ export default {
         this.showpasswordwarn = true;
         return;
       }
+      if(this.formloginFlag){
+        // 同一时间只能提交一次
+        return;
+      }
       if (
         this.repeatFrom.username === this.formlogin.username &&
         this.repeatFrom.password === this.formlogin.password &&
         this.repeatFrom.remeberMe === this.formlogin.remeberMe
       ) {
+        //防止提交多次重复数据
         this.$Message.warning({
           content: "请不要重复提交！",
           duration: 2
         });
         return;
       }
+      
       this.formloginFlag = true;
       this.repeatFrom = {
         username: this.formlogin.username,
@@ -198,8 +204,10 @@ export default {
 #loginBox .know-login-user-land-button.know-login-user-land-load {
   background-color: rgba(24, 144, 255, 0.5);
   border-color: rgba(24, 144, 255, 0.5);
+  cursor: default;
 }
  .know-login-user-land-icon-load {
+
   display: inline-block;
   font-size: 16px;
   margin-right: 5px;
