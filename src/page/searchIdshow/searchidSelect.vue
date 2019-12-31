@@ -29,7 +29,7 @@
       @click="clickButton(3,selectNum)"
     >
       <Icon type="ios-paper-outline " size="20" class="know-searchid-Button-icon" />
-      <div class="know-searchid-Button-titlt">富文本</div>
+      <div class="know-searchid-Button-titlt">节点知识</div>
     </div>
   </div>
 </template>
@@ -70,7 +70,6 @@ export default {
   align-items: center;
 }
 .know-searchid-Button {
-  width: 80px;
   height: 40px;
   line-height: 40px;
   text-align: center;
