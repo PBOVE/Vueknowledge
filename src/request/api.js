@@ -12,7 +12,7 @@ import router from '../router'
 import {Message} from 'view-design'
 
 // eslint-disable-next-line no-console
-console.log(baseUrl);
+
 // 请求时间设置;
 axios.defaults.timeout = 10000;
 // 设置默认请求接口

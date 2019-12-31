@@ -57,7 +57,7 @@
           <Icon type="ios-paper-outline" size='20' />
         </div>
         <div class="know-operate-header-button-title">
-          富文本
+          节点知识
         </div>
       </div>
 
@@ -65,6 +65,7 @@
 </template>
 
 <script>
+import '../../../../assets/css/font.css'
 export default {
   props:['showClientFlag'],
   data() {
@@ -96,22 +97,7 @@ export default {
 </script>
 
 <style  scoped>
-@font-face {font-family: "iconfont";
-  src: url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAAPoAAsAAAAAB/QAAAOcAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCDBgqDWIMnATYCJAMMCwgABCAFhG0HORvwBlGUDUqL7EdCVRndhTPqKEdOTUkdGo+Ggc965zcR0K/99sndF0waJNHE0L15Eo1400oj4i0TCiEx3Uu4/6vLfo1wiuwK4A6gmshLurHyDb7lZf/XNCUWshGqJKuQxvYwB5S+NH8gtNrB5fRb4vOAcpl7YIBxQAGNtSlKtEgS8oaxC1riYQKaBtlDS7vLBzRl5qiAcBGHDjQzCrkhPagLyoqFObw0r1CPE/E+8BB8P/zDdGiCqEhgHrVxtPVh8RW/xiRSEftpyP10OrBlJEwBmXBYadhWiQJT+JqqoNocX8qCOJW7qggYGq+0/vCIAqEEM7UVjCFX5MthJMIYyLpq5sOJShR6A7Y+NETqwU8hKCIsFFKltGfTI+YJeUw/NJRNnj6/Hyi3cQxDaJo1VcDdgQtn5PLGHJbNQAqazoC3c1wmx6QrkerYpXvyHppOW65RdJSNvk2bbGEiTvmV7wc5Nzi3YyzOlbfcimU7d549uu3SrTsHdNY/Lj/5VPVsasIFhVmySW/qkKEKlR7wyazoyDwO/OTY/iZRbJ1s5W7wuv2c9lUTe53/JiTau1gSGFZiU31qPJGY/NexN72ifa79daLYKtkab/qm/Vw4ystFEf+NZLgmF/OwsIhC2KJ6VizEvMI7Zdjov8nUt90m4PGHhKHsbAjLwpma65V2ZMivsGZtGj76c8LAYK2xIibj7KkiP2+ZfWVs3bwsDOW0kwpD+zi7XHz8ndq1ppv6rpSks4skPdnaMmHKrmym7dI1NFozEAknzwf+l50bP99Kj4b7LdgAVV/1AX+oWqi6qpDufuZpnnt1YqyB/7+6XADwadqbBYxutO4pqIt3JvTrZPl+A7LI0dimPGUl8QNk1QIOJxtqL6ZcUxMVYEu3t8Mlfa9HF9QzTAZRzQAkdUOojJuCQosZKNXNQtOkqOUtejSrCFkKTBgBEHQ6BFG7d0g6PUBl3Bso9PsGpc5QgabNoLZhi5EQt8OEHCUfS/6wyuMisNXaDtPfKDSZI2l2gP8iecZudHF0zof3VJBMMaXlO5y1aoCUcI6R4DjKMsZG4YQ8HVWqPuZOTlTVi0alnEPbIkEcivhQiT+oiocVAq+5ahc+/4aEjIxDGuqqlF+IeIrbRy4cOXdA7QVFp7pbeabFt9BMKxVAFMFyKBLoSGYFGGqs7pcgHjVSOcD3MOeEGlFdBaPlRfn7bYEmc+cUeIiPBFBcRkZNozb2HVYDAA==') format('woff2');
-}
-.iconfont {
-  font-family: "iconfont" !important;
-  font-size: 16px;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-.icon-shutu:before {
-  content: "\e649";
-}
-.icon-lidaotu:before {
-  content: "\e602";
-}
+
 .know-operate-header{
   display: flex;
   justify-content: flex-start;
@@ -121,7 +107,7 @@ export default {
 .know-operate-header-button{
   box-sizing: border-box;
   height: 40px;
-  width: 80px;
+  padding:0 10px;
   text-align: center;
   cursor: pointer;
   border-radius: 5px;

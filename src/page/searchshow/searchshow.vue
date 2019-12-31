@@ -7,10 +7,10 @@
 //  {{ $route.params.id}}
 //         <div>this.$route.params.id</div>
 <template>
-  <div class="know-searchid">
+  <div class="know-searchshow">
     <public-header :routerTO="routerTO"></public-header>
-    <div class="know-searchid-titlte">名称&nbsp;:&nbsp;{{nodeName}}</div>
-    <searchid-select @searchIdCallback="searchIdCallback" ref="searchidselect"></searchid-select>
+    <div class="know-searchshow-titlte">名称&nbsp;:&nbsp;{{nodeName}}</div>
+    <search-select @searchIdCallback="searchIdCallback" ref="searchidselect"></search-select>
     <search-content
       :showSelectNum="showSelectNum"
       :InnerHeight="InnerHeight-topHeight"
@@ -23,10 +23,10 @@
 <script>
 // 导入头
 import publicHeader from "../../components/publicHeader";
-import searchidSelect from "./searchidSelect";
+import searchSelect from "./searchshowButton";
 import searchContent from "./searchContent";
 export default {
-  components: { publicHeader, searchidSelect, searchContent },
+  components: { publicHeader, searchSelect, searchContent },
   data() {
     return {
       // 节点名称
@@ -94,12 +94,12 @@ export default {
 </script>
 
 <style  scoped>
-.know-searchid {
+.know-searchshow {
   height: 100vh;
 
   background-color: #f5f7f9;
 }
-.know-searchid-titlte {
+.know-searchshow-titlte {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;

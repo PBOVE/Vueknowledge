@@ -112,13 +112,15 @@ export default {
     },
     //input change select 改变时 触发的函数
     SearchChangeOrselect(val) {
-      if (this.InSearchMeg === "") {
+      let name = this.InSearchMeg;
+      name = name.replace(/^\s+|\s+$/g,"");
+      if (name === "") {
         this.searchData = [];
         return;
       }
       let url = "search";
       let obj = {
-        q: this.InSearchMeg,
+        q: name,
         tips: val
       };
       this.get(url, obj)

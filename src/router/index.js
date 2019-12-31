@@ -28,11 +28,11 @@ import axios from 'axios'
 /**
  * 引入路由组件
  */
-import login from '../page/login/login'
+import loginmain from '../page/login/main'
 import manage from '../page/Backstage/manage'
 import nofound from '../page/noFound/nofound'
 import search from '../page/search/search'
-import searchid from '../page/searchIdshow/searchid'
+import searchid from '../page/searchshow/searchshow'
 
 Vue.use(Vuex);
 Vue.use(ViewUI);
@@ -62,7 +62,7 @@ let router = new vueRouter({
         {
             path: '/login',
             name: 'login',
-            component: login
+            component: loginmain
         },
         {
             path: '/manage',

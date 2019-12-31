@@ -6,7 +6,7 @@
 
 
 <template>
-  <div class="know-searchid-text" ref='eixtText'></div>
+  <div class="know-searchshow-text" ref='eixtText'></div>
 </template>
 
 

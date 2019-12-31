@@ -21,7 +21,6 @@ export default {
   methods: {
     //处理传来的数据
     handletreeData(treeData) {
-     
       if (this.$refs.knowtree.firstChild)
         this.$refs.knowtree.removeChild(this.$refs.knowtree.firstChild);
 
