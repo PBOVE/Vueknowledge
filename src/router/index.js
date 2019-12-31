@@ -90,6 +90,7 @@ let router = new vueRouter({
  *  路由 守卫 函数
  */
 router.beforeEach((to, from, next) => {
+    window.console.log(to)
     if (to.path === '/') {
         next();
     } else {
@@ -101,7 +102,13 @@ router.beforeEach((to, from, next) => {
                 next('/login');
             }
         } else {
-            next();
+            // 不允许 去 searchshow 不带参数去
+            if(to.path === '/search'&&!to.query.id&&!to.query.name){
+                next('/');
+            }else{
+                next();
+            }
+            
         }
     }
 })

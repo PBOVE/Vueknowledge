@@ -62,7 +62,6 @@ export default {
         //设置数据
         2:()=>{
           this.$refs.searchidselect.setselectNum(this.showSelectNum);
-          // this.$refs.searchcontent.contentCallback(1);
         }
       };
       statusMap[type]();
@@ -80,11 +79,11 @@ export default {
     $route(to) {
       if(to.path !=='/search')
         return;
+      
       this.nodeName = to.query.name;
       this.showSelectNum=to.query.q || 1;
       this.nodeId= to.query.id;
       this.searchIdCallback(2)
-      // console.log(to.query.id);
       //  to , from 分别表示从哪跳转到哪，都是一个对象
       // to.path   ( 表示的是要跳转到的路由的地址 eg:  /home );
       // to.query.id 提取id进行http请求数据更新页面
