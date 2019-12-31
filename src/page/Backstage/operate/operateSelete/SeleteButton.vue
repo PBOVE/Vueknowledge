@@ -57,7 +57,7 @@
           <Icon type="ios-paper-outline" size='20' />
         </div>
         <div class="know-operate-header-button-title">
-          富文本
+          节点知识
         </div>
       </div>
 
