@@ -6,7 +6,7 @@
 
 
 import Vue from 'vue'
-import vueRouter from 'vue-router'
+import vueRouter from 'vue-router';
 
 /**
  *  引入 view UI
@@ -34,7 +34,7 @@ import nofound from '../page/noFound/nofound'
 import search from '../page/search/search'
 import searchid from '../page/searchIdshow/searchid'
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 Vue.use(ViewUI);
 Vue.use(vueRouter);
 Vue.prototype.axios = axios;
