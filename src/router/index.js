@@ -28,11 +28,11 @@ import axios from 'axios'
 /**
  * 引入路由组件
  */
-import loginmain from '../page/login/main'
-import manage from '../page/Backstage/manage'
-import nofound from '../page/noFound/nofound'
-import search from '../page/search/search'
-import searchid from '../page/searchshow/searchshow'
+const loginmain = () => import('../page/login/main')
+const manage = () => import('../page/Backstage/manage')
+const nofound = () => import('../page/noFound/nofound')
+const search = () => import('../page/search/search')
+const searchshow = () => import('../page/searchshow/searchshow')
 
 Vue.use(Vuex);
 Vue.use(ViewUI);
@@ -75,7 +75,7 @@ let router = new vueRouter({
         {
             path: '/search',
             name: 'searchid',
-            component: searchid,
+            component: searchshow,
         },
         {
             path: '*',
@@ -90,7 +90,6 @@ let router = new vueRouter({
  *  路由 守卫 函数
  */
 router.beforeEach((to, from, next) => {
-    window.console.log(to)
     if (to.path === '/') {
         next();
     } else {
@@ -103,12 +102,12 @@ router.beforeEach((to, from, next) => {
             }
         } else {
             // 不允许 去 searchshow 不带参数去
-            if(to.path === '/search'&&!to.query.id&&!to.query.name){
+            if (to.path === '/search' && !to.query.id && !to.query.name) {
                 next('/');
-            }else{
+            } else {
                 next();
             }
-            
+
         }
     }
 })
