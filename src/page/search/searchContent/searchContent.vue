@@ -35,6 +35,8 @@ export default {
     return {
       //用户输入的数据
       ShowSMeg: "",
+      //纪录用户输入的数据防止重复提交
+      InOldSearchMeg:'',
       // 分页 可以展示的总页数
       totalPages: "",
       // 当前请求的第几页
@@ -61,6 +63,7 @@ export default {
   methods: {
     // 请求 服务器数据
     getServerData() {
+      this.InOldSearchMeg = this.InSearchMeg;
       let url = "search";
       let obj = {
         size:this.pageSize,

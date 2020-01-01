@@ -17,12 +17,16 @@
       </div>
       <div class="know-s-c-m-attr" v-show="(handleShowData.LabelData.length)>0">
         <div class="know-s-c-m-attr-tittle">属性</div>
-        <div class="know-s-c-m-attr-d know-s-c-m-attr-c">
-          <span v-for="item in handleShowData.LabelData" :key="item" class="know-s-c-m-attr-d-list">
-            “
-            <span>{{item}}</span>”
-          </span>
-        </div>
+        <folding-panel :InitHeight='foldingPanelFlag'>
+            <span
+              v-for="item in handleShowData.LabelData"
+              :key="item"
+              class="know-s-c-m-attr-d-list"
+            >
+              “
+              <span>{{item}}</span>”
+            </span>
+        </folding-panel>
       </div>
     </div>
     <div class="know-s-c-m-c">
@@ -45,7 +49,9 @@
 </template>
 
 <script>
+import foldingPanel from "../../../components/foldingPanel";
 export default {
+  components: { foldingPanel },
   props: [
     "ShowSMeg",
     "totalElements",
@@ -60,7 +66,9 @@ export default {
       //显示加载信息
       loadMsg: "加载更多",
       //显示加载标志位
-      loadFlag: true
+      loadFlag: true,
+      // 搜索结果发生变化 重新渲染 foldingPanel
+      foldingPanelFlag:''
     };
   },
   methods: {
@@ -79,6 +87,9 @@ export default {
   watch: {
     reqSuccessFlag() {
       this.loadMsg = "加载更多";
+      
+      this.foldingPanelFlag = Math.random();
+      // window.console.log(this.foldingPanelFlag);
       // window.console.log(this.reqShowData);
       if (this.pageNum + 1 === this.totalPages || this.totalPages === 0) {
         this.loadFlag = false;

@@ -42,7 +42,7 @@
     <search-content
       :style="{height:setClientHeight}"
       :reqShowDataFlag="reqShowDataFlag"
-      :InSearchMeg="InSearchMeg"
+      :InSearchMeg="handleInSearchMeg"
       :InnerHeight='InnerHeight'
     ></search-content>
   </div>
@@ -70,6 +70,8 @@ export default {
       searchData: [],
       //用户输入的数据
       InSearchMeg: "",
+      //处理过用户输入的数据
+      handleInSearchMeg:'',
       // 获取 innerHeight
       InnerHeight: "",
       // 获取 innerWidth
@@ -137,8 +139,9 @@ export default {
       });
     },
     // 请求 数据 展示 向 main 传数据
-    SearchSelectShow() {
-      if (this.InSearchMeg === "") {
+    SearchSelectShow(val) {
+      this.handleInSearchMeg = val.replace(/^\s+|\s+$/g,"");
+      if (this.handleInSearchMeg === "") {
         return;
       }
       this.reqShowDataFlag = Math.random();
@@ -148,7 +151,7 @@ export default {
       if (event.keyCode !== 13) {
         return;
       }
-      this.SearchSelectShow();
+      this.SearchSelectShow(this.InSearchMeg);
     },
     // 绑定 enter 监听事件
     MonitoringlAddInput() {
