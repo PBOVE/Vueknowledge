@@ -30,6 +30,7 @@ require("froala-editor/js/plugins/print.min");
 require("froala-editor/js/plugins/quick_insert.min");
 require("froala-editor/js/plugins/table.min");
 require("froala-editor/js/plugins/video.min");
+require('froala-editor/js/plugins/help.min');
 import $ from "../../../../../assets/jquery-vendor";
 export default {
   props: ["treeNode", "showSelectNum", "InnerHeight"],
@@ -39,7 +40,60 @@ export default {
       //设置top高
       TopHeight: 190,
       //上传的内容
-      editor: ""
+      editor: "",
+      // 在小型设备
+      toolbarButtonsMD:{
+        moreText: {
+            buttons: [
+              "fontFamily",
+              "fontSize",
+              "bold",
+              "italic",
+              "underline",
+              "strikeThrough",
+              "textColor",
+              "backgroundColor"
+            ],
+            buttonsVisible: 1
+          },
+          moreParagraph: {
+            buttons: [
+              "alignLeft",
+              "alignCenter",
+              "formatOLSimple",
+              "alignRight",
+              "alignJustify",
+              "formatOL",
+              "formatUL",
+              "paragraphFormat",
+              "paragraphStyle",
+              "lineHeight",
+              "outdent",
+              "indent",
+              "quote"
+            ],
+            buttonsVisible: 1
+          },
+          moreRich: {
+            buttons: ["insertImage", "insertVideo", "insertTable", "insertHR"],
+            buttonsVisible: 1
+          },
+          moreMisc: {
+            buttons: [
+              "saveSelection",
+              "undo",
+              "redo",
+              "fullscreen",
+              "print",
+              "spellChecker",
+              "selectAll",
+              "html",
+              "help"
+            ],
+            align: "right",
+            buttonsVisible: 1
+          }
+      }
     };
   },
   methods: {
@@ -110,6 +164,9 @@ export default {
             buttonsVisible: 3
           }
         },
+        toolbarButtonsMD:this.toolbarButtonsMD,
+        toolbarButtonsSM:this.toolbarButtonsMD,
+        toolbarButtonsXS:this.toolbarButtonsMD,
         fontFamilySelection: true,
         fontFamily: {
           "Arial,Helvetica,sans-serif": "Arial",
@@ -128,6 +185,7 @@ export default {
           YouYuan: "幼圆",
           LiSu: "隶书"
         },
+        shortcutsHint: false,
         imageUploadURL: baseUrl + "storage",
         videoUploadURL: baseUrl + "storage",
         requestHeaders: {
@@ -248,7 +306,10 @@ export default {
 .fr-box.fr-basic .fr-element {
    margin-top: -41px;
 }
-/* .fr-box.fr-basic .fr-placeholder{
-    margin-top: -41px!important;
-} */
+.fr-toolbar.fr-ltr.fr-desktop.fr-top.fr-basic.fr-sticky-off{
+  border: none;
+}
+.fr-box.fr-basic .fr-wrapper,.second-toolbar{
+  border: none;
+}
 </style>

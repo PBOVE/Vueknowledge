@@ -86,11 +86,8 @@ export default {
   },
   watch: {
     reqSuccessFlag() {
-      this.loadMsg = "加载更多";
-      
+      this.loadMsg = "加载更多"; 
       this.foldingPanelFlag = Math.random();
-      // window.console.log(this.foldingPanelFlag);
-      // window.console.log(this.reqShowData);
       if (this.pageNum + 1 === this.totalPages || this.totalPages === 0) {
         this.loadFlag = false;
       } else {
