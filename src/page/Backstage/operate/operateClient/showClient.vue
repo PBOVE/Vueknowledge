@@ -38,6 +38,7 @@
         ref = 'journalog'
         :treeNode="treeNode"
         :showSelectNum = 'showSelectNum'
+        :InnerHeight = 'InnerHeight'
         class="know-Showclient-default"
         ></journal-show>
 		</div>

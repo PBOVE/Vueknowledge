@@ -7,35 +7,38 @@
 
 <template>
   <ul class="know-journal-ul">
-    <li v-for="(item ,index) in JournalData" v-bind:key="item.randomId" class="know-journal-li">
-      <div class="know-journal-title" v-if="index===0||item.dateLog!==JournalData[index-1].dateLog">
-        <Icon type="ios-ionic" color="#19be6b" />
-        <span class="know-journal-title-span">时间：{{item.dateLog}}</span>
-      </div>
-      <div class="know-journal-content">
-        <div class="know-journal-content-title">
-          <span class="know-journal-strong">{{item.nickName}}</span>
-          在 {{item.dateValue}} 前，操作了
-          <span class="know-journal-strong">{{item.nodeName}}</span>
-          节点，「{{item.operatorCrux}}」
+    <Scroll :on-reach-bottom="getPageLogData" :height='SetHeight'>
+      <li v-for="(item ,index) in JournalData" v-bind:key="item.randomId" class="know-journal-li">
+        <div
+          class="know-journal-title"
+          v-if="index===0||item.dateLog!==JournalData[index-1].dateLog"
+        >
+          <Icon type="ios-ionic" color="#19be6b" />
+          <span class="know-journal-title-span">时间：{{item.dateLog}}</span>
         </div>
-        <div class="know-journal-content-user">
-          <span class="know-journal-strong">{{item.nodeName}}</span>
-          节点，{{item.operator}}
+        <div class="know-journal-content">
+          <div class="know-journal-content-title">
+            <span class="know-journal-strong">{{item.nickName}}</span>
+            在 {{item.dateValue}} 前，操作了
+            <span
+              class="know-journal-strong"
+            >{{item.nodeName}}</span>
+            节点，「{{item.operatorCrux}}」
+          </div>
+          <div class="know-journal-content-user">
+            <span class="know-journal-strong">{{item.nodeName}}</span>
+            节点，{{item.operator}}
+          </div>
         </div>
-      </div>
-    </li>
-    <div class="know-journal-item-load" v-show="!(dataPage === dataEndPage)">
-      <Icon type="md-snow" size="16" :class="{'know-journal-item-load-icon':requestFlag}" />
-      <span class="know-journal-item-load-button" @click="getPageLogData">&nbsp;查看更多&nbsp;</span>
-    </div>
+      </li>
+    </Scroll>
   </ul>
 </template>
 
 
 <script>
 export default {
-  props: ["treeNode", "showSelectNum"],
+  props: ["treeNode", "showSelectNum", "InnerHeight"],
   data() {
     return {
       //请求数据标志位
@@ -49,7 +52,9 @@ export default {
       //分页终点位置
       dataEndPage: 1,
       //请求标志位
-      requestFlag: false
+      requestFlag: false,
+      // topHeight
+      TopHeight: 120
     };
   },
   methods: {
@@ -62,6 +67,8 @@ export default {
     },
     // 分页点击加载 请求服务器数据 数据
     getPageLogData() {
+      if(this.dataPage === this.dataEndPage)
+        return;
       this.getServerData(this.dataPage++);
     },
     // 请求 服务器 数据
@@ -313,6 +320,12 @@ export default {
     showSelectNum(val) {
       if (val === 4) this.getJournalData();
     }
+  },
+  computed: {
+    //设置  可视区 高度
+    SetHeight() {
+      return this.InnerHeight - this.TopHeight;
+    }
   }
 };
 </script>
@@ -360,36 +373,15 @@ export default {
   text-indent: 1em;
   letter-spacing: 0.1em;
 }
-.know-journal-item-load {
-  margin: 10px 0 10px 40px;
-  color: #2395f1;
-  border-radius: 10px;
-  padding-left: 30px;
-  height: 40px;
-  line-height: 40px;
-  background-color: #f8f8f9;
-}
-.know-journal-item-load-button {
-  position: relative;
-  cursor: pointer;
-  margin-left: 5px;
-}
 
-.know-journal-item-load-button:hover {
-  color: #19be6b;
+</style>
+<style >
+.ivu-scroll-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
-.know-journal-item-load-icon {
-  animation: ani-demo-spin 1s linear infinite;
-}
-@keyframes ani-demo-spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  50% {
-    transform: rotate(180deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+.ivu-scroll-container::-webkit-scrollbar-thumb {
+  background-color: #c5c8ce;
+  border-radius: 5px;
 }
 </style>
