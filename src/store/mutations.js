@@ -3,7 +3,6 @@
 *  @author ZTiger
 *
 */
-import router from '../router'
 
 export default {
     setToken(state,token){
@@ -31,6 +30,6 @@ export default {
         state.user = JSON.stringify(user)
         sessionStorage.setItem('user',JSON.stringify(user));
         sessionStorage.setItem('token',token);
-        router.push({path:'/manage'})
+
     }
 }

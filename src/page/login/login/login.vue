@@ -121,7 +121,6 @@ export default {
         });
         return;
       }
-      
       this.formloginFlag = true;
       this.repeatFrom = {
         username: this.formlogin.username,
@@ -145,6 +144,7 @@ export default {
           this.get("user/me").then(res => {
             let data = res.data;
             this.$store.commit("setUserData", data);
+            this.$router.push({path:'/manage'})
             this.formloginFlag = false;
           });
         })

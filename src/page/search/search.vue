@@ -11,10 +11,11 @@
       <router-link to="/manage">
         <Icon type="md-apps" class="know-search-header-icon" />
       </router-link>
-      <router-link to="/login" v-show="!userStatusFlag">
+      <router-link to="/login" v-show="!userStatusFlag&&userStatusLoadFlag">
         <span class="know-search-header-login">登录</span>
       </router-link>
-      <span class="know-search-header-user-logo" ref="userLogo" v-show="userStatusFlag"></span>
+      <span class="know-search-header-user-logo" ref="userLogo" v-show="userStatusFlag&&userStatusLoadFlag" ></span>
+      <Icon type="md-refresh" class="know-search-header-user-load" v-show="!userStatusLoadFlag"  />
     </header>
     <div class="know-search-box" ref="knowSearchBox">
       <div class="know-search-title-en" ref="knowSearchBoxEn">
@@ -43,7 +44,7 @@
       :style="{height:setClientHeight}"
       :reqShowDataFlag="reqShowDataFlag"
       :InSearchMeg="handleInSearchMeg"
-      :InnerHeight='InnerHeight'
+      :InnerHeight="InnerHeight"
     ></search-content>
   </div>
 </template>
@@ -56,6 +57,8 @@ export default {
     return {
       // 判断用户是否登录 标志位
       userStatusFlag: false,
+      // 判断 用户 登录 加载标志位
+      userStatusLoadFlag:false,
       //随机背景颜色
       color: [
         "#ff4e50",
@@ -71,7 +74,7 @@ export default {
       //用户输入的数据
       InSearchMeg: "",
       //处理过用户输入的数据
-      handleInSearchMeg:'',
+      handleInSearchMeg: "",
       // 获取 innerHeight
       InnerHeight: "",
       // 获取 innerWidth
@@ -89,21 +92,15 @@ export default {
       this.InnerWidth = window.innerWidth;
     },
     //判断用户是否登录
-    judgementUser() {
-      let user = this.$store.state.user;
-      if (user === "") {
-        this.userStatusFlag = false;
-        return;
-      }
+    judgementUser(username) {
       this.userStatusFlag = true;
-      let username = JSON.parse(user).username;
       this.$refs.userLogo.innerHTML = username.charAt(0).toUpperCase();
       this.$refs.userLogo.style.backgroundColor = this.color[
         Math.floor(Math.random() * 7)
       ];
     },
     // 搜索框 获取焦点触发的函数
-    SearchInFocus() { 
+    SearchInFocus() {
       this.$refs.knowSearchBoxCn.style.display = "none";
       this.$refs.knowSearchBoxEn.style.display = "none";
       this.$refs.knowSearchBox.classList.add("know-search-box-focus");
@@ -115,7 +112,7 @@ export default {
     //input change select 改变时 触发的函数
     SearchChangeOrselect(val) {
       let name = this.InSearchMeg;
-      name = name.replace(/^\s+|\s+$/g,"");
+      name = name.replace(/^\s+|\s+$/g, "");
       if (name === "") {
         this.searchData = [];
         return;
@@ -140,7 +137,7 @@ export default {
     },
     // 请求 数据 展示 向 main 传数据
     SearchSelectShow(val) {
-      this.handleInSearchMeg = val.replace(/^\s+|\s+$/g,"");
+      this.handleInSearchMeg = val.replace(/^\s+|\s+$/g, "");
       if (this.handleInSearchMeg === "") {
         return;
       }
@@ -157,11 +154,24 @@ export default {
     MonitoringlAddInput() {
       let InP = document.querySelector("#know-search-box-input-In");
       InP.addEventListener("keyup", this.SearchReqData);
+    },
+    // 获取  user信息
+    getUser() {
+      this.get("user/me")
+        .then(res => {
+          this.userStatusLoadFlag = true;
+          if (res.data.me) {
+            let data = res.data;
+            this.$store.commit("setUserData", data);
+            this.judgementUser(data.me.nickName);
+          }
+        })
+        .catch(() => {});
     }
   },
   mounted() {
-    this.judgementUser();
     this.MonitoringlAddInput();
+    this.getUser();
     this.InnerHeight = window.innerHeight;
     this.InnerWidth = window.innerWidth;
     window.addEventListener("resize", this.getInner);
@@ -320,10 +330,26 @@ export default {
 .know-search-box-input i {
   right: inherit;
 }
+.know-search-header-user-load {
+  color: #2d8cf0;
+  font-size: 20px;
+  animation :ani-demo-load 2.5s linear infinite;
+}
 
 #know-search-box-input-In {
   padding-left: 32px;
   padding-right: 0;
+}
+@keyframes ani-demo-load {
+  from {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 @media screen and (max-width: 850px) {
   .know-search-header {
