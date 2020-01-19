@@ -10,5 +10,8 @@ export default {
     },
     getUser:(state)=>{
         return state.user
+    },
+    getnickName:(state)=>{
+        return state.nickName;
     }
 }

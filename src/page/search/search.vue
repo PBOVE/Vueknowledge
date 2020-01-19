@@ -157,7 +157,8 @@ export default {
     },
     // 获取  user信息
     getUser() {
-      this.get("user/me")
+      const url = "user/me";
+      this.get(url)
         .then(res => {
           this.userStatusLoadFlag = true;
           if (res.data.me) {

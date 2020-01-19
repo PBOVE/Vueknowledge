@@ -94,18 +94,13 @@ export default {
   methods: {
     //登录
     Submitlanding() {
-      if (this.formlogin.username === "" && this.formlogin.password === "") {
+      if (this.formlogin.username === "") {
         this.showuserwarn = true;
-        this.showpasswordwarn = true;
-        return;
-      } else if (this.formlogin.username === "") {
-        this.showuserwarn = true;
-        return;
-      } else if (this.formlogin.password === "") {
-        this.showpasswordwarn = true;
-        return;
       }
-      if(this.formloginFlag){
+      if (this.formlogin.password === "") {
+        this.showpasswordwarn = true;
+      }
+      if (this.formloginFlag || this.showuserwarn || this.showpasswordwarn) {
         // 同一时间只能提交一次
         return;
       }
@@ -144,7 +139,7 @@ export default {
           this.get("user/me").then(res => {
             let data = res.data;
             this.$store.commit("setUserData", data);
-            this.$router.push({path:'/manage'})
+            this.$router.push({ path: "/manage" });
             this.formloginFlag = false;
           });
         })
@@ -206,8 +201,7 @@ export default {
   border-color: rgba(24, 144, 255, 0.5);
   cursor: default;
 }
- .know-login-user-land-icon-load {
-
+.know-login-user-land-icon-load {
   display: inline-block;
   font-size: 16px;
   margin-right: 5px;

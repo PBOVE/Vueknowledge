@@ -106,7 +106,7 @@ export function patch_json(url, params = {}) {
  */
 export function delete_string(url, params = {}) {
   return new Promise((resolve, reject) => {
-    axios.delete(url, qs.stringify(params), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+    axios.delete(url,{data: qs.stringify(params),  headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
       .then(res => {
         resolve(res.data);
       }).catch(err => {

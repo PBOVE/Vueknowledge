@@ -50,8 +50,6 @@ export default {
     },
     //处理 渲染
     handleforceData(Nodes, Links) {
-      // window.console.log(Nodes);
-      // window.console.log(Links);
       if (this.$refs.knowForce.firstChild)
 				this.$refs.knowForce.removeChild(this.$refs.knowForce.firstChild);
 			this.CreateDjsPower(Nodes,Links)

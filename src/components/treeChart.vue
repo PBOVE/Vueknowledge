@@ -95,8 +95,6 @@ export default {
         let Nodes = tree(root).descendants();
         let Links = tree(root).links();
         Nodes[0].y = Nodes[0].Strlen + 10;
-        // window.console.log(Nodes);
-        // window.console.log(Links);
         //有了节点和边集的数据后，我们就可以开始绘制了，
         //绘制边
         let link = LinkAll.selectAll("path").data(Links, function(d) {

@@ -14,7 +14,7 @@ import {get,post_json, post_string,patch_string,post_text,patch_json,delete_json
 
 Vue.prototype.get = get;
 Vue.prototype.post_json = post_json;
-Vue.prototype. post_string =  post_string;
+Vue.prototype.post_string =  post_string;
 Vue.prototype.post_text = post_text;
 Vue.prototype.patch_string = patch_string;
 Vue.prototype.patch_json = patch_json;

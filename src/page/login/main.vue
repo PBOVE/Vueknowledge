@@ -75,7 +75,6 @@ export default {
     },
     // 回调函数
     mainCallback(type,val) {
-      window.console.log(12)
       const statusMap = {
         1: () => {
           this.showLoginRegister = val;
@@ -87,7 +86,7 @@ export default {
     getuserToken() {
       this.get("user/me")
         .then(res => {
-          // window.console.log(res);
+
           this.spinShow = false;
           // this.$store.commit('setToken',res.data._csrf.token);
           if (!res.data.me) {
@@ -201,9 +200,6 @@ export default {
   margin-top: 30px;
   width: 400px;
 }
-/* #loginBox .know-login-user:nth-of-type(3){
-        margin-top: 30px;
-    } */
 #loginBox .know-login-user-land {
   text-align: center;
 }

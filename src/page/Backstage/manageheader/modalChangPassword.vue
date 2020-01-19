@@ -18,7 +18,7 @@
           type="password"
           class="k-h-C-P-I"
           prefix="ios-unlock-outline"
-          placeholder="旧密码"
+          placeholder="输入您的旧密码"
           size="large"
           password
           maxlength="32"

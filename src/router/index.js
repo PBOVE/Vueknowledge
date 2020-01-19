@@ -28,11 +28,12 @@ import axios from 'axios'
 /**
  * 引入路由组件
  */
-const loginmain = () => import('../page/login/main')
-const manage = () => import('../page/Backstage/manage')
-const nofound = () => import('../page/noFound/nofound')
-const search = () => import('../page/search/search')
-const searchshow = () => import('../page/searchshow/searchshow')
+const loginmain = () => import('../page/login/main');
+const manage = () => import('../page/Backstage/manage');
+const nofound = () => import('../page/noFound/nofound');
+const search = () => import('../page/search/search');
+const searchshow = () => import('../page/searchshow/searchshow');
+const user = () => import('../page/user/user')
 
 Vue.use(Vuex);
 Vue.use(ViewUI);
@@ -57,17 +58,25 @@ let router = new vueRouter({
     routes: [{
             path: '/',
             name: 'search',
-            component: search
+            component: search,
         },
         {
             path: '/login',
             name: 'login',
-            component: loginmain
+            component: loginmain,
         },
         {
             path: '/manage',
             name: 'manage',
             component: manage,
+            meta: {
+                requireAuth: true
+            }
+        },
+        {
+            path: '/user',
+            name: 'user',
+            component: user,
             meta: {
                 requireAuth: true
             }

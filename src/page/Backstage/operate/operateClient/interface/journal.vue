@@ -295,7 +295,6 @@ export default {
             contentObj.property.type +
             ' "';
           operatorCrux = "修改节点关系";
-          window.console.log(contentObj);
           return {
             operator,
             nodeName,

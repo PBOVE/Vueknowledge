@@ -183,7 +183,6 @@ export default {
     "treelistVal.delNodes": {
       handler: function() {
         let Nodes = this.zTree.getSelectedNodes();
-        // window.console.log(this.StreeNode);
         Nodes.forEach((item)=>{
           if(this.StreeNode.id === item.id){
             this.StreeNode = "";

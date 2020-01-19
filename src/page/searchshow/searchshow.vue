@@ -42,8 +42,16 @@ export default {
       // 路由跳转地址
       routerTO: "/manage",
       //TopHeigh高度
-      topHeight: 60
+      topHeight: this.$store.state.headerHeight,
     };
+  },
+  mounted() {
+    this.InnerHeight = window.innerHeight;
+    this.InnerWidth = window.innerWidth;
+    window.addEventListener("resize", this.getInner);
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.getInner);
   },
   methods: {
     //获取 浏览器 高度
@@ -53,7 +61,6 @@ export default {
     },
     // 回调函数
     searchIdCallback(type, val) {
-      // window.console.log(this.nodeId);
       const statusMap = {
         //点击按钮
         1: () => {
@@ -67,19 +74,10 @@ export default {
       statusMap[type]();
     }
   },
-  mounted() {
-    this.InnerHeight = window.innerHeight;
-    this.InnerWidth = window.innerWidth;
-    window.addEventListener("resize", this.getInner);
-  },
-  beforeDestroy() {
-    window.removeEventListener("resize", this.getInner);
-  },
   watch: {
     $route(to) {
       if(to.path !=='/search')
         return;
-      
       this.nodeName = to.query.name;
       this.showSelectNum=to.query.q || 1;
       this.nodeId= to.query.id;

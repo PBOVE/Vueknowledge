@@ -69,7 +69,6 @@ export default {
   watch: {
     treeNode: {
       handler: function(val) {
-        // window.console.log(val)
         if (val === "") {
           this.treeNodename = "";
           this.showSelectNum = 0;

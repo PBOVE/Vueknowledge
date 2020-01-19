@@ -17,22 +17,31 @@
       <router-link :to="routerTO?routerTO:'/manage'">
         <Icon type="md-apps" class="know-public-header-icon" />
       </router-link>
-      <router-link to="/login" v-show="!userStatusFlag">
+      <router-link to="/login" v-show="!userStatusFlag&&userStatusLoadFlag">
         <span class="know-public-header-login">登录</span>
       </router-link>
-      <span class="know-public-header-user-logo" ref="userLogo" v-show="userStatusFlag"></span>
+      <span
+        class="know-public-header-user-logo"
+        ref="userLogo"
+        v-show="userStatusFlag&&userStatusLoadFlag"
+      >{{getnickName.charAt(0).toUpperCase()}}</span>
+      <Icon type="md-refresh" class="know-header-user-load" v-show="!userStatusLoadFlag" />
     </div>
   </header>
 </template>
 
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
-  props: ["routerTO"],
+  props: ["routerTO", "RouterFlag"],
   data() {
     return {
       // 判断用户是否登录 标志位
       userStatusFlag: false,
+      // 判断 用户 登录 加载标志位
+      userStatusLoadFlag: false,
       //随机背景颜色
       color: [
         "#ff4e50",
@@ -45,24 +54,41 @@ export default {
       ]
     };
   },
+  computed: {
+    ...mapGetters({
+      getnickName: "getnickName"
+    })
+  },
+  mounted() {
+    this.getUser();
+  },
   methods: {
-    //判断用户是否登录
+    // 判断用户是否登录
     judgementUser() {
-      let user = this.$store.state.user;
-      if (user === "") {
-        this.userStatusFlag = false;
-        return;
-      }
-      this.userStatusFlag = true;
-      let username = JSON.parse(user).username;
-      this.$refs.userLogo.innerHTML = username.charAt(0).toUpperCase();
       this.$refs.userLogo.style.backgroundColor = this.color[
         Math.floor(Math.random() * 7)
       ];
+    },
+    // 获取token 判断用户登录
+    getUser() {
+      const url = "user/me";
+      this.get(url)
+        .then(res => {
+          this.userStatusLoadFlag = true;
+          if (res.data.me) {
+            let data = res.data;
+            this.userStatusFlag = true;
+            this.$store.commit("setUserData", data);
+            this.judgementUser();
+          } else {
+            this.userStatusFlag = false;
+            if (this.RouterFlag) {
+              this.$router.push({ path: "/login" });
+            }
+          }
+        })
+        .catch(() => {});
     }
-  },
-  mounted() {
-    this.judgementUser();
   }
 };
 </script>
@@ -140,5 +166,21 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.know-header-user-load {
+  color: #2d8cf0;
+  font-size: 20px;
+  animation: ani-demo-load 2.5s linear infinite;
+}
+@keyframes ani-demo-load {
+  from {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>

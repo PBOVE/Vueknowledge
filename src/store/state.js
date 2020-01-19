@@ -7,5 +7,8 @@
 
 export default {
     token: '',
-    user: ''
+    user: '',
+    nickName: '',
+    updateTime:'',
+    headerHeight: 60
 }

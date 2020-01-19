@@ -13,28 +13,28 @@
     </div>
     <div class="know-header-right">
       <router-link to="/" class="know-header-right-link">
-        <Icon type="md-apps" class="know-header-right-user-icon"/>
+        <Icon type="md-apps" class="know-header-right-user-icon" />
       </router-link>
       <Dropdown @on-click="clickListevent">
-        <span class="know-header-right-user-logo" ref="userLogo"></span>
+        <span class="know-header-right-user-logo" ref="userLogo">
+          {{
+          getnickName.charAt(0).toUpperCase()
+          }}
+        </span>
         <!-- <span class="know-header-right-user-name">{{username}}</span> -->
         <DropdownMenu slot="list" class="know-header-right-list">
           <DropdownItem name="2">个人中心</DropdownItem>
-          <DropdownItem name="1">密码修改</DropdownItem>
           <DropdownItem name="0" divided>退出登录</DropdownItem>
         </DropdownMenu>
       </Dropdown>
     </div>
-    <change-password :modalCFalg="changePasswordFlag"></change-password>
   </div>
 </template>
 
 
 <script>
-import changePassword from "./modalChangPassword";
 import { mapGetters } from "vuex";
 export default {
-  components: { changePassword },
   data() {
     return {
       //随机背景颜色
@@ -51,19 +51,16 @@ export default {
       changePasswordFlag: ""
     };
   },
-  computed: mapGetters(["getUser"]),
+  computed: mapGetters(["getnickName"]),
   methods: {
     //创建用户 色彩 头像
     createUserLogo() {
-      let username = JSON.parse(this.getUser).username;
-      this.$refs.userLogo.innerHTML = username.charAt(0).toUpperCase();
       this.$refs.userLogo.style.backgroundColor = this.color[
         Math.floor(Math.random() * 7)
       ];
     },
     //点击菜单事件
     clickListevent(name) {
-      // window.console.log(typeof name);
       switch (name) {
         case "0":
           this.post_json("user/logout")
@@ -76,6 +73,8 @@ export default {
         case "1":
           this.changePasswordFlag = Math.random();
           break;
+        case "2":
+          this.$router.push({ path: "/user" });
       }
     }
   },
@@ -147,7 +146,7 @@ know-header-right-list .know-header-right-user:hover {
   cursor: pointer;
 }
 .know-header-right-user-icon:hover {
-  color: rgba(128,134,149,0.8);
+  color: rgba(128, 134, 149, 0.8);
 }
 .k-h-r-s-d {
   display: inline-block;
