@@ -86,6 +86,9 @@ export default {
           newPass: "",
           RepeatPass: ""
         };
+        this.$refs.oldInTip.innerHTML = "";
+        this.$refs.newInTip.innerHTML = "";
+        this.$refs.RepeatInTip.innerHTML = "";
       }
     }
   },

@@ -28,18 +28,26 @@
         @userMainCallback="userMainCallback"
         :viewSeletctFlag="viewSeletctFlag"
       ></password-modify>
+      <logout-account   class="user-main-content-msg"  v-show="viewSeletctFlag === 1" @userMainCallback="userMainCallback"></logout-account>
+      <unregister-confirmationu  class="user-main-content-msg"  v-if="viewSeletctFlag === 4" @userMainCallback="userMainCallback"></unregister-confirmationu>
     </div>
   </div>
 </template>
 
 
 <script>
-import nameModify from "./userModify/nameModify";
-import userMsg from "./userModify/userMsg";
-import passwordModify from "./userModify/passwordModify";
-
+// 修改名称
+import nameModify from './userModify/nameModify';
+// 信息
+import userMsg from './userModify/userMsg';
+// 密码修改
+import passwordModify from './userModify/passwordModify';
+// 注销
+import logoutAccount from './userModify/logoutAccount';
+// 注销确认
+import unregisterConfirmationu from './userModify/unregisterConfirmationu';
 export default {
-  components: { nameModify, userMsg, passwordModify },
+  components: { nameModify, userMsg, passwordModify ,logoutAccount ,unregisterConfirmationu},
   data() {
     return {
       // 视图选择 标志位
@@ -67,6 +75,7 @@ export default {
 .user-main {
   padding: 30px;
   overflow: auto;
+  min-width: 460px;
 }
 .user-main-header {
   text-align: center;
@@ -87,9 +96,15 @@ export default {
 }
 .user-main-content-msg {
   overflow: hidden;
-  margin: 0 auto;
+  margin: 0 auto 20px auto;
   width: 800px;
   border: 1px solid #dadce0;
   border-radius: 8px;
+  
 }
+@media screen and (max-width: 860px) {
+  .user-main-content-msg{
+    width: 100%;
+  }
+} 
 </style>

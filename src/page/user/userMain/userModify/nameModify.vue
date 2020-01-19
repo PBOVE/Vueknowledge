@@ -50,6 +50,7 @@ export default {
         .then(res => {
           const data = res.data;
           this.$store.commit("modifyNickName", data);
+          this.$Message.success("修改成功");
         })
         .catch(() => {});
     },
