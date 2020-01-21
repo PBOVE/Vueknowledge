@@ -20,11 +20,14 @@
       <router-link to="/login" v-show="!userStatusFlag&&userStatusLoadFlag">
         <span class="know-public-header-login">登录</span>
       </router-link>
-      <span
-        class="know-public-header-user-logo"
-        ref="userLogo"
-        v-show="userStatusFlag&&userStatusLoadFlag"
-      >{{getnickName.charAt(0).toUpperCase()}}</span>
+      <drop-down>
+        <span
+          class="know-public-header-user-logo"
+          ref="userLogo"
+          v-show="userStatusFlag&&userStatusLoadFlag"
+        >{{getnickName.charAt(0).toUpperCase()}}</span>
+      </drop-down>
+
       <Icon type="md-refresh" class="know-header-user-load" v-show="!userStatusLoadFlag" />
     </div>
   </header>
@@ -32,9 +35,11 @@
 
 
 <script>
+import dropDown from "./dropdown";
 import { mapGetters } from "vuex";
 
 export default {
+  components: { dropDown },
   props: ["routerTO", "RouterFlag"],
   data() {
     return {

@@ -37,7 +37,7 @@
         </div>
       </Header>
       <Content
-        class="know-tree-default know-tree-main-content"
+        class="know-tree-default know-tree-main-content scroll"
         :style="{height:setTreeClientHeight}"
       >
         <tree-z @selectNode="TLCallback" :treelistVal="treeZ"></tree-z>
@@ -271,14 +271,6 @@ export default {
   padding: 10px;
   box-sizing: border-box;
   overflow: auto;
-}
-.know-tree-main-content::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-.know-tree-main-content::-webkit-scrollbar-thumb {
-  background-color: #c5c8ce;
-  border-radius: 5px;
 }
 .know-tree-header-button-no-selete {
   color: #a0a0a0;

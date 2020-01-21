@@ -15,7 +15,7 @@
         @oMainCallback="oMainCallback"
       ></selete-button>
     </div>
-    <div class="know-operate-mian-content" :style="{height:setTreeClientHeight}">
+    <div class="know-operate-mian-content scroll" :style="{height:setTreeClientHeight}">
       <show-client
         ref = 'showclient'
         :InnerHeight="InnerHeight"
@@ -116,13 +116,5 @@ export default {
   border-radius: 10px;
   padding: 0px;
   overflow: auto;
-}
-.know-operate-mian-content::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-.know-operate-mian-content::-webkit-scrollbar-thumb {
-  background-color: #c5c8ce;
-  border-radius: 5px;
 }
 </style>

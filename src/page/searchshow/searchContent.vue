@@ -6,7 +6,7 @@
 
 
 <template>
-  <div class="know-selectid-content" :style="{height:setClientHeight}">
+  <div class="know-selectid-content scroll" :style="{height:setClientHeight}">
     <div v-show="showSelectNum === 1">
       <force-diagram :InnerHeight="InnerHeight" :showSelectNum="showSelectNum" :nodeId='nodeId'></force-diagram>
     </div>
@@ -55,12 +55,4 @@ export default {
   overflow: auto;
 }
 
-.know-selectid-content::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-.know-selectid-content::-webkit-scrollbar-thumb {
-  background-color: #c5c8ce;
-  border-radius: 5px;
-}
 </style>

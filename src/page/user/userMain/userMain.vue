@@ -6,7 +6,7 @@
 
 
 <template>
-  <div class="user-main">
+  <div class="user-main scroll">
     <div class="user-main-header user-bottom">
       <div class="user-main-header-name">个人信息</div>
       <div class="user-main-header-title">您在 “知识图谱构建平台” 中使用的基本信息，例如您的昵称和头像</div>
@@ -28,31 +28,49 @@
         @userMainCallback="userMainCallback"
         :viewSeletctFlag="viewSeletctFlag"
       ></password-modify>
-      <logout-account   class="user-main-content-msg"  v-show="viewSeletctFlag === 1" @userMainCallback="userMainCallback"></logout-account>
-      <unregister-confirmationu  class="user-main-content-msg"  v-if="viewSeletctFlag === 4" @userMainCallback="userMainCallback"></unregister-confirmationu>
+      <logout-account
+        class="user-main-content-msg"
+        v-show="viewSeletctFlag === 1"
+        @userMainCallback="userMainCallback"
+      ></logout-account>
+      <unregister-confirmationu
+        class="user-main-content-msg"
+        v-if="viewSeletctFlag === 4"
+        @userMainCallback="userMainCallback"
+      ></unregister-confirmationu>
     </div>
+    <upload-images ref="uploadImages"></upload-images>
   </div>
 </template>
 
 
 <script>
 // 修改名称
-import nameModify from './userModify/nameModify';
+import nameModify from "./userModify/nameModify";
 // 信息
-import userMsg from './userModify/userMsg';
+import userMsg from "./userModify/userMsg";
 // 密码修改
-import passwordModify from './userModify/passwordModify';
+import passwordModify from "./userModify/passwordModify";
 // 注销
-import logoutAccount from './userModify/logoutAccount';
+import logoutAccount from "./userModify/logoutAccount";
 // 注销确认
-import unregisterConfirmationu from './userModify/unregisterConfirmationu';
+import unregisterConfirmationu from "./userModify/unregisterConfirmationu";
+// 点击上传照片
+import uploadImages from "../../../components/uploadImages";
+
 export default {
-  components: { nameModify, userMsg, passwordModify ,logoutAccount ,unregisterConfirmationu},
+  components: {
+    nameModify,
+    userMsg,
+    passwordModify,
+    logoutAccount,
+    unregisterConfirmationu,
+    uploadImages
+  },
   data() {
     return {
       // 视图选择 标志位
-      viewSeletctFlag: 1,
-      
+      viewSeletctFlag: 1
     };
   },
   methods: {
@@ -62,6 +80,10 @@ export default {
         // 视图选择
         1: () => {
           this.viewSeletctFlag = val;
+        },
+        // 上传 照片
+        2: () => {
+          this.$refs.uploadImages.clickStatus(3);
         }
       };
       stateMap[type]();
@@ -100,11 +122,10 @@ export default {
   width: 800px;
   border: 1px solid #dadce0;
   border-radius: 8px;
-  
 }
 @media screen and (max-width: 860px) {
-  .user-main-content-msg{
+  .user-main-content-msg {
     width: 100%;
   }
-} 
+}
 </style>

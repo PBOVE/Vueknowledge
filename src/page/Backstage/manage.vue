@@ -7,9 +7,7 @@
 
 <template>
     <div>
-        <div class="know-manage-header">
-            <m-header></m-header>
-        </div>
+        <public-header class="know-manage-header"></public-header>
         <div class="know-manage-split" id='knowManageSplit'>
             <Split v-model="splitinit" :min='splitMin' :max='splitMax'>
                 <div slot="left" class="know-manage-split-pane">
@@ -37,11 +35,11 @@
     //导入tree 模板
     import treeList from './treeInterface/treelist'
     //导入 header 模板
-    import mHeader from './manageheader/mHeader'
+    import publicHeader from '../../components/publicHeader'
     // 导入 操作 模板
     import operateMain from './operate/operateMain'
     export default {
-        components:{treeList,mHeader,operateMain},
+        components:{treeList,publicHeader,operateMain},
         data() {
             return {
                 // 初始化 面板分割

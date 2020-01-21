@@ -14,8 +14,11 @@
       <router-link to="/login" v-show="!userStatusFlag&&userStatusLoadFlag">
         <span class="know-search-header-login">登录</span>
       </router-link>
-      <span class="know-search-header-user-logo" ref="userLogo" v-show="userStatusFlag&&userStatusLoadFlag" ></span>
-      <Icon type="md-refresh" class="know-search-header-user-load" v-show="!userStatusLoadFlag"  />
+      <drop-down v-show="userStatusFlag&&userStatusLoadFlag">
+        <span class="know-search-header-user-logo" ref="userLogo"></span>
+      </drop-down>
+
+      <Icon type="md-refresh" class="know-search-header-user-load" v-show="!userStatusLoadFlag" />
     </header>
     <div class="know-search-box" ref="knowSearchBox">
       <div class="know-search-title-en" ref="knowSearchBoxEn">
@@ -51,14 +54,16 @@
 
 <script>
 import searchContent from "./searchContent/searchContent";
+import dropDown from "../../components/dropdown";
+
 export default {
-  components: { searchContent },
+  components: { searchContent, dropDown },
   data() {
     return {
       // 判断用户是否登录 标志位
       userStatusFlag: false,
       // 判断 用户 登录 加载标志位
-      userStatusLoadFlag:false,
+      userStatusLoadFlag: false,
       //随机背景颜色
       color: [
         "#ff4e50",
@@ -334,7 +339,7 @@ export default {
 .know-search-header-user-load {
   color: #2d8cf0;
   font-size: 20px;
-  animation :ani-demo-load 2.5s linear infinite;
+  animation: ani-demo-load 2.5s linear infinite;
 }
 
 #know-search-box-input-In {

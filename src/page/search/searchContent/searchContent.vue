@@ -6,7 +6,7 @@
 
 
 <template>
-  <div class="know-s-c" v-show="searchFocus">
+  <div class="know-s-c scroll" v-show="searchFocus">
     <div class="know-s-c-m">
       <content-mheader
         :reqSuccessFlag='reqSuccessFlag'
@@ -20,7 +20,6 @@
       ></content-mheader>
     </div>
     <div class="know-s-c-a">
-
     </div>
   </div>
 </template>
@@ -155,14 +154,6 @@ export default {
   padding: 10px 10px 10px 50px;
   display: flex;
   overflow: auto;
-}
-.know-s-c::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-.know-s-c::-webkit-scrollbar-thumb {
-  background-color: #c5c8ce;
-  border-radius: 5px;
 }
 .know-s-c-m {
   width: 670px;

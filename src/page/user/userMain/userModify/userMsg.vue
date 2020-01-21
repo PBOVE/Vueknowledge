@@ -12,9 +12,20 @@
       <div class="user-main-header-title">知识图谱构建平台</div>
     </div>
     <div class="main-content-msg-row">
-      <div class="msg-row-content">
-        <div class="msg-row-name">头像</div>
-        <div></div>
+      <div class="msg-row-content dis-flex"  @click="selectRow(1)">
+        <div class="dis-flex-left">
+          <div class="msg-row-name">头像</div>
+          <div class="msg-row-title msg-row-title-tip">更改照片可帮助您个性化您的帐号</div>
+        </div>
+        <div class="dis-flex-right dis-flex-img">
+          <img
+            src="api/storage/preview/D75DDD971ADDB74EE6F47F6399693BC046E7731F"
+            class="msg-row-image"
+          />
+          <div class="msg-row-image-camera">
+            <Icon type="ios-camera" size="20" color="#c5c8ce" />
+          </div>
+        </div>
       </div>
     </div>
     <div class="main-content-msg-row">
@@ -57,11 +68,14 @@
         </div>
       </div>
     </div>
+    
   </div>
 </template>
 
 
 <script>
+
+
 export default {
   data() {
     return {
@@ -85,8 +99,13 @@ export default {
       );
     },
     // 选择行
-    selectRow(val){
-      this.$emit('userMainCallback',1,val);
+    selectRow(val) {
+      if(val === 1){
+        this.$emit("userMainCallback", 2, val);
+      }else{
+        this.$emit("userMainCallback", 1, val);
+      }
+      
     }
   }
 };
@@ -153,6 +172,27 @@ export default {
   line-height: 25px;
   font-size: 16px;
   color: #202124;
+}
+.msg-row-title-tip {
+  color: #5f6368;
+  font-size: 12px;
+}
+.msg-row-image {
+  height: 60px;
+  width: 60px;
+}
+.dis-flex-img {
+  position: relative;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.msg-row-image-camera {
+  position: absolute;
+  left: 0;
+  bottom: 0px;
+  width: 60px;
+  text-align: center;
+  background: rgba(32, 33, 36, 0.6);
 }
 .dis-flex {
   display: flex;

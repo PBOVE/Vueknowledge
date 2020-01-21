@@ -57,7 +57,8 @@
       <div class="box-msg-row-tip" ref="RepeatInTip"></div>
     </div>
     <div class="box-msg-row">
-      <Button type="primary" @click="modifyServer">更改密码</Button>
+      <Button type="primary" @click="modifyServer" class="box-msg-row-button">更改密码</Button>
+      <Button type="text" @click="selectBack">取消</Button>
     </div>
   </div>
 </template>
@@ -289,6 +290,10 @@ export default {
 .box-msg-row-tips-title {
   display: inline;
   font-size: 12px;
+}
+.box-msg-row-button {
+  margin: 0 20px 0 0;
+  height: 36px;
 }
 .curpoin {
   cursor: pointer;

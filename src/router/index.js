@@ -17,14 +17,18 @@ import 'view-design/dist/styles/iview.css';
 /**
  * 引入 vuex
  */
-import Vuex from 'vuex'
-import store from '../store'
+import Vuex from 'vuex';
+import store from '../store';
 
 /**
  *  引入 axios
  */
-import axios from 'axios'
+import axios from 'axios';
 
+/**
+ * 导入自定义 ui
+ */
+import '../assets/css/default.css';
 /**
  * 引入路由组件
  */
@@ -33,7 +37,7 @@ const manage = () => import('../page/Backstage/manage');
 const nofound = () => import('../page/noFound/nofound');
 const search = () => import('../page/search/search');
 const searchshow = () => import('../page/searchshow/searchshow');
-const user = () => import('../page/user/user')
+const user = () => import('../page/user/user');
 
 Vue.use(Vuex);
 Vue.use(ViewUI);
