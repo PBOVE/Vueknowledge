@@ -7,7 +7,7 @@
 
 <template>
   <div class="drop-warp">
-    <div @click.stop="ClickStatus(1)">
+    <div @click.stop="ClickStatus(1)" class="drop-warp-s" :class="{'drop-warp-border':showViewFlag}">
       <slot></slot>
     </div>
     <div class="drop-box drop-box-c" ref="dropBox" @click.stop v-show="showViewFlag">
@@ -18,7 +18,7 @@
             class="box-header-image"
           />
           <div class="box-header-img-icon img-icon-default disF">
-            <div class="box-header-img-i disF curP">
+            <div class="box-header-img-i disF curP" @click="ClickStatus(4)">
               <Icon type="ios-camera" size="18" />
             </div>
           </div>
@@ -32,14 +32,18 @@
         <div class="drop-box-main-button curP box-button" @click="ClickStatus(3)">退出</div>
       </div>
     </div>
+    <upload-images ref="uploadImages"></upload-images>
   </div>
 </template>
 
 
 <script>
 import { mapState } from "vuex";
+// 点击上传照片
+import uploadImages from "./uploadImages";
 
 export default {
+  components: { uploadImages },
   data() {
     return {
       user: JSON.parse(this.$store.state.user),
@@ -69,14 +73,19 @@ export default {
           this.$router.push({ path: "/user" });
         },
         // 点击 退出
-        3 :() =>{
-          const url = 'user/logout'
+        3: () => {
+          const url = "user/logout";
           this.post_json(url)
             .then(() => {
               this.$store.commit("delToken");
               this.$router.push({ path: "/login" });
             })
             .catch(() => {});
+        },
+        // 点击 展开上传文件
+        4: () => {
+          this.showViewFlag = false;
+          this.$refs.uploadImages.clickStatus(3);
         }
       };
       statusMap[type]();
@@ -95,6 +104,17 @@ export default {
 <style scoped>
 .drop-warp {
   position: relative;
+}
+.drop-warp-s {
+  margin: 0 10px 0 0;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  font-size: 0;
+  width: 31px;
+  height: 31px;
+}
+.drop-warp-border {
+  border: 3px solid rgba(0, 0, 0, 0.4);
 }
 .drop-box {
   position: absolute;

@@ -9,18 +9,17 @@
   <div class="know-s-c scroll" v-show="searchFocus">
     <div class="know-s-c-m">
       <content-mheader
-        :reqSuccessFlag='reqSuccessFlag'
+        :reqSuccessFlag="reqSuccessFlag"
         :ShowSMeg="ShowSMeg"
         :totalElements="totalElements"
         :handleShowData="handleShowData"
         :reqShowData="reqShowData"
-        :totalPages ='totalPages'
-        :pageNum ='pageNum'
-        @contentCallback = 'contentCallback'
+        :totalPages="totalPages"
+        :pageNum="pageNum"
+        @contentCallback="contentCallback"
       ></content-mheader>
     </div>
-    <div class="know-s-c-a">
-    </div>
+    <div class="know-s-c-a"></div>
   </div>
 </template>
 
@@ -28,14 +27,14 @@
 <script>
 import contentMheader from "./contentMheader";
 export default {
-  props: ["reqShowDataFlag", "InSearchMeg",'InnerHeight'],
+  props: ['InnerHeight'],
   components: { contentMheader },
   data() {
     return {
       //用户输入的数据
       ShowSMeg: "",
       //纪录用户输入的数据防止重复提交
-      InOldSearchMeg:'',
+      InOldSearchMeg: "",
       // 分页 可以展示的总页数
       totalPages: "",
       // 当前请求的第几页
@@ -56,7 +55,9 @@ export default {
       // 防止请求的属性重复
       LabelDataFlag: new Set(),
       // 数据加载成功标志为
-      reqSuccessFlag:''
+      reqSuccessFlag: "",
+      //用户输入的数据
+      InSearchMeg: "",
     };
   },
   methods: {
@@ -65,40 +66,42 @@ export default {
       this.InOldSearchMeg = this.InSearchMeg;
       let url = "search";
       let obj = {
-        size:this.pageSize,
+        size: this.pageSize,
         q: this.InSearchMeg,
         page: this.pageNum
       };
       this.get(url, obj)
         .then(res => {
           this.handleServerData(res.data);
-          this.reqSuccessFlag  = Math.random();
+          this.reqSuccessFlag = Math.random();
         })
-        .catch(() => {
-     
-        });
+        .catch(() => {});
     },
     // 处理请求的数据
     handleServerData(data) {
       this.searchFocus = true;
       this.totalElements = data.totalElements;
       this.ShowSMeg = this.InSearchMeg;
-      this.totalPages =  data.totalPages
+      this.totalPages = data.totalPages;
       let content = data.content;
       let reg = new RegExp(this.ShowSMeg, "gi");
       content.forEach(item => {
         this.reqShowData.push({
           info: item.info,
           node: item.node,
-          text:  this.html2Escape(item.text).replace(
+          text: this.html2Escape(item.text).replace(
             reg,
             '<span class="s-c-m-c-t-u">' + this.ShowSMeg + "</span>"
           ),
           user: item.user,
-          nodeName: this.html2Escape(item.node.name).replace(
-            reg,
-            '<span class="s-c-m-c-t-u">' + this.ShowSMeg + "</span>"
-          )+'<div class="know-s-c-m-c-user">编辑者: <span class="know-s-c-m-c-username">'+item.user+'</span></div>'
+          nodeName:
+            this.html2Escape(item.node.name).replace(
+              reg,
+              '<span class="s-c-m-c-t-u">' + this.ShowSMeg + "</span>"
+            ) +
+            '<div class="know-s-c-m-c-user">编辑者: <span class="know-s-c-m-c-username">' +
+            item.user +
+            "</span></div>"
         });
         this.handleServerLabel(item.node.labels);
       });
@@ -120,28 +123,38 @@ export default {
       });
     },
     //content 回调函数
-    contentCallback(type,val){
-      const statusMap ={
-        1: ()=>{
+    contentCallback(type, val) {
+      const statusMap = {
+        1: () => {
           this.pageNum++;
           this.getServerData();
         },
-        2:()=>{
-          this.$refs.contentaside.CAsideCallback(1,val)
+        2: () => {
+          this.$refs.contentaside.CAsideCallback(1, val);
         }
-      }
+      };
       statusMap[type]();
     }
   },
   watch: {
-    reqShowDataFlag() {
-      this.pageNum = 0;
-      this.handleShowData = {
-        LabelData: []
-      };
-      this.reqShowData = [];
-      this.LabelDataFlag.clear();
-      this.getServerData();
+    $route: {
+      handler(to) {
+        if(!to.query.q){
+          return
+        }
+        this.$emit('SearchInFocus');
+        this.$emit('setSearchMsg',to.query.q);
+        this.InSearchMeg = to.query.q;
+        
+        this.pageNum = 0;
+        this.handleShowData = {
+          LabelData: []
+        };
+        this.reqShowData = [];
+        this.LabelDataFlag.clear();
+        this.getServerData();
+      },
+      immediate: true
     }
   }
 };
@@ -158,8 +171,8 @@ export default {
 .know-s-c-m {
   width: 670px;
 }
-.know-s-c-a{
-  flex:1;
+.know-s-c-a {
+  flex: 1;
   padding: 10px;
 }
 </style>

@@ -17,7 +17,7 @@
     <div class="box-msg-row">
       <input type="text" class="box-msg-row-i" v-model="userName" />
       <div class="box-msg-row-confirm curpoin" @click="modifyServer">
-        <Icon type="md-create" size="20" />
+        <Icon type="md-checkmark" size="20"/>
       </div>
     </div>
   </div>
@@ -44,7 +44,7 @@ export default {
       }
       const url = "user/" + this.userId + "/nickName";
       const obj = {
-        nickName: this.userName
+        nickName: this.userName.replace(/^\s+|\s+$/g,"")
       };
       this.patch_string(url, obj)
         .then(res => {
@@ -107,6 +107,9 @@ export default {
 }
 .box-msg-row-confirm {
   padding: 0 0 0 10px;
+}
+.box-msg-row-confirm i{
+  font-weight: bold;
 }
 .curpoin {
   cursor: pointer;

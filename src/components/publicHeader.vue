@@ -17,18 +17,16 @@
       <router-link :to="routerTO?routerTO:'/manage'">
         <Icon type="md-apps" class="know-public-header-icon" />
       </router-link>
-      <router-link to="/login" v-show="!userStatusFlag&&userStatusLoadFlag">
+      <router-link to="/login" v-if="!userStatusFlag&&userStatusLoadFlag">
         <span class="know-public-header-login">登录</span>
       </router-link>
-      <drop-down>
-        <span
+      <drop-down v-else-if="userStatusFlag&&userStatusLoadFlag">
+        <img
+          src="api/storage/preview/D75DDD971ADDB74EE6F47F6399693BC046E7731F"
           class="know-public-header-user-logo"
-          ref="userLogo"
-          v-show="userStatusFlag&&userStatusLoadFlag"
-        >{{getnickName.charAt(0).toUpperCase()}}</span>
+        />
       </drop-down>
-
-      <Icon type="md-refresh" class="know-header-user-load" v-show="!userStatusLoadFlag" />
+      <Icon type="md-refresh" class="know-header-user-load" v-else-if="!userStatusLoadFlag" />
     </div>
   </header>
 </template>
@@ -47,16 +45,6 @@ export default {
       userStatusFlag: false,
       // 判断 用户 登录 加载标志位
       userStatusLoadFlag: false,
-      //随机背景颜色
-      color: [
-        "#ff4e50",
-        "#84B1ED",
-        "#00dffc",
-        "#0080ff",
-        "#f9d423",
-        "#5A9367",
-        "#56A902"
-      ]
     };
   },
   computed: {
@@ -84,7 +72,7 @@ export default {
             let data = res.data;
             this.userStatusFlag = true;
             this.$store.commit("setUserData", data);
-            this.judgementUser();
+            // this.judgementUser();
           } else {
             this.userStatusFlag = false;
             if (this.RouterFlag) {
@@ -155,7 +143,6 @@ export default {
   background-color: RGBA(45, 140, 240, 0.8);
 }
 .know-public-header-user-logo {
-  margin: 0 10px 0 0;
   color: #fff;
   font-family: Georgia;
   display: inline-block;

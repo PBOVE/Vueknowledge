@@ -11,14 +11,16 @@
       <router-link to="/manage">
         <Icon type="md-apps" class="know-search-header-icon" />
       </router-link>
-      <router-link to="/login" v-show="!userStatusFlag&&userStatusLoadFlag">
+      <router-link to="/login" v-if="!userStatusFlag&&userStatusLoadFlag">
         <span class="know-search-header-login">登录</span>
       </router-link>
-      <drop-down v-show="userStatusFlag&&userStatusLoadFlag">
-        <span class="know-search-header-user-logo" ref="userLogo"></span>
+      <drop-down v-else-if="userStatusFlag&&userStatusLoadFlag">
+        <img
+          :src="userImgSrc"
+          class="know-search-header-user-logo"
+        />
       </drop-down>
-
-      <Icon type="md-refresh" class="know-search-header-user-load" v-show="!userStatusLoadFlag" />
+      <Icon type="md-refresh" class="know-search-header-user-load" v-else-if="!userStatusLoadFlag" />
     </header>
     <div class="know-search-box" ref="knowSearchBox">
       <div class="know-search-title-en" ref="knowSearchBoxEn">
@@ -45,9 +47,9 @@
     </div>
     <search-content
       :style="{height:setClientHeight}"
-      :reqShowDataFlag="reqShowDataFlag"
-      :InSearchMeg="handleInSearchMeg"
       :InnerHeight="InnerHeight"
+      @SearchInFocus="SearchInFocus"
+      @setSearchMsg="setSearchMsg"
     ></search-content>
   </div>
 </template>
@@ -64,16 +66,6 @@ export default {
       userStatusFlag: false,
       // 判断 用户 登录 加载标志位
       userStatusLoadFlag: false,
-      //随机背景颜色
-      color: [
-        "#ff4e50",
-        "#84B1ED",
-        "#00dffc",
-        "#0080ff",
-        "#f9d423",
-        "#5A9367",
-        "#56A902"
-      ],
       //联想 请求的数据
       searchData: [],
       //用户输入的数据
@@ -86,8 +78,8 @@ export default {
       InnerWidth: "",
       // 距离顶部的高度
       TopHeight: 60,
-      // 视图数据请求标志
-      reqShowDataFlag: ""
+      // 用户 头像 地址
+      userImgSrc:'api/storage/preview/D75DDD971ADDB74EE6F47F6399693BC046E7731F'
     };
   },
   methods: {
@@ -95,14 +87,6 @@ export default {
     getInner() {
       this.InnerHeight = window.innerHeight;
       this.InnerWidth = window.innerWidth;
-    },
-    //判断用户是否登录
-    judgementUser(username) {
-      this.userStatusFlag = true;
-      this.$refs.userLogo.innerHTML = username.charAt(0).toUpperCase();
-      this.$refs.userLogo.style.backgroundColor = this.color[
-        Math.floor(Math.random() * 7)
-      ];
     },
     // 搜索框 获取焦点触发的函数
     SearchInFocus() {
@@ -146,7 +130,12 @@ export default {
       if (this.handleInSearchMeg === "") {
         return;
       }
-      this.reqShowDataFlag = Math.random();
+      this.$router.push({
+        path: "/",
+        query: {
+          q: this.InSearchMeg
+        }
+      });
     },
     // 回车请求数据
     SearchReqData(event) {
@@ -168,11 +157,15 @@ export default {
           this.userStatusLoadFlag = true;
           if (res.data.me) {
             let data = res.data;
+            this.userStatusFlag = true;
             this.$store.commit("setUserData", data);
-            this.judgementUser(data.me.nickName);
           }
         })
         .catch(() => {});
+    },
+    // 设置用户输入的数据
+    setSearchMsg(val) {
+      this.InSearchMeg = val;
     }
   },
   mounted() {
@@ -242,7 +235,6 @@ export default {
 }
 
 .know-search-header-user-logo {
-  margin: 0 10px 0 0;
   color: #fff;
   font-family: Georgia;
   display: inline-block;

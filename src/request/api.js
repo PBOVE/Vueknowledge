@@ -9,7 +9,7 @@ import axios from 'axios'
 import store from '../store'
 import qs from 'qs'
 import router from '../router'
-import {Message} from 'view-design'
+import { Message } from 'view-design'
 
 // eslint-disable-next-line no-console
 
@@ -22,7 +22,7 @@ axios.defaults.baseURL = baseUrl;
  * 封装 get 方法
  */
 export function get(url, params = {}) {
-    return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     axios.get(url, {
       params: params
     }).then(res => {
@@ -76,6 +76,24 @@ export function post_text(url, params = {}) {
   });
 }
 /**
+ *  封装 post 获取进度条 方法
+ */
+export function post_progress(url, params = {}, callback) {
+  return new Promise((resolve, reject) => {
+    axios.post(url, (params), {
+      headers: { 'Content-Type': 'multipart/form-data' }, onUploadProgress: (progressEvent) => {
+        callback(progressEvent)
+      }
+    })
+      .then(res => {
+        resolve(res.data);
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  });
+}
+/**
  *  封装 patch from 方法
  */
 export function patch_string(url, params = {}) {
@@ -106,7 +124,7 @@ export function patch_json(url, params = {}) {
  */
 export function delete_string(url, params = {}) {
   return new Promise((resolve, reject) => {
-    axios.delete(url,{data: qs.stringify(params),  headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+    axios.delete(url, { data: qs.stringify(params), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
       .then(res => {
         resolve(res.data);
       }).catch(err => {
@@ -119,7 +137,7 @@ export function delete_string(url, params = {}) {
  */
 export function delete_json(url, params = {}) {
   return new Promise((resolve, reject) => {
-    axios.delete(url, { data:JSON.stringify(params),headers: { 'Content-Type': 'application/json;'} })
+    axios.delete(url, { data: JSON.stringify(params), headers: { 'Content-Type': 'application/json;' } })
       .then(res => {
         resolve(res.data);
       }).catch(err => {
@@ -148,7 +166,7 @@ export function put_json(url, params = {}) {
  * 状态码处理函数
  */
 
-const showStatus =  (err) =>{
+const showStatus = (err) => {
   switch (err) {
     case 400:
       notify('error', '请确认输入的密码!');
@@ -161,21 +179,21 @@ const showStatus =  (err) =>{
         path: '/login',
       });
       store.commit('delToken');
-      notify('error','登录失效,请重新登录');
+      notify('error', '登录失效,请重新登录');
       break;
     case 500:
-      notify('error','系统正在维护中,请稍等');
+      notify('error', '系统正在维护中,请稍等');
       break;
     case 502:
-      notify('error','网络错误');
+      notify('error', '网络错误');
       break;
-    default :
+    default:
       notify('error', '错误');
       break;
-    }
+  }
 }
 const notify = (type, msg, duration = 3) => {
-  Message[type]({content:msg, duration:duration});
+  Message[type]({ content: msg, duration: duration });
 };
 
 
@@ -205,10 +223,13 @@ axios.interceptors.response.use(response => {
   if (typeof data === 'string') {
     showStatus(404);
     return Promise.reject();
-  }else if(data.code === 0 && data.msg === 'Success'){
+  } else if (data.code == 0 && data.msg === 'Success') {
     return response;
   }
-  else return Promise.reject();
+  else {
+    showStatus();
+    return Promise.reject();
+  }
 }, error => {
   showStatus(error.response.status)
   return Promise.reject();
