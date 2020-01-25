@@ -139,13 +139,15 @@ export default {
   watch: {
     $route: {
       handler(to) {
-        if(!to.query.q){
+        if(!to.query.q){    
+          this.$emit('SearchInCancel');
+          this.$emit('setSearchMsg','');
+          this.searchFocus = false;
           return
         }
         this.$emit('SearchInFocus');
         this.$emit('setSearchMsg',to.query.q);
         this.InSearchMeg = to.query.q;
-        
         this.pageNum = 0;
         this.handleShowData = {
           LabelData: []

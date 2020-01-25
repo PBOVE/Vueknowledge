@@ -45,7 +45,7 @@
       </div>
     </div>
     <div class="box-floor">
-      <Button type="primary" :disabled="disabledFlag">设置为个人资料照片</Button>
+      <Button type="primary" :disabled="disabledFlag" @click.stop="clickStatus(6)">设置为个人资料照片</Button>
       <Button type="text" @click.stop="clickStatus(2)">取消</Button>
     </div>
   </div>
@@ -114,8 +114,7 @@ export default {
               this.srcImage = res.link;
               this.disabledFlag = false;
             })
-            .catch(() => {
-            });
+            .catch(() => {});
         },
         // 展示上传照片展示位
         5: () => {
@@ -123,6 +122,21 @@ export default {
           this.uploadStatus = 1;
           this.showImgFlag = 1;
           this.disabledFlag = true;
+        },
+        // 设置上传个人照片
+        6: () => {
+          const url = "user/me";
+          const obj = {
+            image: this.srcImage
+          };
+          this.patch_json(url, obj)
+            .then(res => {
+              const data = res.data;
+              this.$store.commit("modify", data);
+              this.$Message.success("修改成功");
+              this.uploadShowFlag = false;
+            })
+            .catch(() => {});
         }
       };
       statusMap[type]();
@@ -161,10 +175,7 @@ export default {
 .cur-poin {
   cursor: pointer;
 }
-.dis-fix {
-  display: flex;
-  justify-content: space-between;
-}
+
 .upload-box-main {
   overflow: hidden;
   height: calc(100% - 110px);

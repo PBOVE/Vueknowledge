@@ -14,7 +14,7 @@
 //导入 d3 数据 包
 import * as d3 from "d3";
 export default {
-	props:['RightWeight','TopHeight'],
+  props: ["RightWeight", "TopHeight"],
   data() {
     return {};
   },
@@ -25,7 +25,6 @@ export default {
         this.$refs.knowtree.removeChild(this.$refs.knowtree.firstChild);
 
       this.CreateD3jsTree(treeData);
-     
     },
     //树图渲染数据
     CreateD3jsTree(dataset) {
@@ -68,7 +67,7 @@ export default {
         );
       width = width - marge.left - 100;
       let g = svg.append("g");
-     
+
       let LinkAll = g.append("g");
       let NodeAll = g.append("g");
       //创建一个树状图
@@ -88,10 +87,9 @@ export default {
         .x(d => d.y)
         .y(d => d.x);
       // 绘制节点
-      Updata(root);
 
       //更新布局
-      function Updata(source) {
+      let Updata = source => {
         let Nodes = tree(root).descendants();
         let Links = tree(root).links();
         Nodes[0].y = Nodes[0].Strlen + 10;
@@ -148,14 +146,6 @@ export default {
           .attr("y", -5)
           .attr("dy", 10)
           .text(function(d) {
-            // if (d.parent != null && d.x == d.parent.x) {
-            //   if (d.Strlen > d.y - d.parent.y + 20) {
-            //     return d.data.name.substr(0, 5) + "...";
-            //   }
-            // }
-            // return d.data.name.length > 5
-            //   ? d.data.name.substr(0, 5) + "..."
-            //   : d.data.name;
             return d.data.name;
           })
           .append("title")
@@ -207,7 +197,8 @@ export default {
           }
           Updata(d);
         }
-      }
+      };
+      Updata(root);
     }
   }
 };

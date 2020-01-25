@@ -69,8 +69,6 @@ export default {
   props: ["viewSeletctFlag"],
   data() {
     return {
-      // 用户 Id
-      userId: JSON.parse(this.$store.state.user).id,
       //修改密碼 上传 的 信息
       fromCPass: {
         oldPass: "",
@@ -122,7 +120,7 @@ export default {
       if (!flag) {
         return;
       }
-      let url = "user/" + this.userId + "/password";
+      let url = "user/me/password";
       let obj = {
         srcPassword: this.fromCPass.oldPass,
         password: this.fromCPass.newPass

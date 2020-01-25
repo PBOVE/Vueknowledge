@@ -45,8 +45,6 @@
 export default {
   data() {
     return {
-      // 用户 Id
-      userId: JSON.parse(this.$store.state.user).id,
       // 判断用户选择
       checkFlag: false
     };
@@ -58,15 +56,12 @@ export default {
         this.$Message.info("请勾选注销");
         return;
       }
-      const url = "user/" + this.userId;
+      const url = "user/me";
       this.delete_string(url)
-        .then(res => {
-          if (res.data) {
+        .then(() => {
             this.$store.commit("delToken");
             this.$router.push({ path: "/login" });
-          } else {
-            this.$Message.warning("注销错误");
-          }
+          
         })
         .catch(() => {});
     },

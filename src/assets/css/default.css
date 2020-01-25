@@ -6,3 +6,27 @@
   width: 8px;
   height: 8px;
 }
+.dis-fix {
+  display: flex;
+  justify-content: space-between;
+}
+.dis-fixc{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+}
+.Noimg {
+  font-family: Georgia;
+  display: inline-block;
+  width: 25px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 25px;
+  font-size: 15px;
+  user-select: none;
+  color: #dff6f0;
+  background: #4d80e4;
+  cursor: pointer;
+}

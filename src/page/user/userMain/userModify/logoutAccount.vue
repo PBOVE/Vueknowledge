@@ -9,7 +9,7 @@
   <div class="msg-news-box">
     <div class="msg-news-box-msg-title">
       <div class="box-msg-header-name">
-        <span>注销帐号</span>
+        <span>帐号注销</span>
       </div>
       <div class="box-msg-header-title">您可以随时删除自己的 “知识图谱构建平台” 帐号。如果事后改变主意了，您可能无法恢复帐号。</div>
       <div class="box-msg-header-title">您将失去该帐号中的所有数据和内容</div>
@@ -26,8 +26,6 @@
 export default {
   data() {
     return {
-      // 用户 Id
-      userId: JSON.parse(this.$store.state.user).id,
     };
   },
   methods: {

@@ -7,7 +7,7 @@
 
 <template>
     <div>
-        <public-header class="know-manage-header"></public-header>
+        <public-header class="know-manage-header" :RouterFlag='true'></public-header>
         <div class="know-manage-split" id='knowManageSplit'>
             <Split v-model="splitinit" :min='splitMin' :max='splitMax'>
                 <div slot="left" class="know-manage-split-pane">

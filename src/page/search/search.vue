@@ -8,17 +8,15 @@
 <template>
   <div class="know-search">
     <header class="know-search-header" ref="knowSearchHeader">
-      <router-link to="/manage">
+      <router-link to="/project">
         <Icon type="md-apps" class="know-search-header-icon" />
       </router-link>
       <router-link to="/login" v-if="!userStatusFlag&&userStatusLoadFlag">
         <span class="know-search-header-login">登录</span>
       </router-link>
       <drop-down v-else-if="userStatusFlag&&userStatusLoadFlag">
-        <img
-          :src="userImgSrc"
-          class="know-search-header-user-logo"
-        />
+        <img v-if="images" :src="images" class="know-search-header-user-logo" />
+        <div v-else class="Noimg">{{nickName.charAt(0).toUpperCase()}}</div>
       </drop-down>
       <Icon type="md-refresh" class="know-search-header-user-load" v-else-if="!userStatusLoadFlag" />
     </header>
@@ -50,6 +48,7 @@
       :InnerHeight="InnerHeight"
       @SearchInFocus="SearchInFocus"
       @setSearchMsg="setSearchMsg"
+      @SearchInCancel="SearchInCancel"
     ></search-content>
   </div>
 </template>
@@ -57,6 +56,7 @@
 <script>
 import searchContent from "./searchContent/searchContent";
 import dropDown from "../../components/dropdown";
+import { mapState } from "vuex";
 
 export default {
   components: { searchContent, dropDown },
@@ -77,10 +77,25 @@ export default {
       // 获取 innerWidth
       InnerWidth: "",
       // 距离顶部的高度
-      TopHeight: 60,
-      // 用户 头像 地址
-      userImgSrc:'api/storage/preview/D75DDD971ADDB74EE6F47F6399693BC046E7731F'
+      TopHeight: 60
     };
+  },
+  computed: {
+    ...mapState(["nickName", "images"]),
+    //设置 树 可视区 高度
+    setClientHeight() {
+      return this.InnerHeight - this.TopHeight + "px";
+    }
+  },
+  mounted() {
+    this.MonitoringlAddInput();
+    this.getUser();
+    this.InnerHeight = window.innerHeight;
+    this.InnerWidth = window.innerWidth;
+    window.addEventListener("resize", this.getInner);
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.getInner);
   },
   methods: {
     //获取 浏览器 高度
@@ -97,6 +112,16 @@ export default {
         "know-search-header-logo-focus"
       );
       this.$refs.knowSearchHeader.classList.add("know-search-header-focus");
+    },
+    // 搜索框 恢复到原来的状态
+    SearchInCancel() {
+      this.$refs.knowSearchBoxCn.style.display = "block";
+      this.$refs.knowSearchBoxEn.style.display = "block";
+      this.$refs.knowSearchBox.classList.remove("know-search-box-focus");
+      this.$refs.knowSearchHeaderLogo.classList.remove(
+        "know-search-header-logo-focus"
+      );
+      this.$refs.knowSearchHeader.classList.remove("know-search-header-focus");
     },
     //input change select 改变时 触发的函数
     SearchChangeOrselect(val) {
@@ -155,7 +180,7 @@ export default {
       this.get(url)
         .then(res => {
           this.userStatusLoadFlag = true;
-          if (res.data.me) {
+          if (res.data.user !== "anonymousUser") {
             let data = res.data;
             this.userStatusFlag = true;
             this.$store.commit("setUserData", data);
@@ -166,22 +191,6 @@ export default {
     // 设置用户输入的数据
     setSearchMsg(val) {
       this.InSearchMeg = val;
-    }
-  },
-  mounted() {
-    this.MonitoringlAddInput();
-    this.getUser();
-    this.InnerHeight = window.innerHeight;
-    this.InnerWidth = window.innerWidth;
-    window.addEventListener("resize", this.getInner);
-  },
-  beforeDestroy() {
-    window.removeEventListener("resize", this.getInner);
-  },
-  computed: {
-    //设置 树 可视区 高度
-    setClientHeight() {
-      return this.InnerHeight - this.TopHeight + "px";
     }
   }
 };
@@ -201,8 +210,7 @@ export default {
   align-items: center;
 }
 .know-search-header-focus {
-  border-bottom: 1px solid #dcdee2;
-  background-color: #f8f8f9;
+ box-shadow: 0 1px 10px rgba(0, 0, 0, 0.08);
 }
 .know-search-header-login {
   display: inline-block;

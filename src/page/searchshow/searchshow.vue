@@ -10,12 +10,16 @@
   <div class="know-searchshow">
     <public-header :routerTO="routerTO"></public-header>
     <div class="know-searchshow-titlte">名称&nbsp;:&nbsp;{{nodeName}}</div>
-    <search-select @searchIdCallback="searchIdCallback" ref="searchidselect"></search-select>
+    <search-select
+      @searchIdCallback="searchIdCallback"
+      ref="searchidselect"
+      :selectNum="showSelectNum"
+    ></search-select>
     <search-content
       :showSelectNum="showSelectNum"
       :InnerHeight="InnerHeight-topHeight"
       :nodeId="nodeId"
-      ref = 'searchcontent'
+      ref="searchcontent"
     ></search-content>
   </div>
 </template>
@@ -32,17 +36,17 @@ export default {
       // 节点名称
       nodeName: this.$route.query.name,
       // 选中的按钮
-      showSelectNum: parseInt(this.$route.query.q) || 1,
+      showSelectNum: "",
       // 选中的节点 id
-      nodeId: this.$route.query.id?parseInt(this.$route.query.id):'',
+      nodeId: this.$route.query.id ? parseInt(this.$route.query.id) : "",
       // 获取 innerHeight
       InnerHeight: "",
       // 获取 innerWidth
       InnerWidth: "",
       // 路由跳转地址
-      routerTO: "/manage",
+      routerTO: "/project",
       //TopHeigh高度
-      topHeight: this.$store.state.headerHeight,
+      topHeight: this.$store.state.headerHeight
     };
   },
   mounted() {
@@ -67,7 +71,7 @@ export default {
           this.showSelectNum = val;
         },
         //设置数据
-        2:()=>{
+        2: () => {
           this.$refs.searchidselect.setselectNum(this.showSelectNum);
         }
       };
@@ -75,16 +79,24 @@ export default {
     }
   },
   watch: {
-    $route(to) {
-      if(to.path !=='/search')
-        return;
-      this.nodeName = to.query.name;
-      this.showSelectNum=to.query.q || 1;
-      this.nodeId= to.query.id;
-      this.searchIdCallback(2)
-      //  to , from 分别表示从哪跳转到哪，都是一个对象
-      // to.path   ( 表示的是要跳转到的路由的地址 eg:  /home );
-      // to.query.id 提取id进行http请求数据更新页面
+    $route: {
+      handler(to) {
+        if (!to.query.id && !to.query.name) {
+          this.$router.push({ path: "/" });
+          return;
+        }
+        this.nodeName = to.query.name;
+        this.nodeId = to.query.id;
+        if (to.query.q) {
+          this.showSelectNum = parseInt(to.query.q);
+        } else {
+          this.showSelectNum = 1;
+        }
+        //  to , from 分别表示从哪跳转到哪，都是一个对象
+        // to.path   ( 表示的是要跳转到的路由的地址 eg:  /home );
+        // to.query.id 提取id进行http请求数据更新页面
+      },
+      immediate: true
     }
   }
 };

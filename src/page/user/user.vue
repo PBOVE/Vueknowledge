@@ -31,6 +31,7 @@ export default {
     };
   },
   computed: {
+    // 可视区高度
     ClientHeight(){
       return this.InnerHeight - this.topHeight + 'px';
     }

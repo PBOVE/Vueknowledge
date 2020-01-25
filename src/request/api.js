@@ -223,7 +223,7 @@ axios.interceptors.response.use(response => {
   if (typeof data === 'string') {
     showStatus(404);
     return Promise.reject();
-  } else if (data.code == 0 && data.msg === 'Success') {
+  } else if (data.code === 0 && data.msg === 'Success') {
     return response;
   }
   else {

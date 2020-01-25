@@ -7,31 +7,35 @@
 
 <template>
   <div class="drop-warp">
-    <div @click.stop="ClickStatus(1)" class="drop-warp-s" :class="{'drop-warp-border':showViewFlag}">
+    <div
+      @click.stop="ClickStatus(1)"
+      class="drop-warp-s"
+      :class="{'drop-warp-border':showViewFlag}"
+    >
       <slot></slot>
     </div>
-    <div class="drop-box drop-box-c" ref="dropBox" @click.stop v-show="showViewFlag">
-      <div class="drop-box-header">
-        <div class="box-header-img">
-          <img
-            src="api/storage/preview/D75DDD971ADDB74EE6F47F6399693BC046E7731F"
-            class="box-header-image"
-          />
-          <div class="box-header-img-icon img-icon-default disF">
-            <div class="box-header-img-i disF curP" @click="ClickStatus(4)">
-              <Icon type="ios-camera" size="18" />
+    <transition name="boxShow">
+      <div class="drop-box drop-box-c" ref="dropBox" @click.stop v-show="showViewFlag">
+        <div class="drop-box-header">
+          <div class="box-header-img">
+            <img :src="images" class="box-header-image" v-if="images" />
+            <div class="box-header-nimg" v-else>{{nickName.charAt(0).toUpperCase()}}</div>
+            <div class="box-header-img-icon img-icon-default disF">
+              <div class="box-header-img-i disF curP" @click="ClickStatus(4)">
+                <Icon type="ios-camera" size="18" />
+              </div>
             </div>
           </div>
+          <div class="box-header-nickname">{{nickName}}</div>
+          <div class="box-header-username">{{user.username}}</div>
+          <div class="box-header-m curP box-button" @click="ClickStatus(2)">管理您的 Knowledge Graph 账号</div>
         </div>
-        <div class="box-header-nickname">{{nickName}}</div>
-        <div class="box-header-username">{{user.username}}</div>
-        <div class="box-header-m curP box-button" @click="ClickStatus(2)">管理您的 Knowledge Graph 账号</div>
+        <Divider />
+        <div class="drop-box-main">
+          <div class="drop-box-main-button curP box-button" @click="ClickStatus(3)">退出</div>
+        </div>
       </div>
-      <Divider />
-      <div class="drop-box-main">
-        <div class="drop-box-main-button curP box-button" @click="ClickStatus(3)">退出</div>
-      </div>
-    </div>
+    </transition>
     <upload-images ref="uploadImages"></upload-images>
   </div>
 </template>
@@ -52,7 +56,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["nickName"])
+    ...mapState(["nickName", "images"])
   },
   mounted() {
     window.addEventListener("click", this.showUserView);
@@ -112,6 +116,7 @@ export default {
   font-size: 0;
   width: 31px;
   height: 31px;
+  cursor: pointer;
 }
 .drop-warp-border {
   border: 3px solid rgba(0, 0, 0, 0.4);
@@ -139,10 +144,18 @@ export default {
   display: inline-block;
   font-size: 0;
 }
-.box-header-image {
+.box-header-image,
+.box-header-nimg {
   width: 80px;
   height: 80px;
   border-radius: 50%;
+}
+.box-header-nimg {
+  line-height: 80px;
+  font-size: 22px;
+  font-family: Georgia;
+  color: #dff6f0;
+  background: #4d80e4;
 }
 .box-header-img-icon {
   position: absolute;
@@ -205,5 +218,13 @@ export default {
 }
 .curP {
   cursor: pointer;
+}
+.boxShow-enter-active,
+.boxShow-leave-active {
+  transition: all 0.5s;
+}
+.boxShow-enter,
+.boxShow-leave-to {
+  opacity: 0;
 }
 </style>

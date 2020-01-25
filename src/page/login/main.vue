@@ -41,7 +41,7 @@
         <login-content :showLoginRegister="showLoginRegister"></login-content>
       </div>
       <div v-show="!showLoginRegister">
-        <register-content :showLoginRegister="showLoginRegister" @mainCallback='mainCallback'></register-content>
+        <register-content :showLoginRegister="showLoginRegister" @mainCallback="mainCallback"></register-content>
       </div>
     </div>
   </div>
@@ -74,7 +74,7 @@ export default {
       }
     },
     // 回调函数
-    mainCallback(type,val) {
+    mainCallback(type, val) {
       const statusMap = {
         1: () => {
           this.showLoginRegister = val;
@@ -86,15 +86,13 @@ export default {
     getuserToken() {
       this.get("user/me")
         .then(res => {
-
           this.spinShow = false;
-          // this.$store.commit('setToken',res.data._csrf.token);
-          if (!res.data.me) {
-            this.$store.commit("setToken", res.data._csrf.token);
-          } else {
+          if (res.data.user !== "anonymousUser") {
             let data = res.data;
             this.$store.commit("setUserData", data);
-            this.$router.push({path:'/manage'})
+            this.$router.push({ path: "/project" });
+          } else {
+            this.$store.commit("setToken", res.data._csrf.token);
           }
         })
         .catch(() => {});

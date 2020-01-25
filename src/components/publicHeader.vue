@@ -14,17 +14,15 @@
       </router-link>
     </div>
     <div class="know-public-header-right">
-      <router-link :to="routerTO?routerTO:'/manage'">
+      <router-link :to="routerTO?routerTO:'/project'">
         <Icon type="md-apps" class="know-public-header-icon" />
       </router-link>
       <router-link to="/login" v-if="!userStatusFlag&&userStatusLoadFlag">
         <span class="know-public-header-login">登录</span>
       </router-link>
       <drop-down v-else-if="userStatusFlag&&userStatusLoadFlag">
-        <img
-          src="api/storage/preview/D75DDD971ADDB74EE6F47F6399693BC046E7731F"
-          class="know-public-header-user-logo"
-        />
+        <img :src="images" class="know-public-header-user-logo" v-if="images" />
+        <div v-else class="Noimg">{{nickName.charAt(0).toUpperCase()}}</div>
       </drop-down>
       <Icon type="md-refresh" class="know-header-user-load" v-else-if="!userStatusLoadFlag" />
     </div>
@@ -34,7 +32,7 @@
 
 <script>
 import dropDown from "./dropdown";
-import { mapGetters } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   components: { dropDown },
@@ -44,37 +42,29 @@ export default {
       // 判断用户是否登录 标志位
       userStatusFlag: false,
       // 判断 用户 登录 加载标志位
-      userStatusLoadFlag: false,
+      userStatusLoadFlag: false
     };
   },
   computed: {
-    ...mapGetters({
-      getnickName: "getnickName"
-    })
+    ...mapState(["nickName", "images"])
   },
   mounted() {
     this.getUser();
   },
   methods: {
-    // 判断用户是否登录
-    judgementUser() {
-      this.$refs.userLogo.style.backgroundColor = this.color[
-        Math.floor(Math.random() * 7)
-      ];
-    },
     // 获取token 判断用户登录
     getUser() {
       const url = "user/me";
       this.get(url)
         .then(res => {
           this.userStatusLoadFlag = true;
-          if (res.data.me) {
+          if (res.data.user !== "anonymousUser") {
             let data = res.data;
             this.userStatusFlag = true;
             this.$store.commit("setUserData", data);
-            // this.judgementUser();
           } else {
             this.userStatusFlag = false;
+            this.$store.commit("delToken");
             if (this.RouterFlag) {
               this.$router.push({ path: "/login" });
             }
@@ -94,8 +84,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #dcdee2;
-  background-color: #f8f8f9;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.08);
 }
 .know-public-logo {
   display: inline-block;
@@ -143,8 +132,6 @@ export default {
   background-color: RGBA(45, 140, 240, 0.8);
 }
 .know-public-header-user-logo {
-  color: #fff;
-  font-family: Georgia;
   display: inline-block;
   width: 25px;
   border-radius: 50%;
@@ -154,7 +141,8 @@ export default {
   user-select: none;
   cursor: pointer;
 }
-.know-public-header-right {
+.know-public-header-right,
+.know-public-header-left {
   display: flex;
   justify-content: center;
   align-items: center;

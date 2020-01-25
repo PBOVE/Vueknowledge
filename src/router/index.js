@@ -32,12 +32,7 @@ import '../assets/css/default.css';
 /**
  * 引入路由组件
  */
-const loginmain = () => import('../page/login/main');
-const manage = () => import('../page/Backstage/manage');
-const nofound = () => import('../page/noFound/nofound');
-const search = () => import('../page/search/search');
-const searchshow = () => import('../page/searchshow/searchshow');
-const user = () => import('../page/user/user');
+
 
 Vue.use(Vuex);
 Vue.use(ViewUI);
@@ -62,17 +57,25 @@ let router = new vueRouter({
     routes: [{
             path: '/',
             name: 'search',
-            component: search,
+            component: () => import('../page/search/search'),
         },
         {
             path: '/login',
             name: 'login',
-            component: loginmain,
+            component: () => import('../page/login/main'),
         },
         {
             path: '/manage',
             name: 'manage',
-            component: manage,
+            component: () => import('../page/Backstage/manage'),
+            meta: {
+                requireAuth: true
+            }
+        },
+        {
+            path: '/project',
+            name: 'project',
+            component: () => import('../page/project/project'),
             meta: {
                 requireAuth: true
             }
@@ -80,7 +83,7 @@ let router = new vueRouter({
         {
             path: '/user',
             name: 'user',
-            component: user,
+            component: () => import('../page/user/user'),
             meta: {
                 requireAuth: true
             }
@@ -88,12 +91,12 @@ let router = new vueRouter({
         {
             path: '/search',
             name: 'searchid',
-            component: searchshow,
+            component: () => import('../page/searchshow/searchshow'),
         },
         {
             path: '*',
             name: 'nofound',
-            component: nofound
+            component: () => import('../page/noFound/nofound')
         }
     ]
 })
@@ -114,13 +117,7 @@ router.beforeEach((to, from, next) => {
                 next('/login');
             }
         } else {
-            // 不允许 去 searchshow 不带参数去
-            if (to.path === '/search' && !to.query.id && !to.query.name) {
-                next('/');
-            } else {
-                next();
-            }
-
+            next();
         }
     }
 })

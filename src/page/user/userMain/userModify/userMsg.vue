@@ -12,16 +12,14 @@
       <div class="user-main-header-title">知识图谱构建平台</div>
     </div>
     <div class="main-content-msg-row">
-      <div class="msg-row-content dis-flex"  @click="selectRow(1)">
+      <div class="msg-row-content dis-flex" @click="selectRow(1)">
         <div class="dis-flex-left">
           <div class="msg-row-name">头像</div>
           <div class="msg-row-title msg-row-title-tip">更改照片可帮助您个性化您的帐号</div>
         </div>
         <div class="dis-flex-right dis-flex-img">
-          <img
-            src="api/storage/preview/D75DDD971ADDB74EE6F47F6399693BC046E7731F"
-            class="msg-row-image"
-          />
+          <img :src="images" class="msg-row-image" v-if="images" />
+          <div class="msg-row-Nimage" v-else>{{nickName.charAt(0).toUpperCase()}}</div>
           <div class="msg-row-image-camera">
             <Icon type="ios-camera" size="20" color="#c5c8ce" />
           </div>
@@ -30,7 +28,7 @@
     </div>
     <div class="main-content-msg-row">
       <div class="msg-row-content">
-        <div class="msg-row-name">名称</div>
+        <div class="msg-row-name">用户名</div>
         <div class="msg-row-title">{{user.username}}</div>
       </div>
     </div>
@@ -68,19 +66,21 @@
         </div>
       </div>
     </div>
-      
   </div>
 </template>
 
 
 <script>
-
+import { mapState } from "vuex";
 
 export default {
   data() {
     return {
       user: JSON.parse(this.$store.state.user)
     };
+  },
+  computed: {
+    ...mapState(["nickName", "images"])
   },
   methods: {
     // 时间转换函数
@@ -100,12 +100,11 @@ export default {
     },
     // 选择行
     selectRow(val) {
-      if(val === 1){
+      if (val === 1) {
         this.$emit("userMainCallback", 2, val);
-      }else{
+      } else {
         this.$emit("userMainCallback", 1, val);
       }
-      
     }
   }
 };
@@ -177,9 +176,18 @@ export default {
   color: #5f6368;
   font-size: 12px;
 }
-.msg-row-image {
+.msg-row-image,
+.msg-row-Nimage {
   height: 60px;
   width: 60px;
+}
+.msg-row-Nimage {
+  font-family: Georgia;
+  font-size: 18px;
+  text-align: center;
+  line-height: 60px;
+  color: #dff6f0;
+  background: #4d80e4;
 }
 .dis-flex-img {
   position: relative;

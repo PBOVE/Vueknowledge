@@ -38,17 +38,14 @@
 <script>
 import "../../assets/css/font.css";
 export default {
-  props: [""],
+  props: ["selectNum"],
   data() {
     return {
-      // 选中的视图
-			selectNum:parseInt(this.$route.query.q)||1,
     };
   },
   methods: {
     // 按钮点击事件
     clickButton(newval, oldval) {
-      
       if (newval === oldval) return;
       this.selectNum = newval;
       this.$emit("searchIdCallback", 1, newval);
