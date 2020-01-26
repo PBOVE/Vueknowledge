@@ -8,8 +8,8 @@
 <template>
   <div class="project">
     <public-header :RouterFlag="true"></public-header>
-    <div class="project-content" :style="{height:ClientHeight}">
-      <project-aside class="project-aside" @Callback='Callback'></project-aside>
+    <div class="project-content scroll" :style="{height:ClientHeight}">
+      <project-aside class="project-aside" @Callback="Callback"></project-aside>
       <project-main class="project-main" ref="projectMain"></project-main>
     </div>
   </div>
@@ -20,11 +20,11 @@
 //导入 header 模板
 import publicHeader from "../../components/publicHeader";
 import projectAside from "./projectaside/projectAside";
-import projectMain from './projectmain/projectMain'
+import projectMain from "./projectmain/projectMain";
 import { mapState } from "vuex";
 
 export default {
-  components: { publicHeader, projectAside, projectMain},
+  components: { publicHeader, projectAside, projectMain },
   data() {
     return {
       InnerHeight: "",
@@ -52,13 +52,13 @@ export default {
       this.InnerHeight = window.innerHeight;
       this.InnerWidth = window.innerWidth;
     },
-    // 回调函数 
-    Callback(type,val){
+    // 回调函数
+    Callback(type, val) {
       const statusMap = {
-        1 :() =>{
+        1: () => {
           this.$refs.projectMain.setStatus(val);
         }
-      }
+      };
       statusMap[type]();
     }
   }
@@ -70,12 +70,24 @@ export default {
 .project-content {
   display: flex;
   padding: 30px;
+  overflow: auto;
 }
 .project-aside {
   width: 280px;
+  flex-shrink: 0;
   margin: 0 40px 0 0;
 }
 .project-main {
   flex-grow: 1;
+}
+@media screen and (max-width: 1000px) {
+  .project-content{
+    flex-direction: column;
+    
+  }
+  .project-aside{
+    width: 100%;
+    margin: 0 0 40px 0;
+  }
 }
 </style>

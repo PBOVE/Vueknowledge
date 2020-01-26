@@ -10,39 +10,59 @@
     <div class="title-h1">项目创建</div>
     <div class="title-tips">欢迎使用 “知识图谱构建平台” ,尝试新建一个项目给自己</div>
     <div class="item-create">
-      <div class="create-box box dis-fixc">
+      <div class="create-box box dis-fixc" @click="statusSelect(1)">
         <Icon type="md-add" size="22" />
         <div class="create-box-title">创建项目</div>
       </div>
     </div>
     <div class="title-h1">我创建的</div>
-    <item-list class="item-row"></item-list>
-    <div class="title-h1">分享的</div>
-    <item-list class="item-row"></item-list>
+    <item-list class="item-row" :itemData='itemData' @selectItem='selectItem'></item-list>
+    <div class="title-h1">成员分享的</div>
+    <!-- <item-list class="item-row" ></item-list> -->
+    <item-create ref="modalC"></item-create>
+    <item-setting ref='modalS'></item-setting>
   </div>
 </template>
 
 
 <script>
 import itemList from "./itemList";
-
+import itemCreate from './itemCreate'
+import itemSetting from './itemSetting'
 export default {
-  components: { itemList },
+  components: { itemList ,itemCreate,itemSetting},
   data() {
-    return {};
+    return {
+      itemData:''
+    };
   },
-  mounted() {},
+  mounted() {
+    this.getServeItem();
+  },
   methods: {
     // 获取服务器里面的项目
     getServeItem() {
       const url = "item";
       this.get(url)
         .then(res => {
-          window.console.log(res);
+          this.itemData = res.data;
         })
-        .catch(err => {
-          window.console.log(err);
+        .catch(() => {
         });
+    },
+    // 状态选择 
+    statusSelect(type){
+      const statusMap = {
+        // 点击创建
+        1:()=>{
+          this.$refs.modalC.setModalStatus();
+        }
+      };
+      statusMap[type]();
+    },
+    // 选中 项目设置
+    selectItem(val){
+      this.$refs.modalS.showView(val);
     }
   }
 };
@@ -61,6 +81,7 @@ export default {
 .item-create {
   margin: 20px 0;
   display: flex;
+  flex-wrap: wrap;
 }
 .box {
   width: 240px;

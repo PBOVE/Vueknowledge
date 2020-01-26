@@ -58,7 +58,7 @@ export default {
       this.get(url)
         .then(res => {
           this.userStatusLoadFlag = true;
-          if (res.data.user !== "anonymousUser") {
+          if (res.data.user.id) {
             let data = res.data;
             this.userStatusFlag = true;
             this.$store.commit("setUserData", data);

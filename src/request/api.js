@@ -185,7 +185,7 @@ const showStatus = (err) => {
       notify('error', '系统正在维护中,请稍等');
       break;
     case 502:
-      notify('error', '网络错误');
+      notify('error', '网络错误,请稍等');
       break;
     default:
       notify('error', '错误');

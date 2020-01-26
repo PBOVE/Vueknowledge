@@ -74,6 +74,13 @@ export default {
       if(val !== ''){
         this.$refs.FullName.classList.remove("Editmodal-error");
       }
+    },
+    ExitModalFlag(val){
+      if(val){
+        document.addEventListener('keyup',this.keyupEsc);
+      }else{  
+        document.removeEventListener('keyup',this.keyupEsc);
+      } 
     }
   },
   methods: {
@@ -132,6 +139,12 @@ export default {
     // 选择回退
     selectBack() {
       this.$emit("userMainCallback", 1, 1);
+    },
+    // 注册按键事件
+    keyupEsc(e){
+      if(e.keyCode === 27){
+        this.Statustriger(5);
+      }
     }
   }
 };

@@ -87,7 +87,7 @@ export default {
       this.get("user/me")
         .then(res => {
           this.spinShow = false;
-          if (res.data.user !== "anonymousUser") {
+          if (res.data.user.id) {
             let data = res.data;
             this.$store.commit("setUserData", data);
             this.$router.push({ path: "/project" });

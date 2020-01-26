@@ -7,7 +7,7 @@
 
 <template>
   <div id="know-fourzerofour">
-    <a class='redbagclass' ondragstart='return false;' href='javascript:void(0);'><img src="../../assets/images/404.jpg" /></a>
+    <a  ondragstart='return false;' href='javascript:void(0);'><img src="../../assets/images/404.jpg" /></a>
   </div>
 </template>
 

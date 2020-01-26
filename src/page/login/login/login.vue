@@ -129,11 +129,9 @@ export default {
       };
       let url = "user/login";
       this.post_string(url, register)
-        .then(res => {
-          if (res.code === 0 && res.msg === "Success") {
-            // this.$store.getters.getToken
-            return Promise.resolve();
-          }
+        .then(() => {
+          // this.$store.getters.getToken
+          return Promise.resolve();
         })
         .then(() => {
           this.get("user/me").then(res => {

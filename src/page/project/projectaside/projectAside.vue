@@ -6,19 +6,17 @@
 
 
 <template>
-  <div>
-    <ul class="project-aside-ul">
-      <li class="project-aside-li" @click="selectStatus(1,1)" :class="{'select-li':selectLI === 1}">
-        <Icon type="ios-home" />首页
-      </li>
-      <li class="project-aside-li" @click="selectStatus(1,2)" :class="{'select-li':selectLI === 2}">
-        <Icon type="logo-buffer" />项目
-      </li>
-      <li class="project-aside-li" @click="selectStatus(1,3)" :class="{'select-li':selectLI=== 3}">
-        <Icon type="md-share" />分享
-      </li>
-    </ul>
-  </div>
+  <ul class="project-aside-ul">
+    <li class="project-aside-li" @click="selectStatus(1,1)" :class="{'select-li':selectLI === 1}">
+      <Icon type="ios-home" />首页
+    </li>
+    <li class="project-aside-li" @click="selectStatus(1,2)" :class="{'select-li':selectLI === 2}">
+      <Icon type="logo-buffer" />项目
+    </li>
+    <li class="project-aside-li" @click="selectStatus(1,3)" :class="{'select-li':selectLI=== 3}">
+      <Icon type="md-share" />分享
+    </li>
+  </ul>
 </template>
 
 
@@ -36,7 +34,7 @@ export default {
       const statusMap = {
         1: () => {
           this.selectLI = val;
-          this.$emit('Callback',1,val);
+          this.$emit("Callback", 1, val);
         }
       };
       statusMap[type]();
@@ -72,5 +70,18 @@ export default {
 }
 .select-li i {
   color: #1b9aee;
+}
+@media screen and (max-width: 1000px) {
+  .project-aside-ul {
+    display: flex;
+  }
+  .project-aside-li {
+    padding: 0;
+    flex-grow: 1;
+    text-align: center;
+  }
+  .project-aside-li i {
+    display: none;
+  }
 }
 </style>
