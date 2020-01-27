@@ -16,28 +16,35 @@
       </div>
     </div>
     <div class="title-h1">我创建的</div>
-    <item-list class="item-row" :itemData='itemData' @selectItem='selectItem'></item-list>
+    <item-list class="item-row" :itemData="itemData" @selectItem="selectItem" @selectDelete='selectDelete'></item-list>
     <div class="title-h1">成员分享的</div>
     <!-- <item-list class="item-row" ></item-list> -->
-    <item-create ref="modalC"></item-create>
-    <item-setting ref='modalS'></item-setting>
+    <item-create ref="modalC" @addItem="addItem"></item-create>
+    <item-setting ref="modalS" @updataItem="updataItem"></item-setting>
+    <item-delete  ref="modalD"  @delItem="delItem"></item-delete>
   </div>
 </template>
 
 
 <script>
-import itemList from "./itemList";
-import itemCreate from './itemCreate'
-import itemSetting from './itemSetting'
+import itemList from "./operation/itemList";
+import itemCreate from "./operation/itemCreate";
+import itemSetting from "./operation/itemSetting";
+import itemDelete from "./operation/itemDelete"
+
 export default {
-  components: { itemList ,itemCreate,itemSetting},
+  components: { itemList, itemCreate, itemSetting,itemDelete },
   data() {
     return {
-      itemData:''
+      // 项目数据
+      itemData: "",
+      // 选中的数据下标
+      selectIndex: ""
     };
   },
   mounted() {
     this.getServeItem();
+    // this.getServeShareItem();
   },
   methods: {
     // 获取服务器里面的项目
@@ -47,22 +54,48 @@ export default {
         .then(res => {
           this.itemData = res.data;
         })
-        .catch(() => {
-        });
+        .catch(() => {});
     },
-    // 状态选择 
-    statusSelect(type){
+    // 获取服务器里面分享的项目
+    getServeShareItem() {
+      const url = "item/share";
+      this.get(url)
+        .then(res => {
+          window.console.log(res);
+        })
+        .catch(() => {});
+    },
+    // 状态选择
+    statusSelect(type) {
       const statusMap = {
         // 点击创建
-        1:()=>{
+        1: () => {
           this.$refs.modalC.setModalStatus();
         }
       };
       statusMap[type]();
     },
     // 选中 项目设置
-    selectItem(val){
-      this.$refs.modalS.showView(val);
+    selectItem(index) {
+      this.selectIndex = index;
+      this.$refs.modalS.showView(this.itemData[index]);
+    },
+    // 选中 项目删除
+    selectDelete(index) {
+      this.selectIndex = index;
+      this.$refs.modalD.showView(this.itemData[index]);
+    },
+    // 创建成功 添加数据
+    addItem(val) {
+      this.itemData.push(val);
+    },
+    // 修改数据
+    updataItem(val) {
+      this.itemData.splice(this.selectIndex, 1, val);
+    },
+    // 删除项目
+    delItem() {
+      this.itemData.splice(this.selectIndex, 1);
     }
   }
 };

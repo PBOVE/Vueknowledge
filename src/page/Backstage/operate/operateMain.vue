@@ -55,12 +55,17 @@ export default {
         1: () => {
           this.showSelectNum = val;
         },
+        // 名称 改变
         2: () => {
           this.$emit("MangageCallback", 2, val);
         },
         //  添加,删除,编辑 重新获取节点
         3: () => {
           this.$refs.showclient.SClientCallback(3,val);
+        },
+        // 名称 改变 details 发送数据
+        4:()=>{
+           this.$refs.showclient.SClientCallback(5,val);
         }
       };
       statusMap[type]();

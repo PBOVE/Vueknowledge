@@ -13,16 +13,18 @@
       </div>
       <div class="item-modal-main">
         <div class="center">
-          <img src="../../../assets/images/item.png" class="main-img" />
+          <img src="../../../../assets/images/item.png" class="main-img" />
         </div>
         <div class="item-modal-title">项目名称 (必填) :</div>
-        <Input v-model="submitMsg.name" placeholder="项目名称" ref="NameI" @on-change="itemNameChange" />
+        <Input v-model="submitMsg.name" placeholder="项目名称" ref="NameI" @on-change="itemNameChange" maxlength="20" />
         <div class="item-modal-title">项目描述 (选填) :</div>
         <Input
           class="textarea-i"
           v-model="submitMsg.description"
           type="textarea"
           :autosize="{minRows: 2,maxRows: 6}"
+          maxlength="3000"
+          show-word-limit
           placeholder="项目描述"
         />
         <div class="item-modal-title">是否分享 :</div>
@@ -96,7 +98,7 @@ export default {
       };
       this.post_json(url, obj)
         .then(res => {
-          window.console.log(res);
+          this.$emit('addItem',res.data);
           this.$Message.success("创建成功");
           this.modalFlag = false;
         })

@@ -183,6 +183,10 @@ export default {
           this.treeNode = "";
           this.$emit("MangageCallback", 1, "");
           this.$emit("MangageCallback", 3, Math.random());
+        },
+        // 名称 改变 details发送
+        14:()=>{
+          this.$emit("MangageCallback", 4, val);
         }
       };
       statusMap[type]();

@@ -42,11 +42,11 @@
                 this.modalFlag = false;
                 if(this.changeNameFlag === this.changeName||this.changeName === '')
                     return;
-                let url = 'node/'+ this.treeNodeId +'/name';
                 let name = this.changeName.replace(/^\s+|\s+$/g,"");
-                this.patch_json(url,{'name':name}).then(res=>{
-                    this.$emit('ExitNameS',3,res.data.name);
-                }).catch(()=>{})
+                this.$emit('ExitNameS',14,name);
+                // this.patch_json(url,{'name':name}).then(res=>{
+                //     this.$emit('ExitNameS',3,res.data.name);
+                // }).catch(()=>{})
             },
             //监听 ctrl + ender 按键 执行函数
             upCtrlEnter(e){

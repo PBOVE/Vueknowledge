@@ -44,7 +44,9 @@
                 let obj = {
                     name : this.inputName.replace(/^\s+|\s+$/g,""),
                     parentId : this.treeNode === '' ?null:this.treeNode.id,
-                    sortId:(new Date().getTime()/1000/60/60-437968).toFixed(5)
+                    itemId: parseInt(this.$route.query.itemId),
+                    labels:[],
+                    property:{}
                 }
                 this.post_json('node',obj).then(res=>{
                     this.$emit('addNameS',7,res.data);

@@ -8,17 +8,11 @@
 <template>
   <div class="know-operate-details">
     <div class="know-operate-details-default">
-      <div class="know-operate-details-title">属性&nbsp;:</div>
+      <div class="know-operate-details-title">属性 :</div>
       <div class="know-details-name">
         <div class="know-details-left">
           <Icon type="md-list" color="#19be6b" />
-          <input
-            type="text"
-            class="k-d-i treeNodeName"
-            @click="CShowInput"
-            @blur="BShowInput"
-            :value="treeNode.name"
-          />
+          <input type="text" class="k-d-i" @click="CShowInput" v-model="NodeName" @blur="changName" />
         </div>
       </div>
 
@@ -28,20 +22,13 @@
           <input
             type="text"
             class="k-d-i exitAttr"
-            :id="'attr_'+ index"
             @click="CShowInput"
-            @blur="BShowInput"
+            @blur="LossFocusA('exit',index)"
             :value="item"
           />
         </div>
         <div class="know-details-right">
-          <Icon
-            type="ios-close"
-            class="know-datails-del"
-            :id="'delAttr_'+index"
-            @click="delAttrData"
-            size="20"
-          />
+          <Icon type="ios-close" class="know-datails-del" @click="delAttrData(index)" size="20" />
         </div>
       </div>
 
@@ -51,25 +38,28 @@
           <input
             type="text"
             placeholder="请输入属性"
-            class="k-d-i Ilabel"
+            class="k-d-i"
+            v-model="labelsInput"
             @click="CShowInput"
-            @blur="BShowInput"
+            @focus="CShowInput"
+            @blur="LossFocusA('add')"
           />
         </div>
       </div>
     </div>
+
     <div class="know-operate-details-default">
-      <div class="know-operate-details-title">关系&nbsp;:</div>
-      <div class="know-details-relation" v-for="(item,index) in relationData" :key="index">
+      <div class="know-operate-details-title">关系 :</div>
+      <div class="know-details-relation" v-for="(key,index) in relationData" :key="index">
         <div class="know-details-relation-I">
           <Icon type="md-funnel" color="#19be6b" />
           <input
             type="text"
-            :id="'relation'+index"
-            class="k-d-i relationI"
+            class="k-d-i"
             @click="CShowInput"
-            @blur="BShowInput"
-            :value="item.name"
+            @focus="CShowInput"
+            @blur="LossFocusR('name',key,index)"
+            :value="key.name"
           />
         </div>
         <div class="know-details-relation-II">
@@ -78,8 +68,9 @@
             type="text"
             class="k-d-i"
             @click="CShowInput"
-            @blur="BShowInput"
-            :value="item.text"
+            @focus="CShowInput"
+            @blur="LossFocusR('title',key,index)"
+            :value="key.title"
           />
         </div>
         <div class="know-details-relation-III">
@@ -87,11 +78,11 @@
             type="ios-close"
             class="know-datails-del"
             size="20"
-            :id="'relation_'+index"
-            @click="delRelationData"
+            @click="delRelationData(key,index)"
           />
         </div>
       </div>
+
       <div class="know-details-relation">
         <div class="know-details-relation-I">
           <Icon type="md-list-box" color="#808695" />
@@ -99,9 +90,11 @@
             type="text"
             ref="RII"
             placeholder="请输入关系"
-            class="k-d-i relationadd"
+            class="k-d-i"
+            v-model="InputNodeName"
             @click="CShowInput"
-            @blur="BShowInput"
+            @focus="CShowInput"
+            @blur="LossFocusR('add')"
           />
         </div>
         <div class="know-details-relation-II">
@@ -110,12 +103,12 @@
             v-model.lazy="RaNodeinput"
             class="relationInput-II"
             :data="searchdata"
-            @on-change='ChangeSearch'
-            @on-focus='CSerachshowInput'
-            @on-blur = 'CSerchBlurInput'
+            @on-change="ChangeSearch"
+            @on-focus="CSerachshowInput"
+            @on-blur="CSerchBlurInput"
             placeholder="请输入节点名称 "
-            element-id='relationadd-id'
-            size ='default'
+            element-id="relationadd-id"
+            size="default"
           ></AutoComplete>
         </div>
       </div>
@@ -128,10 +121,14 @@ export default {
   props: ["treeNode", "showSelectNum"],
   data() {
     return {
-      // 获取输入框node数据
+      // 节点名称
+      NodeName: "",
+      // 属性 输入
+      labelsInput: "",
+      // 获取 输入框node数据
       RaNodeinput: "",
-      //节点名称输入
-      InputNode: "",
+      //节点关系名称输入
+      InputNodeName: "",
       //请求数据标志位
       getDataFlag: false,
       // 点击inpul 获取val 防止输入空格
@@ -139,9 +136,11 @@ export default {
       // 获取 服务器数据
       AttrButeData: [],
       relationData: [],
+      // 服务器 获取的数据 格式不变
+      relationformat: {},
+      AttrButeformat: [],
       // 请求联想框数据
-      searchdata:[],
-
+      searchdata: []
     };
   },
   methods: {
@@ -149,30 +148,27 @@ export default {
     getAttriBute() {
       if (this.getDataFlag) return;
       this.getDataFlag = true;
+      this.NodeName = this.treeNode.name;
       let url = "node/" + this.treeNode.id;
       this.get(url)
         .then(res => {
-          this.AttrButeData = res.data.labels;
-        })
-        .then(() => {
-          let url = "relation/start/name";
-          let obj = {
-            query: this.treeNode.name
-          };
-          this.get(url, obj).then(res => {
-            let data = res.data;
-            this.relationData = [];
-            data.forEach(item => {
+          window.console.log(res);
+          let labels = JSON.stringify(res.data.labels || []);
+          this.AttrButeformat = JSON.parse(labels);
+          this.AttrButeData = JSON.parse(labels);
+          const property = res.data.property;
+          this.relationformat = property;
+          this.relationData = [];
+          for (let item in property) {
+            property[item].forEach(element => {
               this.relationData.push({
-                id: item.id,
-                name: item.property.type,
-                text: item.node.name,
-                textId: item.node.id
+                name: item,
+                title: element
               });
             });
-          });
-        }).catch(()=>{
+          }
         })
+        .catch(() => {});
     },
     //点击 事件
     CShowInput(e) {
@@ -183,215 +179,267 @@ export default {
       this.oldAttrInputVal = target.value;
     },
     // 搜索框点击事件
-    CSerachshowInput(e){
+    CSerachshowInput(e) {
       let target = e.target;
       let Ptarget = target.parentNode.parentNode.parentNode.parentNode;
-      target.style.borderBottom = '1px solid #2db7f5'
+      target.style.borderBottom = "1px solid #2db7f5";
       Ptarget.style.outline = "1px solid #2db7f5";
       this.searchdata = [];
     },
     // 搜索框失去焦点事件
-    CSerchBlurInput(e){
+    CSerchBlurInput(e) {
       let target = e.target;
-      let Ptarget = target.parentNode.parentNode.parentNode.parentNode; 
-      target.style.borderBottom = '1px solid #e8eaec'
+      let Ptarget = target.parentNode.parentNode.parentNode.parentNode;
+      target.style.borderBottom = "1px solid #e8eaec";
       Ptarget.style.outline = "none";
-      // this.addrelation();
-       this.$nextTick(() => {
-         this.addrelation()
-       })
+      this.$nextTick(() => {
+        this.addrelation();
+      });
     },
-    //失去焦点事件
-    BShowInput(e) {
-      let target = e.target;
+    // 属性失去焦点
+    LossFocusA(type, index) {
+      let target = event.target;
       let Ptarget = target.parentNode;
-      let Ival = target.value.replace(/^\s+|\s+$/g, "");
+      let inputVal = target.value.replace(/^\s+|\s+$/g, "");
+      const statusMap = {
+        // 添加 属性
+        add: () => {
+          this.addLabels();
+        },
+        // 编辑 属性
+        exit: () => {
+          this.changExit(inputVal, index);
+        }
+      };
       Ptarget.style.outline = "none";
-      if (Ival === "") {
-        target.value = this.oldAttrInputVal;
+      if (inputVal === "" || (index && inputVal === this.AttrButeData[index])) {
+        target.value = index !== undefined ? this.AttrButeData[index] : "";
         return;
       }
-      if (target.classList.contains("treeNodeName")) {
-        this.changName(Ival);
-      } else if (target.classList.contains("Ilabel")) {
-        this.addLabels(Ival, target);
-      } else if (target.classList.contains("exitAttr")) {
-        this.changExit(Ival, target);
-      } else if (target.classList.contains("relationadd")) {
-        this.addrelation();
-      } else if (target.classList.contains("relationI")) {
-        this.putRelationAttr(Ival, target);
+
+      statusMap[type]();
+    },
+    // 关系 失去 焦点
+    LossFocusR(type, val, index) {
+      const target = event.target;
+      const Ptarget = target.parentNode;
+      const statusMap = {
+        // 修改关系属性,
+        name: () => {
+          this.putRelationName(inputVal, val, index);
+        },
+        // 修改关系名称
+        title: () => {
+          this.putRelationTitle(inputVal, val, index);
+        },
+        // 添加 关系属性
+        add: () => {
+          this.addrelation();
+        }
+      };
+      let inputVal = target.value.replace(/^\s+|\s+$/g, "");
+      Ptarget.style.outline = "none";
+      if (inputVal === "" || (val && target.value === val[type])) {
+        target.value = val ? val[type] : "";
+        return;
       }
+      statusMap[type]();
     },
     // 改变名称 进入的函数
-    changName(Ival) {
-      if (Ival !== this.treeNode.name) {
-        let url = "node/" + this.treeNode.id + "/name";
-        this.patch_json(url, { name: Ival })
-          .then(res => {
-            // 重新 获取日志
-            this.$emit("SClientCallback", 4)
-            this.$emit("SClientCallback", 1, res.data.name);
-          }).catch(()=>{
-        })
+    changName() {
+      let target = event.target;
+      let Ptarget = target.parentNode;
+      Ptarget.style.outline = "none";
+      if (this.NodeName === this.treeNode.name) {
+        return;
       }
+      this.putServerName(this.NodeName);
+    },
+    // 向 服务器发送 改变的名称
+    putServerName(name) {
+      let url = "node/" + this.treeNode.id;
+      let obj = this.ObjData();
+      obj["name"] = name;
+      this.put_json(url, obj)
+        .then(res => {
+          this.NodeName = res.data.name;
+          // 重新 获取日志
+          // this.$emit("SClientCallback", 4)
+          this.$emit("SClientCallback", 1, res.data.name);
+        })
+        .catch(() => {});
     },
     // 添加 属性
-    addLabels(Ival, target) { 
-      this.AttrButeData.push(Ival);
+    addLabels() {
       let url = "node/" + this.treeNode.id;
-      let obj = {
-        name: this.treeNode.name,
-        labels: this.AttrButeData
-      };
+      let obj = this.ObjData();
+      obj["labels"].push(this.labelsInput);
       this.put_json(url, obj)
-        .then(() => {
-          target.value = ""; 
-          // 重新 获取日志
-          this.$emit("SClientCallback", 4)
-        }).catch(()=>{
-           this.AttrButeData.pop();
+        .then(res => {
+          let labels = res.data.labels;
+          this.AttrButeformat = labels;
+          this.AttrButeData.push(this.labelsInput);
         })
+        .catch(() => {});
     },
     //改变属性名称
-    changExit(Ival, target) {
-      let id = target.getAttribute("id").substring(5);
-      let oldVal = this.AttrButeData[id];
-      if (Ival === this.AttrButeData[id]) return;
-      this.$set(this.AttrButeData, id, Ival);
+    changExit(inputVal, index) {
       let url = "node/" + this.treeNode.id;
-      let obj = {
-        name: this.treeNode.name,
-        labels: this.AttrButeData
-      };
+      let obj = this.ObjData();
+      obj["labels"][index] = inputVal;
       this.put_json(url, obj)
-        .then(() => { 
-          // 重新 获取日志
-          this.$emit("SClientCallback", 4)
+        .then(res => {
+          let labels = res.data.labels;
+          this.AttrButeformat = labels;
+          this.$set(this.AttrButeData, index, inputVal);
+          this.labelsInput = "";
+          //       // 重新 获取日志
+          //       this.$emit("SClientCallback", 4);
         })
-        .catch(() => {
-         
-          this.$set(this.AttrButeData, id, oldVal);
-        });
+        .catch(() => {});
     },
     // 删除属性数据
-    delAttrData(e) {
-      let target = e.target;
-      let id = target.getAttribute("id").substring(8);
-      let oldAttr = this.AttrButeData[id];
-      this.AttrButeData.splice(id, 1);
+    delAttrData(index) {
       let url = "node/" + this.treeNode.id;
-      let obj = {
-        name: this.treeNode.name,
-        labels: this.AttrButeData
-      };
+      let obj = this.ObjData();
+      obj["labels"].splice(index, 1);
       this.put_json(url, obj)
-        .then(() => {
-          // 重新 获取日志
-          this.$emit("SClientCallback", 4)
+        .then(res => {
+          let labels = res.data.labels;
+          this.AttrButeformat = labels;
+          this.AttrButeData.splice(index, 1);
+          //       // 重新 获取日志
+          //       this.$emit("SClientCallback", 4);
         })
-        .catch(() => {
-          
-          this.AttrButeData.splice(id, 0, oldAttr);
-        });
+        .catch(() => {});
     },
     // 添加 关系 数据
     addrelation() {
-      let RII = this.$refs.RII;
-      let RIII = this.RaNodeinput;
-      let Ival = RII.value.replace(/^\s+|\s+$/g, "");
-      let IIval = RIII.replace(/^\s+|\s+$/g, "");
-      if (Ival !== "" && IIval !== "") {
-        let url = "relation";
-        let obj = {
-          startNode: this.treeNode.name,
-          endNode: IIval,
-          property: {
-            type: Ival
-          }
-        };
-        this.post_json(url, JSON.stringify(obj))
-          .then(res => {
-            let data = res.data;
-            this.relationData.push({
-              id: data.id,
-              name: data.property.type,
-              text: data.node.name,
-              textId: data.node.id
-            });
-            RII.value = "";
-            this.RaNodeinput = "";
-            // 力导图 树图 从新请求数据
-            this.$emit("SClientCallback", 2);
-            // 重新 获取日志
-            this.$emit("SClientCallback", 4)
-          }).catch(()=>{
-        })
+      let name = this.InputNodeName.replace(/^\s+|\s+$/g, "");
+      let title = this.RaNodeinput.replace(/^\s+|\s+$/g, "");
+      if (name === "" || title === "") {
+        return;
       }
-    },
-    // 删除 关系 数据
-    delRelationData(e) {
-      let target = e.target;
-      let index = target.getAttribute("id").substring(9);
-      let url = "relation/" + this.relationData[index].id;
-      this.delete_string(url)
-        .then(() => {
-          this.relationData.splice(index, 1);
-          // 力导图 树图 从新请求数据
-          this.$emit("SClientCallback", 2);
-          // 重新 获取日志
-          this.$emit("SClientCallback", 4)
-        }).catch(()=>{})
-    },
-    // 更新 关系 属性
-    putRelationAttr(Ival, target) {
-      let index = target.getAttribute("id").substring(8);
-      if (Ival === this.relationData[index].name) return;
-      let url = "relation/" + this.relationData[index].id;
-      let obj = {
-        startNode: this.treeNode.name,
-        endNode: this.relationData[index].text,
-        property: {
-          type: Ival
-        }
-      };
+      let url = "node/" + this.treeNode.id;
+      let obj = this.ObjData();
+      if (!obj["property"].hasOwnProperty(name)) {
+        obj["property"][name] = [];
+      }
+      obj["property"][name].push(title);
       this.put_json(url, obj)
         .then(res => {
-          let data = res.data;
-          this.$set(this.relationData, index, {
-            id: data.id,
-            name: data.property.type,
-            text: data.node.name,
-            textId: data.node.id
+          const property = res.data.property;
+          this.relationformat = property;
+          this.relationData.push({
+            name,
+            title
           });
-          // 力导图 树图 从新请求数据
-          this.$emit("SClientCallback", 2);
-          // 重新 获取日志
-          this.$emit("SClientCallback", 4)
-        }).catch(()=>{
+          this.InputNodeName = this.RaNodeinput = "";
+          // // 力导图 树图 从新请求数据
+          // this.$emit("SClientCallback", 2);
+          // // 重新 获取日志
+          // this.$emit("SClientCallback", 4);
         })
+        .catch(() => {});
+    },
+    // 删除 关系 数据
+    delRelationData(val, inputIndex) {
+      let obj = this.ObjData();
+      let index = obj["property"][val.name].indexOf(val.title);
+      obj["property"][val.name].splice(index, 1);
+      if (!obj["property"][val.name].length) {
+        delete obj["property"][val.name];
+      }
+      this.poshServerR("", inputIndex, obj);
+    },
+    // 更新 关系 属性
+    putRelationName(inputVal, val, inputIndex) {
+      let obj = this.ObjData();
+      let index = obj["property"][val.name].indexOf(val.title);
+      if (!obj["property"].hasOwnProperty(inputVal)) {
+        obj["property"][inputVal] = [];
+      }
+      obj["property"][inputVal].push(val.title);
+      obj["property"][val.name].splice(index, 1);
+      if (!obj["property"][val.name].length) {
+        delete obj["property"][val.name];
+      }
+      this.poshServerR(inputVal, inputIndex, obj, "name");
+    },
+    // 更新 关系 键值
+    putRelationTitle(inputVal, val, inputIndex) {
+      let obj = this.ObjData();
+      let index = obj["property"][val.name].indexOf(val.title);
+      obj["property"][val.name][index] = inputVal;
+      this.poshServerR(inputVal, inputIndex, obj, "title");
+    },
+    // 向服务器发送 关系数据
+    poshServerR(inputVal, inputIndex, obj, updataKey) {
+      const url = "node/" + this.treeNode.id;
+      this.put_json(url, obj)
+        .then(res => {
+          const property = res.data.property;
+          this.relationformat = property;
+          if (updataKey) {
+            this.relationData[inputIndex][updataKey] = inputVal;
+          } else {
+            this.relationData.splice(inputIndex, 1);
+          }
+          //       // 力导图 树图 从新请求数据
+          //       this.$emit("SClientCallback", 2);
+          //       // 重新 获取日志
+          //       this.$emit("SClientCallback", 4);
+        })
+        .catch(() => {});
+    },
+    //   向服务器发送 obj 关系
+    ObjData() {
+      let obj = {
+        name: this.treeNode.name,
+        labels: this.AttrButeformat,
+        itemId: parseInt(this.$route.query.itemId),
+        property: { ...this.relationformat }
+      };
+      return obj;
     },
     // 根据节点 name 模糊匹配返回节点列表
     getVagueName(val) {
       let url = "node/name";
       let obj = {
         query: val,
-        size:6
+        itemId: parseInt(this.$route.query.itemId)
       };
-      this.get(url, obj).then(res => {
-        let data =  res.data.content;
-        this.searchdata = [];
-        data.forEach(item=>{
-          this.searchdata.push(item.name);
+      this.get(url, obj)
+        .then(res => {
+          let data = res.data;
+          this.searchdata = [];
+          data.forEach((item, index) => {
+            if (index > 5) {
+              return;
+            }
+            this.searchdata.push(item.name);
+          });
         })
-      }).catch(()=>{
-        });
+        .catch(() => {});
     },
     // 搜索框change事件时调用
-    ChangeSearch(){
+    ChangeSearch() {
       let Ival = this.RaNodeinput.replace(/^\s+|\s+$/g, "");
-      if (Ival === "" ) return;
+      if (Ival === "") return;
       this.getVagueName(Ival);
+    },
+    // 查询该节点是否存在
+    queryNode(NodeName){
+      let url = "node/name";
+      let obj = {
+        query: NodeName,
+        itemId: parseInt(this.$route.query.itemId)
+      };
+      this.get(url, obj)
+        .then(res => {
+          window.console.log(res)
+        })
+        .catch(() => {});
     }
   },
   watch: {
@@ -409,7 +457,7 @@ export default {
     showSelectNum(val) {
       if (val !== 1) return;
       this.getAttriBute();
-    },
+    }
   }
 };
 </script>
@@ -469,10 +517,10 @@ export default {
 .k-d-i::placeholder {
   color: #c3cbd6;
 }
-.relationInput-II .ivu-select-dropdown.ivu-auto-complete{
+.relationInput-II .ivu-select-dropdown.ivu-auto-complete {
   margin-left: -15px;
 }
-#relationadd-id{
+#relationadd-id {
   font-size: 13px;
   box-sizing: border-box;
   height: 25px;
@@ -481,17 +529,17 @@ export default {
   /* margin-bottom: 1px; */
   border-bottom: 1px solid #e8eaec;
 }
-#relationadd-id:focus{
-  box-shadow:none;
+#relationadd-id:focus {
+  box-shadow: none;
 }
-.ivu-select-dropdown.ivu-auto-complete{
+.ivu-select-dropdown.ivu-auto-complete {
   max-width: 80%;
 }
-.ivu-select-dropdown.ivu-auto-complete .ivu-select-item{
+.ivu-select-dropdown.ivu-auto-complete .ivu-select-item {
   overflow: hidden;
-  white-space:nowrap;
-  text-overflow:ellipsis; 
-  overflow:hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 .know-details-relation {
   border-bottom: 1px solid #e8eaec;
@@ -510,5 +558,4 @@ export default {
 .know-details-relation .ivu-icon {
   line-height: 25px;
 }
-
 </style>

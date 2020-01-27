@@ -13,17 +13,14 @@
     </p>
     <div class="know-modal-text">
       <p v-show="selectNodesFlag">
-        你确定要此&nbsp;&nbsp;
-        <strong>删除</strong>&nbsp;&nbsp;节点吗?
+        你确定要&nbsp;&nbsp;
+        <strong>删除</strong>&nbsp;&nbsp;此节点吗?
       </p>
       <p v-show="!selectNodesFlag">
         你确定要&nbsp;&nbsp;
         <strong>删除</strong>&nbsp;&nbsp;这些节点吗?
       </p>
-      <p
-        class="know-modal-text-center"
-        v-show="selectNodesFlag"
-      >{{selectNodeName}}</p>
+      <p class="know-modal-text-center" v-show="selectNodesFlag">{{selectNodeName}}</p>
       <p
         class="know-modal-text-nodes"
         v-show="!selectNodesFlag"
@@ -97,16 +94,15 @@ export default {
               this.$Message.error("删除失败");
             }
           })
-          .catch(() => {
-            this.$Message.error("删除失败");
-          });
+          .catch(() => {});
       } else {
-				let url = "node";
-				let obj = this.NodeId
+        let url = "node";
+        let obj = this.NodeId;
         this.delete_json(url, obj)
           .then(() => {
             this.$emit("addNameS", 12, Math.random());
-          }).catch(()=>{})
+          })
+          .catch(() => {});
       }
     },
     //监听 ctrl + ender 按键 执行函数

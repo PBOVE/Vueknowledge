@@ -34,8 +34,6 @@ export default {
           }
         },
         callback: {
-          // beforeClick:this.beforeMouseUp,
-          // beforeMouseUp: this.beforeMouseUp,
           beforeDblClick: this.showChildClik,
           beforeExpand: this.showChildClik,
           onClick: this.zTreeOnClick
@@ -49,26 +47,32 @@ export default {
       zTree: ""
     };
   },
+  mounted() {
+    this.getTreeData();
+  },
   methods: {
     //获取服务器数据
     getTreeData() {
-      this.get("node")
+      const url = "node";
+      const obj = {
+        itemId: parseInt(this.$route.query.itemId)
+      };
+      this.get(url, obj)
         .then(res => {
-          let data = res.data.content;
+          let data = res.data;
           let Arr = [];
           this.$emit("selectNode", 9, data.length);
           data.forEach(item => {
             let obj = {
               id: item.id,
               name: item.name,
-              sortId: item.sortId,
-              childLen: item.childNodes.length,
-              isParent: item.childNodes.length ? true : false
+              isParent: item.child
             };
             Arr.push(obj);
           });
           this.createTree(Arr);
-        }).catch(()=>{})
+        })
+        .catch(() => {});
     },
     //添加节点 修改样式
     addDiyDom(treeId, treeNode) {
@@ -115,31 +119,30 @@ export default {
       let url = "node/" + treeNode.id + "/child";
       this.get(url)
         .then(res => {
-          let data = res.data.sort(this.sortId);
+          let data = res.data;
           let Arr = [];
           data.forEach(item => {
             Arr.push({
               id: item.id,
               name: item.name,
-              childLen: item.childNodes.length,
-              isParent: item.childNodes.length !== 0 ? true : false
+              isParent: item.child
             });
           });
-
           this.zTree.addNodes(treeNode, Arr, false);
-        }).catch(()=>{})
+        })
+        .catch(() => {});
     },
     // 点击 节点 后
     zTreeOnClick(event, treeId, treeNode) {
       if (!treeNode) return;
       else if (event.ctrlKey) {
-        this.$emit("selectNode", 10,this.zTree.getSelectedNodes());
+        this.$emit("selectNode", 10, this.zTree.getSelectedNodes());
       } else {
         this.StreeId = treeNode.tId;
         this.StreeNode = treeNode;
         this.$emit("selectNode", 1, true);
         this.$emit("selectNode", 2, treeNode);
-        this.$emit("selectNode", 11,[]);
+        this.$emit("selectNode", 11, []);
       }
     }
   },
@@ -183,25 +186,21 @@ export default {
     "treelistVal.delNodes": {
       handler: function() {
         let Nodes = this.zTree.getSelectedNodes();
-        Nodes.forEach((item)=>{
-          if(this.StreeNode.id === item.id){
+        Nodes.forEach(item => {
+          if (this.StreeNode.id === item.id) {
             this.StreeNode = "";
             this.$emit("selectNode", 1, false);
             this.$emit("selectNode", 13);
           }
           this.zTree.removeNode(item, false);
-        })
-        if(this.StreeNode){
+        });
+        if (this.StreeNode) {
           this.zTree.selectNode(this.StreeNode);
           this.$emit("selectNode", 1, true);
         }
-        this.$emit("selectNode", 11,[]);
-
+        this.$emit("selectNode", 11, []);
       }
     }
-  },
-  mounted() {
-    this.getTreeData();
   }
 };
 </script>

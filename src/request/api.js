@@ -188,7 +188,7 @@ const showStatus = (err) => {
       notify('error', '网络错误,请稍等');
       break;
     default:
-      notify('error', '错误');
+      notify('error', '错误,请稍等');
       break;
   }
 }

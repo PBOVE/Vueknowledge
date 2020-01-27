@@ -7,7 +7,7 @@
 
 <template>
   <ul class="know-journal-ul">
-    <Scroll :on-reach-bottom="getPageLogData" :height='SetHeight'>
+    <Scroll :on-reach-bottom="getPageLogData" :height="SetHeight">
       <li v-for="(item ,index) in JournalData" v-bind:key="item.randomId" class="know-journal-li">
         <div
           class="know-journal-title"
@@ -67,8 +67,7 @@ export default {
     },
     // 分页点击加载 请求服务器数据 数据
     getPageLogData() {
-      if(this.dataPage === this.dataEndPage)
-        return;
+      if (this.dataPage === this.dataEndPage) return;
       this.getServerData(this.dataPage++);
     },
     // 请求 服务器 数据
@@ -82,6 +81,7 @@ export default {
       };
       this.get(url, obj)
         .then(res => {
+          window.console.log(res);
           if (this.showSelectNum === 4) {
             this.requestFlag = false;
             this.dataEndPage = res.data.totalPages;
@@ -372,7 +372,6 @@ export default {
   text-indent: 1em;
   letter-spacing: 0.1em;
 }
-
 </style>
 <style >
 .ivu-scroll-container::-webkit-scrollbar {

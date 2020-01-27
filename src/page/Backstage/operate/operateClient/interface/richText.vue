@@ -306,6 +306,9 @@ export default {
 .fr-box.fr-basic .fr-element {
    margin-top: -41px;
 }
+.fr-toolbar{
+  border: none;
+}
 .fr-toolbar.fr-ltr.fr-desktop.fr-top.fr-basic.fr-sticky-off{
   border: none;
 }
