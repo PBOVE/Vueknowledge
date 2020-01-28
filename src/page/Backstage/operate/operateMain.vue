@@ -21,6 +21,7 @@
         :InnerHeight="InnerHeight"
         :treeNode="treeNode"
         :showSelectNum="showSelectNum"
+        :itemId='itemId'
         @oMainCallback="oMainCallback"
         v-show="showClientFlag"
       ></show-client>
@@ -35,7 +36,7 @@ import SeleteButton from "./operateSelete/SeleteButton";
 import showClient from "./operateClient/showClient";
 export default {
   components: { SeleteButton, showClient },
-  props: ["InnerHeight", "treeNode"],
+  props: ["InnerHeight", "treeNode",'itemId'],
   data() {
     return {
       //节点名称

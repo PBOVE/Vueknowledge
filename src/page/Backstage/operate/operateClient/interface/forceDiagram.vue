@@ -6,18 +6,14 @@
 
 
 <template>
-  <force-chart  
-    :style="{height:SetHeight}"
-    :RightWeight='RightWeight'
-    ref = 'forcechart'></force-chart>
+  <force-chart :style="{height:SetHeight}" :RightWeight="RightWeight" ref="forcechart"></force-chart>
 </template>
 
 <script>
-
 // 力导向组件
-import forceChart from '../../../../../components/forceChart'
+import forceChart from "../../../../../components/forceChart";
 export default {
-  components:{forceChart},
+  components: { forceChart },
   props: ["treeNode", "showSelectNum", "InnerHeight"],
   data() {
     return {
@@ -42,7 +38,6 @@ export default {
           }
         })
         .catch(() => {});
-        
     },
     //从新获取数据
     setForce() {
@@ -53,7 +48,7 @@ export default {
   },
   watch: {
     treeNode: {
-      handler: function(newval, oldval) {
+      handler(newval, oldval){
         if (newval === "" || newval.id === oldval.id) return;
         this.getDataFlag = false;
         if (this.showSelectNum === 2) {

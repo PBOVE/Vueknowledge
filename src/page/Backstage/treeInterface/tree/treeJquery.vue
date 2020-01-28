@@ -16,7 +16,7 @@ import $ from "../../../../assets/jquery-vendor";
 import "ztree";
 import "ztree/css/metroStyle/metroStyle.css";
 export default {
-  props: ["treelistVal"],
+  props: ["treelistVal",'itemId'],
   data() {
     return {
       //设置 ztree 树
@@ -55,7 +55,7 @@ export default {
     getTreeData() {
       const url = "node";
       const obj = {
-        itemId: parseInt(this.$route.query.itemId)
+        itemId: this.itemId
       };
       this.get(url, obj)
         .then(res => {

@@ -118,7 +118,7 @@
 
 <script>
 export default {
-  props: ["treeNode", "showSelectNum"],
+  props: ["treeNode", "showSelectNum", "itemId",'spinShow'],
   data() {
     return {
       // 节点名称
@@ -147,12 +147,13 @@ export default {
     // 获取 服务器 节点属性 节点关系
     getAttriBute() {
       if (this.getDataFlag) return;
+      this.$emit('update:spinShow',true);
       this.getDataFlag = true;
       this.NodeName = this.treeNode.name;
       let url = "node/" + this.treeNode.id;
       this.get(url)
         .then(res => {
-          window.console.log(res);
+          this.$emit('update:spinShow',false);
           let labels = JSON.stringify(res.data.labels || []);
           this.AttrButeformat = JSON.parse(labels);
           this.AttrButeData = JSON.parse(labels);
@@ -230,7 +231,11 @@ export default {
         },
         // 修改关系名称
         title: () => {
-          this.putRelationTitle(inputVal, val, index);
+          this.queryNode(inputVal, this.putRelationTitle, [
+            inputVal,
+            val,
+            index
+          ]);
         },
         // 添加 关系属性
         add: () => {
@@ -258,13 +263,22 @@ export default {
     // 向 服务器发送 改变的名称
     putServerName(name) {
       let url = "node/" + this.treeNode.id;
-      let obj = this.ObjData();
-      obj["name"] = name;
+      let message =
+        "[" + this.treeNode.name + "] 节点名称修改为 [" + name + "]";
+      let obj = {
+        name,
+        itemId: this.itemId,
+        record: {
+          message: JSON.stringify({ message, name }),
+          operator: "UPDATE_NODE_NAME"
+        }
+      };
       this.put_json(url, obj)
         .then(res => {
           this.NodeName = res.data.name;
           // 重新 获取日志
-          // this.$emit("SClientCallback", 4)
+          this.$emit("SClientCallback", 4);
+          // 告诉其他 名称修改成功
           this.$emit("SClientCallback", 1, res.data.name);
         })
         .catch(() => {});
@@ -272,44 +286,66 @@ export default {
     // 添加 属性
     addLabels() {
       let url = "node/" + this.treeNode.id;
-      let obj = this.ObjData();
+      let obj = this.ObjDataA();
+      let message = "添加新的节点属性，属性名称为 [" + this.labelsInput + "]";
+      let name = this.treeNode.name;
       obj["labels"].push(this.labelsInput);
+      obj["record"] = {
+        message: JSON.stringify({ message, name }),
+        operator: "ADD_NODE_PROPER"
+      };
       this.put_json(url, obj)
         .then(res => {
           let labels = res.data.labels;
           this.AttrButeformat = labels;
           this.AttrButeData.push(this.labelsInput);
+          this.labelsInput = "";
+          // 重新 获取日志
+          this.$emit("SClientCallback", 4);
         })
         .catch(() => {});
     },
     //改变属性名称
     changExit(inputVal, index) {
       let url = "node/" + this.treeNode.id;
-      let obj = this.ObjData();
+      let obj = this.ObjDataA();
+      let message =
+        "[" + obj["labels"][index] + "] 属性名称修改为 [" + inputVal + "]";
+      let name = this.treeNode.name;
+
       obj["labels"][index] = inputVal;
+      obj["record"] = {
+        message: JSON.stringify({ message, name }),
+        operator: "UPDATE_NODE_PROPER"
+      };
       this.put_json(url, obj)
         .then(res => {
           let labels = res.data.labels;
           this.AttrButeformat = labels;
           this.$set(this.AttrButeData, index, inputVal);
-          this.labelsInput = "";
-          //       // 重新 获取日志
-          //       this.$emit("SClientCallback", 4);
+          // 重新 获取日志
+          this.$emit("SClientCallback", 4);
         })
         .catch(() => {});
     },
     // 删除属性数据
     delAttrData(index) {
       let url = "node/" + this.treeNode.id;
-      let obj = this.ObjData();
+      let obj = this.ObjDataA();
+      let message = "[" + obj["labels"][index] + "] 属性被删除";
+      let name = this.treeNode.name;
       obj["labels"].splice(index, 1);
+      obj["record"] = {
+        message: JSON.stringify({ message, name }),
+        operator: "DELETE_NODE_PROPER"
+      };
       this.put_json(url, obj)
         .then(res => {
           let labels = res.data.labels;
           this.AttrButeformat = labels;
           this.AttrButeData.splice(index, 1);
-          //       // 重新 获取日志
-          //       this.$emit("SClientCallback", 4);
+          // 重新 获取日志
+          this.$emit("SClientCallback", 4);
         })
         .catch(() => {});
     },
@@ -320,12 +356,29 @@ export default {
       if (name === "" || title === "") {
         return;
       }
+      this.queryNode(title, this.pushServeR, [name, title]);
+    },
+    // 向服务器发送 添加关系的数据
+    pushServeR(name, title) {
       let url = "node/" + this.treeNode.id;
-      let obj = this.ObjData();
+      let obj = this.objDataR();
+      let Nodename = this.treeNode.name;
+      let message =
+        "[" +
+        Nodename +
+        "] 与 [" +
+        title +
+        "] 添加新的关系,关系名称为 [" +
+        name +
+        "]";
       if (!obj["property"].hasOwnProperty(name)) {
         obj["property"][name] = [];
       }
       obj["property"][name].push(title);
+      obj["record"] = {
+        message: JSON.stringify({ message, name: Nodename }),
+        operator: "ADD_NODE_PROPERTY"
+      };
       this.put_json(url, obj)
         .then(res => {
           const property = res.data.property;
@@ -337,30 +390,58 @@ export default {
           this.InputNodeName = this.RaNodeinput = "";
           // // 力导图 树图 从新请求数据
           // this.$emit("SClientCallback", 2);
-          // // 重新 获取日志
-          // this.$emit("SClientCallback", 4);
+          // 重新 获取日志
+          this.$emit("SClientCallback", 4);
         })
         .catch(() => {});
     },
     // 删除 关系 数据
     delRelationData(val, inputIndex) {
-      let obj = this.ObjData();
+      let obj = this.objDataR();
       let index = obj["property"][val.name].indexOf(val.title);
+      let name = this.treeNode.name;
+      let message =
+        "[" +
+        name +
+        "] 与 [" +
+        val.title +
+        "] 不在拥有 [" +
+        val.name +
+        "] 关系";
       obj["property"][val.name].splice(index, 1);
       if (!obj["property"][val.name].length) {
         delete obj["property"][val.name];
       }
+      obj["record"] = {
+        message: JSON.stringify({ message, name }),
+        operator: "DELETE_NODE_PROPERTY"
+      };
       this.poshServerR("", inputIndex, obj);
     },
     // 更新 关系 属性
     putRelationName(inputVal, val, inputIndex) {
-      let obj = this.ObjData();
+      let obj = this.objDataR();
       let index = obj["property"][val.name].indexOf(val.title);
+      let name = this.treeNode.name;
+      let message =
+        "[" +
+        name +
+        "] 与 [" +
+        val.title +
+        "] 关系名称由 [" +
+        val.name +
+        "] 修改为 [" +
+        inputVal +
+        "]";
       if (!obj["property"].hasOwnProperty(inputVal)) {
         obj["property"][inputVal] = [];
       }
       obj["property"][inputVal].push(val.title);
       obj["property"][val.name].splice(index, 1);
+      obj["record"] = {
+        message: JSON.stringify({ message, name }),
+        operator: "UPDATE_NODE_PROPERTY"
+      };
       if (!obj["property"][val.name].length) {
         delete obj["property"][val.name];
       }
@@ -368,9 +449,15 @@ export default {
     },
     // 更新 关系 键值
     putRelationTitle(inputVal, val, inputIndex) {
-      let obj = this.ObjData();
+      let obj = this.objDataR();
       let index = obj["property"][val.name].indexOf(val.title);
+      let name = this.treeNode.name;
+      let message = "[" + val.title + "] 关系节点修改为 [" + inputVal + "]";
       obj["property"][val.name][index] = inputVal;
+      obj["record"] = {
+        message: JSON.stringify({ message, name }),
+        operator: "UPDATE_NODE_PROPERTYNAME"
+      };
       this.poshServerR(inputVal, inputIndex, obj, "title");
     },
     // 向服务器发送 关系数据
@@ -387,18 +474,24 @@ export default {
           }
           //       // 力导图 树图 从新请求数据
           //       this.$emit("SClientCallback", 2);
-          //       // 重新 获取日志
-          //       this.$emit("SClientCallback", 4);
+          // 重新 获取日志
+          this.$emit("SClientCallback", 4);
         })
         .catch(() => {});
     },
-    //   向服务器发送 obj 关系
-    ObjData() {
+    // 向服务器 发送 关系
+    objDataR() {
       let obj = {
-        name: this.treeNode.name,
-        labels: this.AttrButeformat,
-        itemId: parseInt(this.$route.query.itemId),
+        itemId: this.itemId,
         property: { ...this.relationformat }
+      };
+      return obj;
+    },
+    // 向服务器 发送 属性
+    ObjDataA() {
+      let obj = {
+        labels: this.AttrButeformat,
+        itemId: this.itemId
       };
       return obj;
     },
@@ -407,7 +500,7 @@ export default {
       let url = "node/name";
       let obj = {
         query: val,
-        itemId: parseInt(this.$route.query.itemId)
+        itemId: this.itemId
       };
       this.get(url, obj)
         .then(res => {
@@ -429,25 +522,39 @@ export default {
       this.getVagueName(Ival);
     },
     // 查询该节点是否存在
-    queryNode(NodeName){
+    queryNode(NodeName, callback, value) {
       let url = "node/name";
       let obj = {
         query: NodeName,
-        itemId: parseInt(this.$route.query.itemId)
+        itemId: this.itemId
       };
       this.get(url, obj)
         .then(res => {
-          window.console.log(res)
+          const data = res.data;
+          let val = data.findIndex(item => {
+            return item["name"] === NodeName;
+          });
+          if (val === -1) {
+            this.$Message.warning("关系节点名称错误,请重新输入");
+          } else {
+            callback(...value);
+          }
         })
         .catch(() => {});
     }
   },
   watch: {
     treeNode: {
-      handler: function(newval, oldval) {
+      handler(newval, oldval) {
         if (newval === "" || newval.id === oldval.id) return;
         this.getDataFlag = false;
         this.RaNodeinput = "";
+        this.InputNodeName = "";
+        this.labelsInput = "";
+        this.AttrButeData = [];
+        this.relationData = [];
+        this.relationformat = {};
+        this.AttrButeformat = [];
         if (this.showSelectNum === 1) {
           this.getAttriBute();
         }

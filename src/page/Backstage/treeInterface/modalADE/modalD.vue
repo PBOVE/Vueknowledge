@@ -37,7 +37,13 @@
 
 <script>
 export default {
-  props: ["DelModalFlag", "selectNodeName", "treeNodeId", "selectNodes"],
+  props: [
+    "DelModalFlag",
+    "selectNodeName",
+    "treeNodeId",
+    "selectNodes",
+    "itemId"
+  ],
   data() {
     return {
       // modal标志位
@@ -86,7 +92,10 @@ export default {
       this.modalFlag = false;
       if (this.selectNodesFlag) {
         let url = "node/" + this.treeNodeId;
-        this.delete_string(url)
+        let obj = {
+          itemId: this.itemId
+        };
+        this.delete_string(url, obj)
           .then(res => {
             if (res.data) {
               this.$emit("addNameS", 8, Math.random());
@@ -96,8 +105,9 @@ export default {
           })
           .catch(() => {});
       } else {
-        let url = "node";
+        let url = "node?itemId=" + this.itemId;
         let obj = this.NodeId;
+        window.console.log(obj);
         this.delete_json(url, obj)
           .then(() => {
             this.$emit("addNameS", 12, Math.random());

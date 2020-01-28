@@ -251,7 +251,7 @@ export default {
   },
   watch: {
     treeNode: {
-      handler: function(newval, oldval) {
+      handler(newval, oldval) {
         if (newval === "" || newval.id === oldval.id) return;
         this.getDataFlag = false;
         if (this.showSelectNum === 5) {

@@ -7,11 +7,14 @@
 
 <template>
   <div class="know-Showclient">
+    <Spin fix size="large" v-if="spinShow"></Spin>
     <div v-show="showSelectNum === 1">
       <details-show
         ref="detailsShow"
+        :itemId="itemId"
         :treeNode="treeNode"
         :showSelectNum="showSelectNum"
+        :spinShow.sync="spinShow"
         @SClientCallback="SClientCallback"
         class="know-Showclient-default"
       ></details-show>
@@ -22,6 +25,7 @@
         :InnerHeight="InnerHeight"
         :treeNode="treeNode"
         :showSelectNum="showSelectNum"
+         :spinShow.sync="spinShow"
         class="know-Showclient-default"
       ></force-diagram>
     </div>
@@ -31,6 +35,7 @@
         :InnerHeight="InnerHeight"
         :treeNode="treeNode"
         :showSelectNum="showSelectNum"
+         :spinShow.sync="spinShow"
         class="know-Showclient-default"
       ></tree-diagram>
     </div>
@@ -40,11 +45,17 @@
         :treeNode="treeNode"
         :showSelectNum="showSelectNum"
         :InnerHeight="InnerHeight"
+         :spinShow.sync="spinShow"
         class="know-Showclient-default"
       ></journal-show>
     </div>
     <div v-show="showSelectNum === 5">
-      <rich-text :InnerHeight="InnerHeight" :treeNode="treeNode" :showSelectNum="showSelectNum"></rich-text>
+      <rich-text
+        :InnerHeight="InnerHeight"
+        :treeNode="treeNode"
+        :showSelectNum="showSelectNum"
+         :spinShow.sync="spinShow"
+      ></rich-text>
     </div>
   </div>
 </template>
@@ -61,11 +72,15 @@ import forceDiagram from "./interface/forceDiagram";
 //导入富文本
 import richText from "./interface/richText";
 export default {
-  props: ["treeNode", "showSelectNum", "InnerHeight"],
+  props: ["treeNode", "showSelectNum", "InnerHeight", "itemId"],
   components: { detailsShow, journalShow, treeDiagram, forceDiagram, richText },
   data() {
-    return {};
+    return {
+      // 加载 信息 动画
+      spinShow: false
+    };
   },
+  watch: {},
   methods: {
     SClientCallback(type, val) {
       const statusMap = {
@@ -90,19 +105,19 @@ export default {
         },
         // 名称 改变 details 发送数据
         5: () => {
-           this.$refs.detailsShow.putServerName(val);
+          this.$refs.detailsShow.putServerName(val);
         }
       };
       statusMap[type]();
     }
-  },
-  watch: {}
+  }
 };
 </script>
 
 <style  scoped>
 .know-Showclient {
   height: 100%;
+  position: relative;
 }
 .know-Showclient-default {
   padding: 10px;

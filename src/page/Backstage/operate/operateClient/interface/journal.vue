@@ -38,7 +38,7 @@
 
 <script>
 export default {
-  props: ["treeNode", "showSelectNum", "InnerHeight"],
+  props: ["treeNode", "showSelectNum", "InnerHeight", "spinShow"],
   data() {
     return {
       //请求数据标志位
@@ -61,6 +61,7 @@ export default {
     // 获取 服务器 数据
     getJournalData() {
       if (this.getDataFlag) return;
+      this.$emit("update:spinShow", true);
       this.getDataFlag = true;
       this.dataPage = 1;
       this.getServerData(0);
@@ -81,7 +82,7 @@ export default {
       };
       this.get(url, obj)
         .then(res => {
-          window.console.log(res);
+          this.$emit("update:spinShow", false);
           if (this.showSelectNum === 4) {
             this.requestFlag = false;
             this.dataEndPage = res.data.totalPages;
@@ -99,18 +100,20 @@ export default {
     },
     // 处理并且渲染 数据
     handleJournalData(data) {
-      let dataLen = data.length;
-      data.forEach((item, index) => {
+      data.forEach(item => {
         let Dateobj = this.handleTime(item.createTime);
-        let nodeitem = "";
-        if (index < dataLen) {
-          nodeitem = data[index + 1];
-        }
-        let Megobj = this.handleMessage(item.operator, item.content, nodeitem);
-
+        let DateFlite = date => {
+          return date < 10 ? "0" + date : date;
+        };
+        let Megobj = this.handleMessage(item.operator, item.message);
         this.JournalData.push({
           randomId: Math.random(),
-          dateLog: Dateobj.YY + "-" + Dateobj.MM + "-" + Dateobj.DD,
+          dateLog:
+            Dateobj.YY +
+            " - " +
+            DateFlite(Dateobj.MM) +
+            " - " +
+            DateFlite(Dateobj.DD),
           dateValue: Dateobj.dateValue,
           nodeName: Megobj.nodeName,
           Time:
@@ -123,9 +126,6 @@ export default {
           nickName: item.nickName,
           operatorCrux: Megobj.operatorCrux
         });
-        function DateFlite(date) {
-          return date < 10 ? "0" + date : date;
-        }
       });
     },
     // 处理响应 时间
@@ -172,23 +172,15 @@ export default {
       };
     },
     // 处理message 信息
-    handleMessage(type, val, nextNodeData) {
-      let contentObj, operator, operatorCrux, labels, nodeName, nextDataLabel;
-      contentObj = JSON.parse(val);
-      labels = contentObj.labels;
-      nodeName = contentObj.name || this.treeNode.name;
+    handleMessage(type, val) {
+      let value = JSON.parse(val);
+      let operator,
+        operatorCrux,
+        nodeName = value.name;
       const statusMap = {
         UPDATE_NODE_NAME: () => {
-          operator = "修改节点名称";
+          operator = value.message;
           operatorCrux = "修改节点名称";
-          if (nextNodeData) {
-            let nextDataName = this.handleMessage(
-              nextNodeData.operator,
-              nextNodeData.content
-            ).nodeName;
-            operator =
-              '" ' + nextDataName + ' "节点名称修改为" ' + nodeName + ' "';
-          }
 
           return {
             operator,
@@ -197,8 +189,17 @@ export default {
           };
         },
         ADD_NODE: () => {
-          operator = "添加节点";
+          operator = value.message;
           operatorCrux = "添加节点";
+          return {
+            operator,
+            nodeName,
+            operatorCrux
+          };
+        },
+        ADD_NODE_PROPER: () => {
+          operator = value.message;
+          operatorCrux = "添加属性";
 
           return {
             operator,
@@ -207,78 +208,28 @@ export default {
           };
         },
         UPDATE_NODE_PROPER: () => {
-          operator = "更新节点属性";
-          operatorCrux = "更新属性";
-          if (nextNodeData) {
-            nextDataLabel = this.handleMessage(
-              nextNodeData.operator,
-              nextNodeData.content
-            ).labels;
-            if (nextDataLabel) {
-              let len = labels.length;
-              let nextLen = nextDataLabel.length;
-              let oldName, newName;
-              if (nextDataLabel.length === labels.length) {
-                let a = nextDataLabel;
-                let b = labels;
-                let c = a
-                  .filter(v => {
-                    return !(b.indexOf(v) > -1);
-                  })
-                  .concat(
-                    b.filter(v => {
-                      return !(a.indexOf(v) > -1);
-                    })
-                  );
-                operatorCrux = "修改属性";
-                operator = '"' + c[0] + '"修改属性名称为" ' + c[1] + '"';
-              } else if (nextDataLabel.length < labels.length) {
-                operatorCrux = "添加属性";
-                for (let i = 0; i < len; i++) {
-                  if (nextDataLabel.indexOf(labels[i]) === -1) {
-                    newName = labels[i];
-                    break;
-                  }
-                }
-                operatorCrux = "添加属性";
-                operator = '添加新的属性名称 " ' + newName + ' "';
-              } else {
-                operatorCrux = "删除属性";
-                for (let i = 0; i < nextLen; i++) {
-                  if (labels.indexOf(nextDataLabel[i]) === -1) {
-                    oldName = nextDataLabel[i];
-                    break;
-                  }
-                }
-                operator = '属性 " ' + oldName + ' " 被删除';
-              }
-            }
-          }
+          operator = value.message;
+          operatorCrux = "修改属性";
           return {
-            labels,
+            operator,
+            nodeName,
+            operatorCrux
+          };
+        },
+        DELETE_NODE_PROPER: () => {
+          operator = value.message;
+          operatorCrux = "删除属性";
+
+          return {
             operator,
             nodeName,
             operatorCrux
           };
         },
         ADD_NODE_PROPERTY: () => {
-          operator =
-            '" ' +
-            contentObj.startNode +
-            ' " 节点与 " ' +
-            contentObj.endNode +
-            ' " 节点产生新的关系,关系为: ' +
-            contentObj.property.type;
+          operator = value.message;
           operatorCrux = "添加节点关系";
-          return {
-            operator,
-            nodeName,
-            operatorCrux
-          };
-        },
-        DELETE_NODE_RELATION: () => {
-          operator = "删除节点关系";
-          operatorCrux = "删除节点关系";
+
           return {
             operator,
             nodeName,
@@ -286,15 +237,26 @@ export default {
           };
         },
         UPDATE_NODE_PROPERTY: () => {
-          operator =
-            '" ' +
-            contentObj.startNode +
-            ' " 节点与 " ' +
-            contentObj.endNode +
-            ' " 节点的关系值改变为 " ' +
-            contentObj.property.type +
-            ' "';
+          operator = value.message;
           operatorCrux = "修改节点关系";
+          return {
+            operator,
+            nodeName,
+            operatorCrux
+          };
+        },
+        UPDATE_NODE_PROPERTYNAME: () => {
+          operator = value.message;
+          operatorCrux = "变更节点关系";
+          return {
+            operator,
+            nodeName,
+            operatorCrux
+          };
+        },
+        DELETE_NODE_PROPERTY: () => {
+          operator = value.message;
+          operatorCrux = "删除节点关系";
           return {
             operator,
             nodeName,
@@ -307,7 +269,7 @@ export default {
   },
   watch: {
     treeNode: {
-      handler: function(newval, oldval) {
+      handler(newval, oldval) {
         if (newval === "" || newval.id === oldval.id) return;
         this.getDataFlag = false;
         this.JournalData = [];

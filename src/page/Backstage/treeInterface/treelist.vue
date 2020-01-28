@@ -10,11 +10,12 @@
     <div class="know-tree-list-header-title">类层次结构</div>
     <Layout>
       <Header class="know-tree-default know-tree-header-select">
-        <div class="know-tree-header-button know-tree-header-button-add" 
+        <div
+          class="know-tree-header-button know-tree-header-button-add"
           @click="TLCallback(4)"
           :class="{'know-tree-header-button-no-selete':ctrlButtonFlag}"
-          >
-         <Icon type="md-add-circle" size = 20 />
+        >
+          <Icon type="md-add-circle" size="20" />
           <div class="know-tree-header-button-title">添加</div>
         </div>
 
@@ -23,7 +24,7 @@
           :class="{'know-tree-header-button-no-selete':!SeleteNodeFlag}"
           @click="TLCallback(5)"
         >
-          <Icon type="ios-close-circle" size=20 />
+          <Icon type="ios-close-circle" size="20" />
           <div class="know-tree-header-button-title">删除</div>
         </div>
 
@@ -32,7 +33,7 @@
           :class="{'know-tree-header-button-no-selete':!SeleteNodeFlag||ctrlButtonFlag}"
           @click="TLCallback(6)"
         >
-          <Icon type="ios-create" size =22 />
+          <Icon type="ios-create" size="22" />
           <div class="know-tree-header-button-title">编辑</div>
         </div>
       </Header>
@@ -40,16 +41,22 @@
         class="know-tree-default know-tree-main-content scroll"
         :style="{height:setTreeClientHeight}"
       >
-        <tree-z @selectNode="TLCallback" :treelistVal="treeZ"></tree-z>
+        <tree-z @selectNode="TLCallback" :treelistVal="treeZ" :itemId="itemId"></tree-z>
       </Content>
     </Layout>
 
-    <modal-a :AddModalFlag="buttonAddFlag" :treeNode="treeNode" @addNameS="TLCallback"></modal-a>
+    <modal-a
+      :AddModalFlag="buttonAddFlag"
+      :treeNode="treeNode"
+      :itemId="itemId"
+      @addNameS="TLCallback"
+    ></modal-a>
     <modal-d
       :DelModalFlag="buttonDelFlag"
       :selectNodeName="selectNodeName"
       :treeNodeId="treeNode.id"
-      :selectNodes='selectNodes'
+      :selectNodes="selectNodes"
+      :itemId="itemId"
       @addNameS="TLCallback"
     ></modal-d>
     <modal-e
@@ -72,11 +79,11 @@ import modalE from "./modalADE/modalE";
 import treeZ from "./tree/treeJquery";
 export default {
   components: { modalD, modalA, modalE, treeZ },
-  props: ["InnerHeight"],
+  props: ["InnerHeight", "itemId"],
   data() {
     return {
       // ctrl 点击标志 位
-      ctrlButtonFlag:false,
+      ctrlButtonFlag: false,
       // 点击 添加标志 位
       buttonAddFlag: "",
       // 点击 删除标志 位
@@ -96,12 +103,12 @@ export default {
         ExitName: "",
         addName: "",
         delName: "",
-        delNodes:""
+        delNodes: ""
       },
       // 根节点数量
       rootNodeNum: "",
       // 选择多个节点 id + name
-      selectNodes:[]
+      selectNodes: []
     };
   },
   methods: {
@@ -130,8 +137,7 @@ export default {
         },
         // 点击 添加按键
         4: () => {
-          if(!this.ctrlButtonFlag)
-            this.buttonAddFlag = Math.random();
+          if (!this.ctrlButtonFlag) this.buttonAddFlag = Math.random();
         },
         // 点击 删除 按键
         5: () => {
@@ -141,7 +147,7 @@ export default {
         },
         // 点击 编辑 按键
         6: () => {
-          if (this.SeleteNodeFlag&&!this.ctrlButtonFlag) {
+          if (this.SeleteNodeFlag && !this.ctrlButtonFlag) {
             this.buttonExitFlag = Math.random();
           }
         },
@@ -174,23 +180,23 @@ export default {
           this.selectNodes = val;
         },
         //删除 多节点 标志位
-        12 :() =>{
+        12: () => {
           this.treeZ.delNodes = val;
         },
         //删除 多节点 包括选中 treeNode
-        13 :() =>{
+        13: () => {
           this.selectNodeName = "";
           this.treeNode = "";
           this.$emit("MangageCallback", 1, "");
           this.$emit("MangageCallback", 3, Math.random());
         },
         // 名称 改变 details发送
-        14:()=>{
+        14: () => {
           this.$emit("MangageCallback", 4, val);
         }
       };
       statusMap[type]();
-    },
+    }
   },
   computed: {
     //设置 树 可视区 高度

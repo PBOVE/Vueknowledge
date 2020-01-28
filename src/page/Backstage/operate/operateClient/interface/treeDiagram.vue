@@ -6,17 +6,18 @@
 
 
 <template>
-  <tree-chart 
-    :TopHeight='TopHeight'
-    :RightWeight='RightWeight'
-    :style="{height:SetHeight}" 
-    ref="treechart"></tree-chart>
+  <tree-chart
+    :TopHeight="TopHeight"
+    :RightWeight="RightWeight"
+    :style="{height:SetHeight}"
+    ref="treechart"
+  ></tree-chart>
 </template>
 
 <script>
-import treeChart from '../../../../../components/treeChart'
+import treeChart from "../../../../../components/treeChart";
 export default {
-  components:{treeChart},
+  components: { treeChart },
   props: ["treeNode", "showSelectNum", "InnerHeight"],
   data() {
     return {
@@ -33,25 +34,35 @@ export default {
       if (this.getDataFlag) return;
       this.getDataFlag = true;
 
-      let url = "node/" + this.treeNode.id + "/child";
+      let url = "node/" + this.treeNode.id + "/link";
       this.get(url)
         .then(res => {
-          let child = this.ChildNodeProcessing(res.data);
-          return Promise.resolve(child);
+          let child = this.ChildNodeProcessing(res.data.child);
+          let treeData = this.parentNodeProcessing(child, res.data.parent);
+          window.console.log(res);
+          this.$refs.treechart.handletreeData(treeData);
         })
-        .then(childdata => {
-          let url = "node/" + this.treeNode.id + "/link";
-          this.get(url).then(res => {
-            if (this.showSelectNum === 3) {
-              let treeData = this.parentNodeProcessing(
-                childdata,
-                res.data.parent
-              );
-              this.$refs.treechart.handletreeData(treeData);
-            }
-          });
-        })
-        .catch(() => {});
+        .catch(err => {
+          window.console.log(err);
+        });
+      // this.get(url)
+      //   .then(res => {
+      //     let child = this.ChildNodeProcessing(res.data);
+      //     return Promise.resolve(child);
+      //   })
+      //   .then(childdata => {
+      //     let url = "node/" + this.treeNode.id + "/link";
+      //     this.get(url).then(res => {
+      //       if (this.showSelectNum === 3) {
+      //         let treeData = this.parentNodeProcessing(
+      //           childdata,
+      //           res.data.parent
+      //         );
+      //         this.$refs.treechart.handletreeData(treeData);
+      //       }
+      //     });
+      //   })
+      //   .catch(() => {});
     },
     //子节点处理
     ChildNodeProcessing(child) {
@@ -61,27 +72,22 @@ export default {
         data.forEach(item => {
           let obj = {
             name: item.name,
-            sortId: item.sortId
+            child: item.child
           };
-          if (item.childNodes.length) {
-            obj.children = nodeBFS(item.childNodes);
-          }
           Arr.push(obj);
         });
-        return Arr.sort(this.sortId);
+        return Arr;
       };
       return nodeBFS(child);
     },
     //父亲节点处理
     parentNodeProcessing(childdata, parent) {
-      let treeData = {
-        name: this.treeNode.name,
-        children: childdata
-      };
+      let treeData = childdata;
+      parent = parent.reverse();
       parent.forEach(item => {
         treeData = {
           name: item.name,
-          children: [treeData]
+          children: treeData.constructor === Array ? treeData : [treeData]
         };
       });
       return treeData;
@@ -94,7 +100,7 @@ export default {
       else if (valA > valB) return 1;
       else return 0;
     },
-    
+
     //设置 数据重新获取
     //从新获取数据
     setForce() {
@@ -105,7 +111,7 @@ export default {
   },
   watch: {
     treeNode: {
-      handler: function(newval, oldval) {
+      handler(newval, oldval) {
         if (newval === "" || newval.id === oldval.id) return;
         this.getDataFlag = false;
         if (this.showSelectNum === 3) {

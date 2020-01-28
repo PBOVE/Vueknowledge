@@ -14,6 +14,7 @@
           <tree-list
             ref="treelist"
             :InnerHeight="InnerHeight - headerHeight"
+            :itemId='itemId'
             @MangageCallback="MangageCallback"
           ></tree-list>
         </div>
@@ -22,6 +23,7 @@
             ref="operatemain"
             :InnerHeight="InnerHeight - headerHeight"
             :treeNode="treeNode"
+            :itemId='itemId'
             @MangageCallback="MangageCallback"
           ></operate-main>
         </div>
@@ -55,7 +57,9 @@ export default {
       //Split 最大宽度
       splitMax: "500px",
       //树节点
-      treeNode: ""
+      treeNode: "",
+      // 项目id
+      itemId:parseInt(this.$route.query.itemId)
     };
   },
   computed: {
