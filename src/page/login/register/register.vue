@@ -410,7 +410,7 @@ export default {
   font-size: 16px;
   margin-right: 5px;
   color: #fff;
-  animation: ani-demo-spin 1s linear infinite;
+  animation: ani-demo-load 1s linear infinite;
 }
 #know-register .know-register-icon-load-default {
   font-size: 16px;
@@ -423,15 +423,6 @@ export default {
   border-color: rgba(24, 144, 255, 0.5);
   cursor: default;
 }
-@keyframes ani-demo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  50% {
-    transform: rotate(180deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+
+
 </style>

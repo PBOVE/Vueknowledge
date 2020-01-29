@@ -38,10 +38,11 @@ export default {
             type: "tree",
             data: [dataset],
             top: "1%",
-            left: "7%",
+            left: "8%",
             bottom: "1%",
             right: "20%",
-            symbolSize: 7,
+            symbolSize: 10,
+            roam: true,
             label: {
               normal: {
                 position: "left",
@@ -59,15 +60,23 @@ export default {
                 }
               }
             },
-
+            itemStyle: {
+              borderColor: "#9D85FB"
+            },
+            lineStyle: { color: "#fb767b" },
             expandAndCollapse: true,
             animationDuration: 550,
             animationDurationUpdate: 750
           }
         ]
       };
-       var myChart = echarts.init(this.$refs.knowtree);
+      var myChart = echarts.init(this.$refs.knowtree);
       myChart.setOption(option);
+
+      myChart.on("click", function(params) {
+        // 控制台打印数据的名称
+        window.console.log(params);
+      });
     }
   }
 };

@@ -16,12 +16,30 @@
       </div>
     </div>
     <div class="title-h1">我创建的</div>
-    <item-list class="item-row" :itemData="itemData" @selectItem="selectItem" @selectDelete='selectDelete'></item-list>
+    <div class="item-load" v-if="itemLoadFlag">
+      <Icon type="md-ionic" class="item-load-icon" />
+    </div>
+    <item-list
+      class="item-row"
+      :itemData="itemData"
+      @selectItem="selectItem"
+      @selectDelete="selectDelete"
+      status="true"
+    ></item-list>
     <div class="title-h1">成员分享的</div>
-    <!-- <item-list class="item-row" ></item-list> -->
+    <div class="item-load" v-if="shareitemLoadFlag">
+      <Icon type="md-ionic" class="item-load-icon" />
+    </div>
+    <item-list
+      class="item-row"
+      :itemData="itemShareData"
+      @selectItem="selectItem"
+      @selectDelete="selectDelete"
+      status="false"
+    ></item-list>
     <item-create ref="modalC" @addItem="addItem"></item-create>
     <item-setting ref="modalS" @updataItem="updataItem"></item-setting>
-    <item-delete  ref="modalD"  @delItem="delItem"></item-delete>
+    <item-delete ref="modalD" @delItem="delItem"></item-delete>
   </div>
 </template>
 
@@ -30,21 +48,27 @@
 import itemList from "./operation/itemList";
 import itemCreate from "./operation/itemCreate";
 import itemSetting from "./operation/itemSetting";
-import itemDelete from "./operation/itemDelete"
+import itemDelete from "./operation/itemDelete";
 
 export default {
-  components: { itemList, itemCreate, itemSetting,itemDelete },
+  components: { itemList, itemCreate, itemSetting, itemDelete },
   data() {
     return {
       // 项目数据
       itemData: "",
+      // 分享项目数据
+      itemShareData: "",
       // 选中的数据下标
-      selectIndex: ""
+      selectIndex: "",
+      // 项目加载标志位
+      itemLoadFlag: true,
+      // 分享项目加载标志位
+      shareitemLoadFlag: true
     };
   },
   mounted() {
     this.getServeItem();
-    // this.getServeShareItem();
+    this.getServeShareItem();
   },
   methods: {
     // 获取服务器里面的项目
@@ -52,6 +76,7 @@ export default {
       const url = "item";
       this.get(url)
         .then(res => {
+          this.itemLoadFlag = false;
           this.itemData = res.data;
         })
         .catch(() => {});
@@ -61,7 +86,8 @@ export default {
       const url = "item/share";
       this.get(url)
         .then(res => {
-          window.console.log(res);
+          this.shareitemLoadFlag = false;
+          this.itemShareData = res.data;
         })
         .catch(() => {});
     },
@@ -76,9 +102,13 @@ export default {
       statusMap[type]();
     },
     // 选中 项目设置
-    selectItem(index) {
+    selectItem(index, status) {
       this.selectIndex = index;
-      this.$refs.modalS.showView(this.itemData[index]);
+      if (status === "true") {
+        this.$refs.modalS.showView(this.itemData[index], status);
+      } else {
+        this.$refs.modalS.showView(this.itemShareData[index], status);
+      }
     },
     // 选中 项目删除
     selectDelete(index) {
@@ -88,14 +118,17 @@ export default {
     // 创建成功 添加数据
     addItem(val) {
       this.itemData.push(val);
+      this.getServeShareItem();
     },
     // 修改数据
     updataItem(val) {
       this.itemData.splice(this.selectIndex, 1, val);
+      this.getServeShareItem();
     },
     // 删除项目
     delItem() {
       this.itemData.splice(this.selectIndex, 1);
+      this.getServeShareItem();
     }
   }
 };
@@ -135,5 +168,15 @@ export default {
 .create-box-title {
   font-size: 15px;
   letter-spacing: 0.1em;
+}
+.item-load {
+  height: 120px;
+  line-height: 120px;
+  text-align: center;
+  color: #2d8cf0;
+  font-size: 30px;
+}
+.item-load-icon {
+  animation: ani-demo-load 2.5s linear infinite;
 }
 </style>

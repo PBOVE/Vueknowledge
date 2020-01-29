@@ -6,43 +6,50 @@
 
 
 <template>
-  <div class="container">
-    <Modal v-model="modalFlag" width="400">
-      <div slot="header" class="item-modal-header center">
-        <span>项目创建</span>
+  <Modal v-model="modalFlag" width="400">
+    <div slot="header" class="item-modal-header center">
+      <span>项目创建</span>
+    </div>
+    <div class="item-modal-main">
+      <div class="center">
+        <img src="../../../../assets/images/item.png" class="main-img" />
       </div>
-      <div class="item-modal-main">
-        <div class="center">
-          <img src="../../../../assets/images/item.png" class="main-img" />
-        </div>
-        <div class="item-modal-title">项目名称 (必填) :</div>
-        <Input v-model="submitMsg.name" placeholder="项目名称" ref="NameI" @on-change="itemNameChange" maxlength="20" />
-        <div class="item-modal-title">项目描述 (选填) :</div>
-        <Input
-          class="textarea-i"
-          v-model="submitMsg.description"
-          type="textarea"
-          :autosize="{minRows: 2,maxRows: 6}"
-          maxlength="3000"
-          show-word-limit
-          placeholder="项目描述"
-        />
-        <div class="item-modal-title">是否分享 :</div>
-        <RadioGroup v-model="submitMsg.share">
-          <Radio label="true">
-            <span>是</span>
-          </Radio>
-          <Radio label="false">
-            <span>否</span>
-          </Radio>
-        </RadioGroup>
-      </div>
-      <div slot="footer" class="item-modal-footer">
-        <Button type="text" @click="closeModal">取消</Button>
-        <Button type="primary" @click="pushServer" :disabled="allowFlag">完成并创建</Button>
-      </div>
-    </Modal>
-  </div>
+      <div class="item-modal-title">项目名称 (必填) :</div>
+      <Input
+        v-model="submitMsg.name"
+        placeholder="项目名称"
+        ref="NameI"
+        @on-change="itemNameChange"
+        maxlength="20"
+      />
+      <div class="item-modal-title">项目描述 (选填) :</div>
+      <Input
+        class="textarea-i"
+        v-model="submitMsg.description"
+        type="textarea"
+        :autosize="{minRows: 2,maxRows: 6}"
+        maxlength="3000"
+        show-word-limit
+        placeholder="项目描述"
+      />
+      <div class="item-modal-title">是否分享 :</div>
+      <RadioGroup v-model="submitMsg.share">
+        <Radio label="true">
+          <span>是</span>
+        </Radio>
+        <Radio label="false">
+          <span>否</span>
+        </Radio>
+      </RadioGroup>
+    </div>
+    <div slot="footer" class="item-modal-footer">
+      <Button type="text" @click="closeModal">取消</Button>
+      <Button type="primary" @click="pushServer" :disabled="allowFlag" :loading="serveLoadFlag">
+        <span v-if="!serveLoadFlag">完成并创建</span>
+        <span v-else>创建中</span>
+      </Button>
+    </div>
+  </Modal>
 </template>
 
 
@@ -59,7 +66,9 @@ export default {
         description: ""
       },
       // 允许发送标志位
-      allowFlag: true
+      allowFlag: true,
+      // 向服务器发送 标志位
+      serveLoadFlag: false
     };
   },
   methods: {
@@ -96,13 +105,17 @@ export default {
         name: this.submitMsg.name,
         description: this.submitMsg.description
       };
+      this.serveLoadFlag = true;
       this.post_json(url, obj)
         .then(res => {
-          this.$emit('addItem',res.data);
+          this.$emit("addItem", res.data);
           this.$Message.success("创建成功");
           this.modalFlag = false;
+          this.serveLoadFlag = false;
         })
-        .catch(() => {});
+        .catch(() => {
+          this.serveLoadFlag = false;
+        });
     }
   }
 };
@@ -110,6 +123,9 @@ export default {
 
 
 <style scoped>
+.item-modal-box {
+  overflow: hidden;
+}
 .item-modal-header {
   font-size: 18px;
   font-weight: 600;

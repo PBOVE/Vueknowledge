@@ -152,15 +152,5 @@ export default {
   font-size: 20px;
   animation: ani-demo-load 2.5s linear infinite;
 }
-@keyframes ani-demo-load {
-  from {
-    transform: rotate(0deg);
-  }
-  50% {
-    transform: rotate(180deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+
 </style>

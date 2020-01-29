@@ -6,7 +6,7 @@
 
 
 <template>
-  <Modal v-model="delmodal" width="260"  :styles="{top: '200px'}" >
+  <Modal v-model="delmodal" width="260">
     <p slot="header" style="color:#f60;text-align:center">
       <span>删除 {{ItemName}} 项目</span>
     </p>
@@ -15,7 +15,10 @@
     </div>
     <div slot="footer">
       <Button type="text" @click="delmodal = false">取消</Button>
-      <Button type="error" @click="delItem">删除</Button>
+      <Button type="error" @click="delItem" :loading="serveLoadFlag">
+        <span v-if="!serveLoadFlag">删除</span>
+        <span v-else>删除中</span>
+      </Button>
     </div>
   </Modal>
 </template>
@@ -28,29 +31,35 @@ export default {
       // 删除模态框标志位
       delmodal: false,
       // 项目名称
-      ItemName:'',
+      ItemName: "",
       // 项目 id
-      ItemId:''
+      ItemId: "",
+      // 向服务器发送 标志位
+      serveLoadFlag: false
     };
   },
   methods: {
-    showView(val){
+    showView(val) {
       this.delmodal = true;
       this.ItemName = val.name;
-      this.ItemId = val.id
+      this.ItemId = val.id;
     },
     // 删除项目
     delItem() {
       const url = "item/" + this.ItemId;
+      this.serveLoadFlag = true;
       this.delete_string(url)
         .then(() => {
           this.$Message.success("删除成功");
           this.delmodal = false;
+          this.serveLoadFlag = false;
           this.$emit("delItem");
         })
-        .catch(() => {});
+        .catch(() => {
+          this.serveLoadFlag = false;
+        });
     }
-  },
+  }
 };
 </script>
 

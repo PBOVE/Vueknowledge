@@ -204,7 +204,7 @@ export default {
   font-size: 16px;
   margin-right: 5px;
   color: #fff;
-  animation: ani-demo-spin 1s linear infinite;
+  animation: ani-demo-load 1s linear infinite;
 }
 .know-login-user-land-icon-default {
   font-size: 16px;
@@ -212,15 +212,5 @@ export default {
   color: #fff;
   display: none;
 }
-@keyframes ani-demo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  50% {
-    transform: rotate(180deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+
 </style>

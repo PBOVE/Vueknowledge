@@ -14,11 +14,20 @@
       <div class="item-modal-title">项目封面</div>
       <div class="item-modal-cover">
         <div class="item-modal-upload item-upload-default"></div>
-        <Button class="modal-cover-button">上传新的封面</Button>
+        <Button class="modal-cover-button" v-if="status">上传新的封面</Button>
       </div>
-
+      <div class="item-modal-title" v-if="!status">项目作者</div>
+      <div class="item-border" v-if="!status">{{submitMsg.nickName}}</div>
       <div class="item-modal-title">项目名称</div>
-      <Input placeholder="项目名称" ref="NameI" v-model="submitMsg.name" @on-change="changeEvent" maxlength="20" />
+      <Input
+        placeholder="项目名称"
+        ref="NameI"
+        v-model="submitMsg.name"
+        @on-change="changeEvent"
+        maxlength="20"
+        v-if="status"
+      />
+      <div v-else class="item-border">{{submitMsg.name}}</div>
       <div class="item-modal-title">项目描述</div>
       <Input
         class="textarea-i"
@@ -29,11 +38,17 @@
         maxlength="3000"
         show-word-limit
         @on-change="changeEvent"
+        v-if="status"
       />
+      <div v-else class="item-border">{{submitMsg.description}}</div>
       <div class="item-modal-title">项目公开性</div>
-      <Select v-model="submitMsg.share" @on-change="changeEvent">
+      <Select v-model="submitMsg.share" @on-change="changeEvent" v-if="status">
         <Option v-for="item in shareList" :value="item.value" :key="item.value">{{ item.label }}</Option>
       </Select>
+      <div
+        v-else
+        class="item-border"
+      >{{submitMsg.share === 'true'?shareList[0].label:shareList[1].label}}</div>
       <div class="item-modal-title">项目创建时间</div>
       <div>{{TimeConversion(submitMsg.createTime)}}</div>
       <div class="item-modal-title">项目修改时间</div>
@@ -41,7 +56,17 @@
     </div>
     <div slot="footer" class="item-modal-footer">
       <Button type="text" @click="ModalFalg = false">取消</Button>
-      <Button type="primary" @click="keepSetting" :disabled="allowFlag">保存</Button>
+      <Button
+        type="primary"
+        @click="keepSetting"
+        :disabled="allowFlag"
+        v-if="status"
+        :loading="serveLoadFlag"
+      >
+        <span v-if="!serveLoadFlag">保存</span>
+        <span v-else>保存中</span>
+      </Button>
+      <Button type="primary" @click="ModalFalg = false" v-else>确定</Button>
     </div>
   </Modal>
 </template>
@@ -79,7 +104,11 @@ export default {
         share: "",
         name: "",
         description: ""
-      }
+      },
+      // 设置查看状态还是分享状态
+      status: "",
+      // 向服务器发送 标志位
+      serveLoadFlag: false
     };
   },
   methods: {
@@ -113,14 +142,16 @@ export default {
       );
     },
     // 展示 设置modal
-    showView(val) {
+    showView(val, status) {
       this.ModalFalg = true;
+      this.status = status === "true" ? true : false;
       this.submitMsg = {
         name: val.name,
         share: val.share ? "true" : "false",
         description: val.description,
         createTime: val.createTime,
         updateTime: val.updateTime,
+        nickName: val.nickName,
         id: val.id
       };
       this.oldMsg = {
@@ -137,13 +168,23 @@ export default {
         name: this.submitMsg.name,
         description: this.submitMsg.description
       };
+      this.serveLoadFlag = true;
       this.put_json(url, obj)
         .then(res => {
+          const data = res.data;
           this.$Message.success("保存成功");
-          this.ModalFalg = false;
-          this.$emit("updataItem", res.data);
+          this.oldMsg = {
+            name: data.name,
+            share: data.share ? "true" : "false",
+            description: data.description
+          };
+          this.allowFlag = true;
+          this.$emit("updataItem", data);
+          this.serveLoadFlag = false;
         })
-        .catch(() => {});
+        .catch(() => {
+          this.serveLoadFlag = false;
+        });
     }
   }
 };
@@ -197,5 +238,10 @@ export default {
 .item-modal-main {
   max-height: calc(100vh - 308px);
   overflow: auto;
+}
+.item-border {
+  border: 1px solid #dadce0;
+  padding: 5px 10px;
+  border-radius: 4px;
 }
 </style>

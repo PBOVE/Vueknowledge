@@ -33,36 +33,15 @@ export default {
     getTreeData() {
       if (this.getDataFlag) return;
       this.getDataFlag = true;
-
       let url = "node/" + this.treeNode.id + "/link";
       this.get(url)
         .then(res => {
           let child = this.ChildNodeProcessing(res.data.child);
           let treeData = this.parentNodeProcessing(child, res.data.parent);
-          window.console.log(res);
           this.$refs.treechart.handletreeData(treeData);
         })
-        .catch(err => {
-          window.console.log(err);
+        .catch(() => {
         });
-      // this.get(url)
-      //   .then(res => {
-      //     let child = this.ChildNodeProcessing(res.data);
-      //     return Promise.resolve(child);
-      //   })
-      //   .then(childdata => {
-      //     let url = "node/" + this.treeNode.id + "/link";
-      //     this.get(url).then(res => {
-      //       if (this.showSelectNum === 3) {
-      //         let treeData = this.parentNodeProcessing(
-      //           childdata,
-      //           res.data.parent
-      //         );
-      //         this.$refs.treechart.handletreeData(treeData);
-      //       }
-      //     });
-      //   })
-      //   .catch(() => {});
     },
     //子节点处理
     ChildNodeProcessing(child) {
@@ -71,6 +50,7 @@ export default {
         let Arr = [];
         data.forEach(item => {
           let obj = {
+            lineStyle:{color:'#76fb89'},
             name: item.name,
             child: item.child
           };

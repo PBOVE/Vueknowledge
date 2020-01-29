@@ -346,17 +346,6 @@ export default {
   padding-left: 32px;
   padding-right: 0;
 }
-@keyframes ani-demo-load {
-  from {
-    transform: rotate(0deg);
-  }
-  50% {
-    transform: rotate(180deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
 @media screen and (max-width: 850px) {
   .know-search-header {
     padding: 0;

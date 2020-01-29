@@ -25,7 +25,8 @@
         :InnerHeight="InnerHeight"
         :treeNode="treeNode"
         :showSelectNum="showSelectNum"
-         :spinShow.sync="spinShow"
+        :spinShow.sync="spinShow"
+        :itemId="itemId"
         class="know-Showclient-default"
       ></force-diagram>
     </div>
@@ -35,7 +36,7 @@
         :InnerHeight="InnerHeight"
         :treeNode="treeNode"
         :showSelectNum="showSelectNum"
-         :spinShow.sync="spinShow"
+        :spinShow.sync="spinShow"
         class="know-Showclient-default"
       ></tree-diagram>
     </div>
@@ -45,7 +46,7 @@
         :treeNode="treeNode"
         :showSelectNum="showSelectNum"
         :InnerHeight="InnerHeight"
-         :spinShow.sync="spinShow"
+        :spinShow.sync="spinShow"
         class="know-Showclient-default"
       ></journal-show>
     </div>
@@ -54,7 +55,7 @@
         :InnerHeight="InnerHeight"
         :treeNode="treeNode"
         :showSelectNum="showSelectNum"
-         :spinShow.sync="spinShow"
+        :spinShow.sync="spinShow"
       ></rich-text>
     </div>
   </div>
