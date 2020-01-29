@@ -6,7 +6,8 @@ module.exports = {
           'vue-router': 'VueRouter',
           'vuex': 'Vuex',
           'axios': 'axios',
-          'jquery': '$'
+          'jquery': '$',
+          'echarts': 'echarts'
       }
     },
     devServer:{

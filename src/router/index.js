@@ -55,49 +55,49 @@ if (sessionStorage.getItem('token')) {
 let router = new vueRouter({
     mode: 'history',
     routes: [{
-            path: '/',
-            name: 'search',
-            component: () => import('../page/search/search'),
-        },
-        {
-            path: '/login',
-            name: 'login',
-            component: () => import('../page/login/main'),
-        },
-        {
-            path: '/manage',
-            name: 'manage',
-            component: () => import('../page/Backstage/manage'),
-            meta: {
-                requireAuth: true
-            }
-        },
-        {
-            path: '/project',
-            name: 'project',
-            component: () => import('../page/project/project'),
-            meta: {
-                requireAuth: true
-            }
-        },
-        {
-            path: '/user',
-            name: 'user',
-            component: () => import('../page/user/user'),
-            meta: {
-                requireAuth: true
-            }
-        },
-        {
-            path: '/search',
-            name: 'searchid',
-            component: () => import('../page/searchshow/searchshow'),
-        },
-        {
-            path: '*',
-            name: 'nofound',
-            component: () => import('../page/noFound/nofound')
+        path: '/',
+        name: 'search',
+        component: () => import('../page/search/search'),
+    },
+    {
+        path: '/login',
+        name: 'login',
+        component: () => import('../page/login/main'),
+    },
+    {
+        path: '/manage',
+        name: 'manage',
+        component: () => import('../page/Backstage/manage'),
+        meta: {
+            requireAuth: true
         }
+    },
+    {
+        path: '/project',
+        name: 'project',
+        component: () => import('../page/project/project'),
+        meta: {
+            requireAuth: true
+        }
+    },
+    {
+        path: '/user',
+        name: 'user',
+        component: () => import('../page/user/user'),
+        meta: {
+            requireAuth: true
+        }
+    },
+    {
+        path: '/search',
+        name: 'searchid',
+        component: () => import('../page/searchshow/searchshow'),
+    },
+    {
+        path: '*',
+        name: 'nofound',
+        component: () => import('../page/noFound/nofound')
+    }
     ]
 })
 
