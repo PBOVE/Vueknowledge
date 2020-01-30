@@ -7,7 +7,7 @@
 
 <template>
   <div>
-    <public-header class="know-manage-header" :RouterFlag="true"></public-header>
+    <public-header class="know-manage-header" :RouterFlag="true" :itemName="itemName" :TitleShow ="false"></public-header>
     <div class="know-manage-split" :style="{height:ClientHeight}">
       <Split v-model="splitinit" :min="splitMin" :max="splitMax">
         <div slot="left" class="know-manage-split-pane">
@@ -59,7 +59,9 @@ export default {
       //树节点
       treeNode: "",
       // 项目id
-      itemId:parseInt(this.$route.query.itemId)
+      itemId:parseInt(this.$route.query.itemId),
+      // 项目名称
+      itemName:this.$route.query.name
     };
   },
   computed: {

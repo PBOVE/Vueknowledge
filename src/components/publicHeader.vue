@@ -7,21 +7,31 @@
 
 <template>
   <header class="know-public-header" ref="knowSearchHeader">
-    <div class="know-public-header-left">
-      <router-link to="/">
+    <div class="know-public-header-left df">
+      <router-link to="/" class="df" v-if="TitleShow !== false">
         <span class="know-public-logo"></span>
         <span class="know-public-title">Knowledge Graph</span>
       </router-link>
+      <div class="df" v-else>
+        <span class="know-public-logo"></span>
+        <Tooltip content="回到首页" placement="bottom">
+          <router-link to="/project">
+            <span class="know-item-home know-public-title cup">Knowledge Graph</span>
+          </router-link>
+        </Tooltip>
+        <Icon type="ios-arrow-forward " class="know-item-icon" />
+        <span class="know-item cup">{{itemName}}</span>
+      </div>
     </div>
-    <div class="know-public-header-right">
+    <div class="know-public-header-right df">
       <router-link :to="routerTO?routerTO:'/project'">
-        <Icon type="md-apps" class="know-public-header-icon" />
+        <Icon type="ios-keypad" class="know-public-header-icon cup" />
       </router-link>
       <router-link to="/login" v-if="!userStatusFlag&&userStatusLoadFlag">
-        <span class="know-public-header-login">登录</span>
+        <span class="know-public-header-login cup">登录</span>
       </router-link>
       <drop-down v-else-if="userStatusFlag&&userStatusLoadFlag">
-        <img :src="images" class="know-public-header-user-logo" v-if="images" />
+        <img :src="images" class="know-public-header-user-logo cup" v-if="images" />
         <div v-else class="Noimg">{{nickName.charAt(0).toUpperCase()}}</div>
       </drop-down>
       <Icon type="md-refresh" class="know-header-user-load" v-else-if="!userStatusLoadFlag" />
@@ -36,7 +46,7 @@ import { mapState } from "vuex";
 
 export default {
   components: { dropDown },
-  props: ["routerTO", "RouterFlag"],
+  props: ["routerTO", "RouterFlag", "itemName", "TitleShow"],
   data() {
     return {
       // 判断用户是否登录 标志位
@@ -89,25 +99,23 @@ export default {
 .know-public-logo {
   display: inline-block;
   background-image: url("../assets/images/logo.png");
-  background-size: 20px 20px;
+  background-size: 100% 100%;
   background-repeat: no-repeat;
-  background-position: 0 5px;
-  height: 25px;
-  width: 25px;
+  height: 20px;
+  width: 20px;
 }
 .know-public-title {
   display: inline-block;
   font-family: Georgia;
   font-size: 20px;
-  text-indent: 0.2em;
-  color: #515a6e;
+  margin: 0 0 0 10px;
+  color: #17233d;
 }
 .know-public-header-icon {
   font-size: 24px;
   margin-right: 15px;
   color: #808695;
   transition: color 0.5s;
-  cursor: pointer;
 }
 .know-public-header-icon:hover {
   color: rgba(128, 134, 149, 0.8);
@@ -119,7 +127,6 @@ export default {
   line-height: 28px;
   text-align: center;
   border-radius: 2px;
-  cursor: pointer;
   font-weight: 500;
   letter-spacing: 0.1em;
   font-size: 12px;
@@ -139,18 +146,21 @@ export default {
   line-height: 25px;
   font-size: 15px;
   user-select: none;
-  cursor: pointer;
-}
-.know-public-header-right,
-.know-public-header-left {
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 .know-header-user-load {
   color: #2d8cf0;
   font-size: 20px;
   animation: ani-demo-load 2.5s linear infinite;
 }
-
+.know-item {
+  font-size: 18px;
+  color: #17233d;
+}
+.know-item-home {
+  margin-left: 10px;
+}
+.know-item-icon {
+  margin: 0 5px;
+  font-weight: 600;
+}
 </style>

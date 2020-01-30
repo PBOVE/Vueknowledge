@@ -19,6 +19,14 @@
   justify-content: center;
   align-items: center;
 }
+.df{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.cup{
+  cursor: pointer;
+}
 .Noimg {
   font-family: Georgia;
   display: inline-block;

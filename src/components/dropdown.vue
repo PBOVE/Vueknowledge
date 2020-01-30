@@ -7,11 +7,7 @@
 
 <template>
   <div class="drop-warp">
-    <div
-      @click.stop="ClickStatus(1)"
-      class="drop-warp-s"
-      :class="{'drop-warp-border':showViewFlag}"
-    >
+    <div class="drop-warp-s" ref="dropWarpS">
       <slot></slot>
     </div>
     <transition name="boxShow">
@@ -52,13 +48,23 @@ export default {
     return {
       user: JSON.parse(this.$store.state.user),
       // 管理页面展示标志位
-      showViewFlag: false
+      showViewFlag: false,
+      // 字母表
+      wordList: "abcdefghigklmnopqrstuvwxyz1234567890",
+      // 随机
+      randomPass: ""
     };
   },
   computed: {
     ...mapState(["nickName", "images"])
   },
+  created() {
+    for (let i = 0; i < 8; i++) {
+      this.randomPass += this.wordList[Math.floor(Math.random() * 36)];
+    }
+  },
   mounted() {
+    this.$refs.dropWarpS.dataset.k = this.randomPass;
     window.addEventListener("click", this.showUserView);
   },
   beforeDestroy() {
@@ -70,6 +76,8 @@ export default {
       const statusMap = {
         // 展示 隐藏
         1: () => {
+          // if(!this.showViewFlag)
+          // event.stopPropagation();
           this.showViewFlag = !this.showViewFlag;
         },
         // 点击跳转 user页面
@@ -96,7 +104,14 @@ export default {
     },
     // 注册全局点击事件
     showUserView() {
-      if (this.showViewFlag) {
+      const target = event.target;
+      const Ptarget = target.parentNode;
+      if (
+        Ptarget.dataset.k === this.randomPass ||
+        target.dataset.k === this.randomPass
+      ) {
+        this.showViewFlag = !this.showViewFlag;
+      }else{
         this.showViewFlag = false;
       }
     }
@@ -110,17 +125,12 @@ export default {
   position: relative;
 }
 .drop-warp-s {
-  margin: 0 10px 0 0;
-  border-radius: 50%;
-  border: 3px solid transparent;
   font-size: 0;
-  width: 31px;
-  height: 31px;
   cursor: pointer;
 }
-.drop-warp-border {
+/* .drop-warp-border {
   border: 3px solid rgba(0, 0, 0, 0.4);
-}
+} */
 .drop-box {
   position: absolute;
   left: -280px;

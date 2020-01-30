@@ -9,13 +9,13 @@
   <div class="know-search">
     <header class="know-search-header" ref="knowSearchHeader">
       <router-link to="/project">
-        <Icon type="md-apps" class="know-search-header-icon" />
+      <Icon type="ios-keypad" class="know-search-header-icon cup" />
       </router-link>
       <router-link to="/login" v-if="!userStatusFlag&&userStatusLoadFlag">
-        <span class="know-search-header-login">登录</span>
+        <span class="know-search-header-login cup">登录</span>
       </router-link>
       <drop-down v-else-if="userStatusFlag&&userStatusLoadFlag">
-        <img v-if="images" :src="images" class="know-search-header-user-logo" />
+        <img v-if="images" :src="images" class="know-search-header-user-logo cup" />
         <div v-else class="Noimg">{{nickName.charAt(0).toUpperCase()}}</div>
       </drop-down>
       <Icon type="md-refresh" class="know-search-header-user-load" v-else-if="!userStatusLoadFlag" />
@@ -219,7 +219,6 @@ export default {
   line-height: 28px;
   text-align: center;
   border-radius: 2px;
-  cursor: pointer;
   font-weight: 500;
   letter-spacing: 0.1em;
   font-size: 12px;
@@ -236,7 +235,6 @@ export default {
   margin-right: 15px;
   color: #808695;
   transition: color 0.5s;
-  cursor: pointer;
 }
 .know-search-header-icon:hover {
   color: rgba(128, 134, 149, 0.8);
@@ -252,7 +250,6 @@ export default {
   line-height: 25px;
   font-size: 15px;
   user-select: none;
-  cursor: pointer;
 }
 .know-search-box {
   position: absolute;
