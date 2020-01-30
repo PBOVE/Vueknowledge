@@ -14,10 +14,10 @@
       <div class="item-modal-title">项目封面</div>
       <div class="item-modal-cover">
         <div class="item-modal-upload item-upload-default"></div>
-        <Button class="modal-cover-button" v-if="status">上传新的封面</Button>
+        <Button class="modal-cover-button" v-if="status||JSON.parse(user).username === submitMsg.userName">上传新的封面</Button>
       </div>
-      <div class="item-modal-title" v-if="!status">项目作者</div>
-      <div class="item-border" v-if="!status">{{submitMsg.nickName}}</div>
+      <div class="item-modal-title">项目作者</div>
+      <div class="item-border">{{submitMsg.nickName}}</div>
       <div class="item-modal-title">项目名称</div>
       <Input
         placeholder="项目名称"
@@ -25,7 +25,7 @@
         v-model="submitMsg.name"
         @on-change="changeEvent"
         maxlength="20"
-        v-if="status"
+        v-if="status||JSON.parse(user).username === submitMsg.userName"
       />
       <div v-else class="item-border">{{submitMsg.name}}</div>
       <div class="item-modal-title">项目描述</div>
@@ -38,11 +38,11 @@
         maxlength="3000"
         show-word-limit
         @on-change="changeEvent"
-        v-if="status"
+        v-if="status||JSON.parse(user).username === submitMsg.userName"
       />
       <div v-else class="item-border">{{submitMsg.description}}</div>
       <div class="item-modal-title">项目公开性</div>
-      <Select v-model="submitMsg.share" @on-change="changeEvent" v-if="status">
+      <Select v-model="submitMsg.share" @on-change="changeEvent" v-if="status||JSON.parse(user).username === submitMsg.userName">
         <Option v-for="item in shareList" :value="item.value" :key="item.value">{{ item.label }}</Option>
       </Select>
       <div
@@ -60,7 +60,7 @@
         type="primary"
         @click="keepSetting"
         :disabled="allowFlag"
-        v-if="status"
+        v-if="status||JSON.parse(user).username === submitMsg.userName"
         :loading="serveLoadFlag"
       >
         <span v-if="!serveLoadFlag">保存</span>
@@ -73,6 +73,8 @@
 
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   data() {
     return {
@@ -110,6 +112,9 @@ export default {
       // 向服务器发送 标志位
       serveLoadFlag: false
     };
+  },
+  computed: {
+    ...mapState(["user"])
   },
   methods: {
     // chang 事件触发的函数
@@ -151,7 +156,8 @@ export default {
         description: val.description,
         createTime: val.createTime,
         updateTime: val.updateTime,
-        nickName: val.nickName,
+        nickName: val.author.nickName,
+        userName: val.author.userName,
         id: val.id
       };
       this.oldMsg = {

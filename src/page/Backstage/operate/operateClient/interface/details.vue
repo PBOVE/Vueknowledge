@@ -12,7 +12,15 @@
       <div class="know-details-name">
         <div class="know-details-left">
           <Icon type="md-list" color="#19be6b" />
-          <input type="text" class="k-d-i" @click="CShowInput" v-model="NodeName" @blur="changName" />
+          <input
+            type="text"
+            class="k-d-i k-d-i-d"
+            @click="CShowInput"
+            v-model="NodeName"
+            @blur="changName"
+            v-if="itemExitFlag"
+          />
+          <div class="k-d-i-d k-d-i-dd" v-else>{{NodeName}}</div>
         </div>
       </div>
 
@@ -21,24 +29,26 @@
           <Icon type="md-list" color="#19be6b" />
           <input
             type="text"
-            class="k-d-i exitAttr"
+            class="k-d-i k-d-i-d"
             @click="CShowInput"
             @blur="LossFocusA('exit',index)"
             :value="item"
+            v-if="itemExitFlag"
           />
+          <div class="k-d-i-d k-d-i-dd" v-else>{{item}}</div>
         </div>
-        <div class="know-details-right">
+        <div class="know-details-right" v-if="itemExitFlag">
           <Icon type="ios-close" class="know-datails-del" @click="delAttrData(index)" size="20" />
         </div>
       </div>
 
-      <div class="know-details-name">
+      <div class="know-details-name" v-if="itemExitFlag">
         <div class="know-details-left">
           <Icon type="md-list-box" color="#808695" />
           <input
             type="text"
             placeholder="请输入属性"
-            class="k-d-i"
+            class="k-d-i k-d-i-d"
             v-model="labelsInput"
             @click="CShowInput"
             @focus="CShowInput"
@@ -55,25 +65,29 @@
           <Icon type="md-funnel" color="#19be6b" />
           <input
             type="text"
-            class="k-d-i"
+            class="k-d-i k-d-i-d"
+            v-if="itemExitFlag"
             @click="CShowInput"
             @focus="CShowInput"
             @blur="LossFocusR('name',key,index)"
             :value="key.name"
           />
+          <div v-else class="k-d-i-d k-d-i-w k-d-i-dd">{{key.name}}</div>
         </div>
         <div class="know-details-relation-II">
           <Icon type="md-list" color="#19be6b" />
           <input
             type="text"
-            class="k-d-i"
+            class="k-d-i k-d-i-d"
+            v-if="itemExitFlag"
             @click="CShowInput"
             @focus="CShowInput"
             @blur="LossFocusR('title',key,index)"
             :value="key.title"
           />
+          <div v-else class="k-d-i-d k-d-i-dd">{{key.title}}</div>
         </div>
-        <div class="know-details-relation-III">
+        <div class="know-details-relation-III" v-if="itemExitFlag">
           <Icon
             type="ios-close"
             class="know-datails-del"
@@ -83,14 +97,14 @@
         </div>
       </div>
 
-      <div class="know-details-relation">
+      <div class="know-details-relation" v-if="itemExitFlag">
         <div class="know-details-relation-I">
           <Icon type="md-list-box" color="#808695" />
           <input
             type="text"
             ref="RII"
             placeholder="请输入关系"
-            class="k-d-i"
+            class="k-d-i k-d-i-d"
             v-model="InputNodeName"
             @click="CShowInput"
             @focus="CShowInput"
@@ -118,7 +132,7 @@
 
 <script>
 export default {
-  props: ["treeNode", "showSelectNum", "itemId",'spinShow'],
+  props: ["treeNode", "showSelectNum", "itemId", "spinShow", "itemExitFlag"],
   data() {
     return {
       // 节点名称
@@ -147,13 +161,13 @@ export default {
     // 获取 服务器 节点属性 节点关系
     getAttriBute() {
       if (this.getDataFlag) return;
-      this.$emit('update:spinShow',true);
+      this.$emit("update:spinShow", true);
       this.getDataFlag = true;
       this.NodeName = this.treeNode.name;
       let url = "node/" + this.treeNode.id;
       this.get(url)
         .then(res => {
-          this.$emit('update:spinShow',false);
+          this.$emit("update:spinShow", false);
           let labels = JSON.stringify(res.data.labels || []);
           this.AttrButeformat = JSON.parse(labels);
           this.AttrButeData = JSON.parse(labels);
@@ -209,7 +223,7 @@ export default {
         },
         // 编辑 属性
         exit: () => {
-          this.changExit(inputVal, index);
+          this.changExit(inputVal, index, target);
         }
       };
       Ptarget.style.outline = "none";
@@ -227,14 +241,15 @@ export default {
       const statusMap = {
         // 修改关系属性,
         name: () => {
-          this.putRelationName(inputVal, val, index);
+          this.putRelationName(inputVal, val, index, target);
         },
         // 修改关系名称
         title: () => {
           this.queryNode(inputVal, this.putRelationTitle, [
             inputVal,
             val,
-            index
+            index,
+            target
           ]);
         },
         // 添加 关系属性
@@ -289,6 +304,10 @@ export default {
       let obj = this.ObjDataA();
       let message = "添加新的节点属性，属性名称为 [" + this.labelsInput + "]";
       let name = this.treeNode.name;
+      if (obj["labels"].indexOf(this.labelsInput) !== -1) {
+        this.$Message.warning("请不要重复添加数据");
+        return;
+      }
       obj["labels"].push(this.labelsInput);
       obj["record"] = {
         message: JSON.stringify({ message, name }),
@@ -306,13 +325,17 @@ export default {
         .catch(() => {});
     },
     //改变属性名称
-    changExit(inputVal, index) {
+    changExit(inputVal, index, target) {
       let url = "node/" + this.treeNode.id;
       let obj = this.ObjDataA();
       let message =
         "[" + obj["labels"][index] + "] 属性名称修改为 [" + inputVal + "]";
       let name = this.treeNode.name;
-
+      if (obj["labels"].indexOf(inputVal) !== -1) {
+        this.$Message.warning("数据重复");
+        target.value = obj["labels"][index];
+        return;
+      }
       obj["labels"][index] = inputVal;
       obj["record"] = {
         message: JSON.stringify({ message, name }),
@@ -373,6 +396,9 @@ export default {
         "]";
       if (!obj["property"].hasOwnProperty(name)) {
         obj["property"][name] = [];
+      } else if (obj["property"][name].indexOf(title) !== -1) {
+        this.$Message.warning("请不要重复添加数据");
+        return;
       }
       obj["property"][name].push(title);
       obj["record"] = {
@@ -419,7 +445,7 @@ export default {
       this.poshServerR("", inputIndex, obj);
     },
     // 更新 关系 属性
-    putRelationName(inputVal, val, inputIndex) {
+    putRelationName(inputVal, val, inputIndex, target) {
       let obj = this.objDataR();
       let index = obj["property"][val.name].indexOf(val.title);
       let name = this.treeNode.name;
@@ -435,6 +461,10 @@ export default {
         "]";
       if (!obj["property"].hasOwnProperty(inputVal)) {
         obj["property"][inputVal] = [];
+      } else if (obj["property"][inputVal].indexOf(val.title) !== -1) {
+        this.$Message.warning("数据重复");
+        target.value = val.name;
+        return;
       }
       obj["property"][inputVal].push(val.title);
       obj["property"][val.name].splice(index, 1);
@@ -448,11 +478,16 @@ export default {
       this.poshServerR(inputVal, inputIndex, obj, "name");
     },
     // 更新 关系 键值
-    putRelationTitle(inputVal, val, inputIndex) {
+    putRelationTitle(inputVal, val, inputIndex, target) {
       let obj = this.objDataR();
       let index = obj["property"][val.name].indexOf(val.title);
       let name = this.treeNode.name;
       let message = "[" + val.title + "] 关系节点修改为 [" + inputVal + "]";
+      if (obj["property"][val.name].indexOf(inputVal) !== -1) {
+        this.$Message.warning("数据重复");
+        target.value = val.title;
+        return;
+      }
       obj["property"][val.name][index] = inputVal;
       obj["record"] = {
         message: JSON.stringify({ message, name }),
@@ -608,22 +643,6 @@ export default {
   color: #ed4014;
   cursor: pointer;
 }
-
-.k-d-i {
-  width: 100%;
-  height: 25px;
-  margin-left: 10px;
-  font-size: 13px;
-  box-sizing: border-box;
-  border-width: 0px;
-  outline: none;
-  border-bottom: 1px solid #e8eaec;
-  color: #657180;
-  letter-spacing: 0.1em;
-}
-.k-d-i::placeholder {
-  color: #c3cbd6;
-}
 .relationInput-II .ivu-select-dropdown.ivu-auto-complete {
   margin-left: -15px;
 }
@@ -664,5 +683,30 @@ export default {
 }
 .know-details-relation .ivu-icon {
   line-height: 25px;
+}
+</style>
+<style scoped>
+.k-d-i {
+  width: 100%;
+  height: 25px;
+  box-sizing: border-box;
+  border-width: 0px;
+  outline: none;
+  border-bottom: 1px solid #e8eaec;
+}
+.k-d-i::placeholder {
+  color: #c3cbd6;
+}
+.k-d-i-d {
+  font-size: 13px;
+  margin-left: 10px;
+  letter-spacing: 0.1em;
+  color: #657180;
+}
+.k-d-i-dd {
+  line-height: 25px;
+}
+.k-d-i-w {
+  width: 100px;
 }
 </style>

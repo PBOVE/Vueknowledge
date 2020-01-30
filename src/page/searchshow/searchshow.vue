@@ -81,10 +81,6 @@ export default {
   watch: {
     $route: {
       handler(to) {
-        if (!to.query.id && !to.query.name) {
-          this.$router.push({ path: "/" });
-          return;
-        }
         this.nodeName = to.query.name;
         this.nodeId = to.query.id;
         if (to.query.q) {

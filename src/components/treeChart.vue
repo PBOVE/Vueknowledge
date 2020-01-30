@@ -73,10 +73,10 @@ export default {
       var myChart = echarts.init(this.$refs.knowtree);
       myChart.setOption(option);
 
-      myChart.on("click", function(params) {
-        // 控制台打印数据的名称
-        window.console.log(params);
-      });
+      // myChart.on("click", function(params) {
+      //   // 控制台打印数据的名称
+      //   window.console.log(params);
+      // });
     }
   }
 };

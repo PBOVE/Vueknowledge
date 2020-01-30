@@ -12,7 +12,7 @@
       <div class="user-main-header-title">知识图谱构建平台</div>
     </div>
     <div class="main-content-msg-row">
-      <div class="msg-row-content dis-flex" @click="selectRow(1)">
+      <div class="msg-row-content dis-flex" @click.stop="selectRow(1)">
         <div class="dis-flex-left">
           <div class="msg-row-name">头像</div>
           <div class="msg-row-title msg-row-title-tip">更改照片可帮助您个性化您的帐号</div>

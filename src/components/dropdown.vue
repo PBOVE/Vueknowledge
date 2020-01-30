@@ -28,7 +28,9 @@
         </div>
         <Divider />
         <div class="drop-box-main">
-          <div class="drop-box-main-button curP box-button" @click="ClickStatus(3)">退出</div>
+          <div class="drop-box-main-button curP box-button" @click="ClickStatus(3)" :class="{'drop-box-main-button-loading':logoutLoad}">
+            <Icon type="md-refresh" class="drop-box-main-button-icon" v-show="logoutLoad" />退出
+          </div>
         </div>
       </div>
     </transition>
@@ -52,7 +54,9 @@ export default {
       // 字母表
       wordList: "abcdefghigklmnopqrstuvwxyz1234567890",
       // 随机
-      randomPass: ""
+      randomPass: "",
+      // 退出标志位
+      logoutLoad: false
     };
   },
   computed: {
@@ -86,13 +90,20 @@ export default {
         },
         // 点击 退出
         3: () => {
+          if(this.logoutLoad){
+            return;
+          }
           const url = "user/logout";
+          this.logoutLoad = true;
           this.post_json(url)
             .then(() => {
               this.$store.commit("delToken");
               this.$router.push({ path: "/login" });
+              this.logoutLoad = false;
             })
-            .catch(() => {});
+            .catch(() => {
+              this.logoutLoad = false;
+            });
         },
         // 点击 展开上传文件
         4: () => {
@@ -111,7 +122,7 @@ export default {
         target.dataset.k === this.randomPass
       ) {
         this.showViewFlag = !this.showViewFlag;
-      }else{
+      } else {
         this.showViewFlag = false;
       }
     }
@@ -236,5 +247,16 @@ export default {
 .boxShow-enter,
 .boxShow-leave-to {
   opacity: 0;
+}
+.drop-box-main-button-icon {
+  animation: ani-demo-load 2.5s linear infinite;
+  margin:0 5px 0 0;
+  font-size: 16px;
+  
+}
+.drop-box-main-button.drop-box-main-button-loading{
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  cursor: default;
 }
 </style>

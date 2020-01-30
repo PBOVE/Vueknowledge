@@ -7,14 +7,20 @@
 
 <template>
   <div>
-    <public-header class="know-manage-header" :RouterFlag="true" :itemName="itemName" :TitleShow ="false"></public-header>
+    <public-header
+      class="know-manage-header"
+      :RouterFlag="true"
+      :itemName="itemName"
+      :TitleShow="false"
+    ></public-header>
     <div class="know-manage-split" :style="{height:ClientHeight}">
       <Split v-model="splitinit" :min="splitMin" :max="splitMax">
         <div slot="left" class="know-manage-split-pane">
           <tree-list
             ref="treelist"
             :InnerHeight="InnerHeight - headerHeight"
-            :itemId='itemId'
+            :itemId="itemId"
+            :itemExitFlag="itemExitFlag"
             @MangageCallback="MangageCallback"
           ></tree-list>
         </div>
@@ -23,7 +29,8 @@
             ref="operatemain"
             :InnerHeight="InnerHeight - headerHeight"
             :treeNode="treeNode"
-            :itemId='itemId'
+            :itemId="itemId"
+            :itemExitFlag="itemExitFlag"
             @MangageCallback="MangageCallback"
           ></operate-main>
         </div>
@@ -59,13 +66,16 @@ export default {
       //树节点
       treeNode: "",
       // 项目id
-      itemId:parseInt(this.$route.query.itemId),
+      itemId: parseInt(this.$route.params.itemId),
       // 项目名称
-      itemName:this.$route.query.name
+      itemName: "",
+      // 项目编辑 标志位
+      itemExitFlag: false
     };
   },
+  created() {},
   computed: {
-    ...mapState(["headerHeight"]),
+    ...mapState(["headerHeight", "user",'nickName']),
     ClientHeight() {
       return this.InnerHeight - this.headerHeight + "px";
     }
@@ -84,16 +94,40 @@ export default {
   mounted() {
     this.InnerHeight = window.innerHeight;
     this.InnerWidth = window.innerWidth;
+    this.getItem();
     window.addEventListener("resize", this.getInner);
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.getInner);
   },
   methods: {
-    //获取 浏览器 高度
+    // 获取 浏览器 高度
     getInner() {
       this.InnerHeight = window.innerHeight;
       this.InnerWidth = window.innerWidth;
+    },
+    // 获取项目
+    getItem() {
+      const url = "item/" + this.itemId;
+      this.get(url)
+        .then(res => {
+          const data = res.data;
+          const user = data.author.userName;
+          const usetWeb = this.$route.params.user;
+          if (user === usetWeb) {
+            this.itemName = data.name;
+            if (JSON.parse(this.user).username === user) {
+              this.itemExitFlag = true;
+              this.$refs.treelist.TLCallback(15);
+            } else if (data.share) {
+              this.itemExitFlag = false;
+              this.$refs.treelist.TLCallback(15);
+            }
+          } else {
+            this.itemName = "错误";
+          }
+        })
+        .catch(() => {});
     },
     // 子组件 调用函数
     MangageCallback(type, val) {

@@ -137,7 +137,7 @@ export default {
           this.get("user/me").then(res => {
             let data = res.data;
             this.$store.commit("setUserData", data);
-            this.$router.push({ path: "/project" });
+            this.$router.push({ path:"/project" });
             this.formloginFlag = false;
           });
         })

@@ -65,7 +65,7 @@ let router = new vueRouter({
         component: () => import('../page/login/main'),
     },
     {
-        path: '/manage',
+        path: '/manage/:user/:itemId',
         name: 'manage',
         component: () => import('../page/Backstage/manage'),
         meta: {
@@ -112,12 +112,24 @@ router.beforeEach((to, from, next) => {
         let token = sessionStorage.getItem('token');
         if (to.matched.some(r => r.meta.requireAuth)) {
             if (token) {
-                next();
+                // if (to.name === 'manage' && (!to.query.itemId || !to.query.name)) {
+                //     next('/project')
+                // } else {
+                    next();
+                // }
             } else {
                 next('/login');
             }
         } else {
-            next();
+            if (to.name === 'searchid') {
+                if (!to.query.id || !to.query.name) {
+                    next('/')
+                } else {
+                    next();
+                }
+            } else {
+                next();
+            }
         }
     }
 })

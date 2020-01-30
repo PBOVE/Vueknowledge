@@ -17,11 +17,12 @@
     </div>
     <div class="know-operate-mian-content scroll" :style="{height:setTreeClientHeight}">
       <show-client
-        ref = 'showclient'
+        ref="showclient"
         :InnerHeight="InnerHeight"
         :treeNode="treeNode"
         :showSelectNum="showSelectNum"
-        :itemId='itemId'
+        :itemId="itemId"
+        :itemExitFlag="itemExitFlag"
         @oMainCallback="oMainCallback"
         v-show="showClientFlag"
       ></show-client>
@@ -36,7 +37,7 @@ import SeleteButton from "./operateSelete/SeleteButton";
 import showClient from "./operateClient/showClient";
 export default {
   components: { SeleteButton, showClient },
-  props: ["InnerHeight", "treeNode",'itemId'],
+  props: ["InnerHeight", "treeNode", "itemId", "itemExitFlag"],
   data() {
     return {
       //节点名称
@@ -62,11 +63,11 @@ export default {
         },
         //  添加,删除,编辑 重新获取节点
         3: () => {
-          this.$refs.showclient.SClientCallback(3,val);
+          this.$refs.showclient.SClientCallback(3, val);
         },
         // 名称 改变 details 发送数据
-        4:()=>{
-           this.$refs.showclient.SClientCallback(5,val);
+        4: () => {
+          this.$refs.showclient.SClientCallback(5, val);
         }
       };
       statusMap[type]();
@@ -102,9 +103,9 @@ export default {
 
 <style  scoped>
 .know-operate-mian-header-title {
-  white-space:nowrap;
-  text-overflow:ellipsis; 
-  overflow:hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
   font-weight: bold;
   font-size: 18px;
   line-height: 25px;

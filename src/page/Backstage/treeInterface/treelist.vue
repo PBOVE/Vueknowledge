@@ -10,38 +10,40 @@
     <div class="know-tree-list-header-title">类层次结构</div>
     <Layout>
       <Header class="know-tree-default know-tree-header-select">
-        <div
-          class="know-tree-header-button know-tree-header-button-add"
-          @click="TLCallback(4)"
-          :class="{'know-tree-header-button-no-selete':ctrlButtonFlag}"
-        >
-          <Icon type="md-add-circle" size="20" />
-          <div class="know-tree-header-button-title">添加</div>
-        </div>
+        <div v-if="itemExitFlag">
+          <div
+            class="know-tree-header-button know-tree-header-button-add"
+            @click="TLCallback(4)"
+            :class="{'know-tree-header-button-no-selete':ctrlButtonFlag}"
+          >
+            <Icon type="md-add-circle" size="20" />
+            <div class="know-tree-header-button-title">添加</div>
+          </div>
 
-        <div
-          class="know-tree-header-button know-tree-header-button-del"
-          :class="{'know-tree-header-button-no-selete':!SeleteNodeFlag}"
-          @click="TLCallback(5)"
-        >
-          <Icon type="ios-close-circle" size="20" />
-          <div class="know-tree-header-button-title">删除</div>
-        </div>
+          <div
+            class="know-tree-header-button know-tree-header-button-del"
+            :class="{'know-tree-header-button-no-selete':!SeleteNodeFlag}"
+            @click="TLCallback(5)"
+          >
+            <Icon type="ios-close-circle" size="20" />
+            <div class="know-tree-header-button-title">删除</div>
+          </div>
 
-        <div
-          class="know-tree-header-button know-tree-header-button-exit"
-          :class="{'know-tree-header-button-no-selete':!SeleteNodeFlag||ctrlButtonFlag}"
-          @click="TLCallback(6)"
-        >
-          <Icon type="ios-create" size="22" />
-          <div class="know-tree-header-button-title">编辑</div>
+          <div
+            class="know-tree-header-button know-tree-header-button-exit"
+            :class="{'know-tree-header-button-no-selete':!SeleteNodeFlag||ctrlButtonFlag}"
+            @click="TLCallback(6)"
+          >
+            <Icon type="ios-create" size="22" />
+            <div class="know-tree-header-button-title">编辑</div>
+          </div>
         </div>
       </Header>
       <Content
         class="know-tree-default know-tree-main-content scroll"
         :style="{height:setTreeClientHeight}"
       >
-        <tree-z @selectNode="TLCallback" :treelistVal="treeZ" :itemId="itemId"></tree-z>
+        <tree-z @selectNode="TLCallback" :treelistVal="treeZ" :itemId="itemId" ref="treeZ"></tree-z>
       </Content>
     </Layout>
 
@@ -79,7 +81,7 @@ import modalE from "./modalADE/modalE";
 import treeZ from "./tree/treeJquery";
 export default {
   components: { modalD, modalA, modalE, treeZ },
-  props: ["InnerHeight", "itemId"],
+  props: ["InnerHeight", "itemId", "itemExitFlag"],
   data() {
     return {
       // ctrl 点击标志 位
@@ -193,6 +195,10 @@ export default {
         // 名称 改变 details发送
         14: () => {
           this.$emit("MangageCallback", 4, val);
+        },
+        // 树数据请求
+        15: () => {
+          this.$refs.treeZ.getTreeData();
         }
       };
       statusMap[type]();

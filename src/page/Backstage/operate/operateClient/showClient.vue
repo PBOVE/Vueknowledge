@@ -15,6 +15,7 @@
         :treeNode="treeNode"
         :showSelectNum="showSelectNum"
         :spinShow.sync="spinShow"
+        :itemExitFlag="itemExitFlag"
         @SClientCallback="SClientCallback"
         class="know-Showclient-default"
       ></details-show>
@@ -73,7 +74,7 @@ import forceDiagram from "./interface/forceDiagram";
 //导入富文本
 import richText from "./interface/richText";
 export default {
-  props: ["treeNode", "showSelectNum", "InnerHeight", "itemId"],
+  props: ["treeNode", "showSelectNum", "InnerHeight", "itemId", "itemExitFlag"],
   components: { detailsShow, journalShow, treeDiagram, forceDiagram, richText },
   data() {
     return {

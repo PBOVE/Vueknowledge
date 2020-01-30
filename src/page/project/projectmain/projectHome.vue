@@ -86,6 +86,7 @@ export default {
       const url = "item/share";
       this.get(url)
         .then(res => {
+
           this.shareitemLoadFlag = false;
           this.itemShareData = res.data;
         })

@@ -26,12 +26,22 @@
                 @click.stop="selectItemSetting(index)"
               />
             </Tooltip>
-            <Tooltip content="项目删除" placement="top" v-if="status !== 'false'">
+            <Tooltip
+              content="项目删除"
+              placement="top"
+              v-if="status !== 'false'||JSON.parse(user).username === item.author.userName"
+            >
               <Icon type="ios-trash" class="item-box-icon" @click.stop="selectItemDelete(index)" />
             </Tooltip>
           </div>
         </div>
-        <Tooltip :content="item.description" placement="bottom" max-width="280" transfer v-if="item.description">
+        <Tooltip
+          :content="item.description"
+          placement="bottom"
+          max-width="280"
+          transfer
+          v-if="item.description"
+        >
           <div class="item-description">{{item.description}}</div>
         </Tooltip>
       </div>
@@ -41,13 +51,19 @@
 
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   components: {},
   props: ["itemData", "status"],
   data() {
     return {
       modalFlag: false
+      // userName:JSON.parse(this.user)
     };
+  },
+  computed: {
+    ...mapState(["user"])
   },
   watch: {},
   methods: {
@@ -62,18 +78,8 @@ export default {
     // 选中的项目
     selectItem(index) {
       this.$router.push({
-        path: "/manage",
-        query: {
-          itemId: this.itemData[index].id,
-          name: this.itemData[index].name
-        }
+        path: `/manage/${this.itemData[index]["author"]["userName"]}/${this.itemData[index].id}`
       });
-    },
-    // 简介裁剪
-    tipsSubstr(description) {
-      return description.length <= 80
-        ? description
-        : description.substr(0, 80) + "...";
     }
   }
 };

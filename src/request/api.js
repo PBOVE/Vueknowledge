@@ -232,7 +232,7 @@ axios.interceptors.response.use(response => {
   }
 }, error => {
   showStatus(error.response.status)
-  return Promise.reject();
+  return Promise.reject(error.response);
 })
 
 

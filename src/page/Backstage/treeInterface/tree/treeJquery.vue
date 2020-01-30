@@ -16,7 +16,7 @@ import $ from "../../../../assets/jquery-vendor";
 import "ztree";
 import "ztree/css/metroStyle/metroStyle.css";
 export default {
-  props: ["treelistVal",'itemId'],
+  props: ["treelistVal", "itemId"],
   data() {
     return {
       //设置 ztree 树
@@ -48,7 +48,6 @@ export default {
     };
   },
   mounted() {
-    this.getTreeData();
   },
   methods: {
     //获取服务器数据
@@ -59,20 +58,23 @@ export default {
       };
       this.get(url, obj)
         .then(res => {
-          let data = res.data;
-          let Arr = [];
-          this.$emit("selectNode", 9, data.length);
-          data.forEach(item => {
-            let obj = {
-              id: item.id,
-              name: item.name,
-              isParent: item.child
-            };
-            Arr.push(obj);
-          });
-          this.createTree(Arr);
+          this.HandleData(res.data);
         })
         .catch(() => {});
+    },
+    // 请求数据处理
+    HandleData(data) {
+      let Arr = [];
+      this.$emit("selectNode", 9, data.length);
+      data.forEach(item => {
+        let obj = {
+          id: item.id,
+          name: item.name,
+          isParent: item.child
+        };
+        Arr.push(obj);
+      });
+      this.createTree(Arr);
     },
     //添加节点 修改样式
     addDiyDom(treeId, treeNode) {

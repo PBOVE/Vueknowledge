@@ -6,7 +6,7 @@
 
 
 <template>
-  <div class="upload-box upload-box-c" v-if="uploadShowFlag">
+  <div class="upload-box upload-box-c" v-if="uploadShowFlag" @click.stop>
     <div class="upload-box-header dis-fix">
       <div class="upload-box-header-title">选择个人资料照片</div>
       <Tooltip content="关闭">
@@ -71,6 +71,13 @@ export default {
       // 照片名称
       ImagesName: ""
     };
+  },
+
+  mounted() {
+    window.addEventListener("click", this.showModalView);
+  },
+  beforeDestroy() {
+    window.removeEventListener("click", this.showModalView);
   },
   methods: {
     // 状态选择函数
@@ -140,6 +147,12 @@ export default {
         }
       };
       statusMap[type]();
+    },
+    // 注册全局点击事件
+    showModalView() {
+      if (this.uploadShowFlag) {
+        this.uploadShowFlag = false;
+      }
     }
   }
 };

@@ -14,11 +14,13 @@
       </router-link>
       <div class="df" v-else>
         <span class="know-public-logo"></span>
-        <Tooltip content="回到首页" placement="bottom">
-          <router-link to="/project">
-            <span class="know-item-home know-public-title cup">Knowledge Graph</span>
-          </router-link>
-        </Tooltip>
+        <router-link to="/project">
+          <span class="know-public-title know-item-home cup">
+            <span v-if="title">{{title}}</span>
+            <span v-else>Knowledge Graph</span>
+          </span>
+        </router-link>
+
         <Icon type="ios-arrow-forward " class="know-item-icon" />
         <span class="know-item cup">{{itemName}}</span>
       </div>
@@ -46,7 +48,7 @@ import { mapState } from "vuex";
 
 export default {
   components: { dropDown },
-  props: ["routerTO", "RouterFlag", "itemName", "TitleShow"],
+  props: ["routerTO", "RouterFlag", "itemName", "TitleShow", "title"],
   data() {
     return {
       // 判断用户是否登录 标志位
@@ -158,6 +160,7 @@ export default {
 }
 .know-item-home {
   margin-left: 10px;
+  font-size: 18px;
 }
 .know-item-icon {
   margin: 0 5px;
