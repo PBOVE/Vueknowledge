@@ -30,7 +30,7 @@ require("froala-editor/js/plugins/print.min");
 require("froala-editor/js/plugins/quick_insert.min");
 require("froala-editor/js/plugins/table.min");
 require("froala-editor/js/plugins/video.min");
-require('froala-editor/js/plugins/help.min');
+require("froala-editor/js/plugins/help.min");
 import $ from "../../../../../assets/jquery-vendor";
 export default {
   props: ["treeNode", "showSelectNum", "InnerHeight"],
@@ -42,57 +42,57 @@ export default {
       //上传的内容
       editor: "",
       // 在小型设备
-      toolbarButtonsMD:{
+      toolbarButtonsMD: {
         moreText: {
-            buttons: [
-              "fontFamily",
-              "fontSize",
-              "bold",
-              "italic",
-              "underline",
-              "strikeThrough",
-              "textColor",
-              "backgroundColor"
-            ],
-            buttonsVisible: 1
-          },
-          moreParagraph: {
-            buttons: [
-              "alignLeft",
-              "alignCenter",
-              "formatOLSimple",
-              "alignRight",
-              "alignJustify",
-              "formatOL",
-              "formatUL",
-              "paragraphFormat",
-              "paragraphStyle",
-              "lineHeight",
-              "outdent",
-              "indent",
-              "quote"
-            ],
-            buttonsVisible: 1
-          },
-          moreRich: {
-            buttons: ["insertImage", "insertVideo", "insertTable", "insertHR"],
-            buttonsVisible: 1
-          },
-          moreMisc: {
-            buttons: [
-              "saveSelection",
-              "undo",
-              "redo",
-              "fullscreen",
-              "print",
-              "spellChecker",
-              "selectAll",
-              "html",
-              "help"
-            ],
-            align: "right",
-            buttonsVisible: 1
-          }
+          buttons: [
+            "fontFamily",
+            "fontSize",
+            "bold",
+            "italic",
+            "underline",
+            "strikeThrough",
+            "textColor",
+            "backgroundColor"
+          ],
+          buttonsVisible: 1
+        },
+        moreParagraph: {
+          buttons: [
+            "alignLeft",
+            "alignCenter",
+            "formatOLSimple",
+            "alignRight",
+            "alignJustify",
+            "formatOL",
+            "formatUL",
+            "paragraphFormat",
+            "paragraphStyle",
+            "lineHeight",
+            "outdent",
+            "indent",
+            "quote"
+          ],
+          buttonsVisible: 1
+        },
+        moreRich: {
+          buttons: ["insertImage", "insertVideo", "insertTable", "insertHR"],
+          buttonsVisible: 1
+        },
+        moreMisc: {
+          buttons: [
+            "saveSelection",
+            "undo",
+            "redo",
+            "fullscreen",
+            "print",
+            "spellChecker",
+            "selectAll",
+            "html",
+            "help"
+          ],
+          align: "right",
+          buttonsVisible: 1
+        }
       }
     };
   },
@@ -164,9 +164,9 @@ export default {
             buttonsVisible: 3
           }
         },
-        toolbarButtonsMD:this.toolbarButtonsMD,
-        toolbarButtonsSM:this.toolbarButtonsMD,
-        toolbarButtonsXS:this.toolbarButtonsMD,
+        toolbarButtonsMD: this.toolbarButtonsMD,
+        toolbarButtonsSM: this.toolbarButtonsMD,
+        toolbarButtonsXS: this.toolbarButtonsMD,
         fontFamilySelection: true,
         fontFamily: {
           "Arial,Helvetica,sans-serif": "Arial",
@@ -186,6 +186,7 @@ export default {
           LiSu: "隶书"
         },
         shortcutsHint: false,
+        imageUploadRemoteUrls: false,
         imageUploadURL: baseUrl + "storage",
         videoUploadURL: baseUrl + "storage",
         requestHeaders: {
@@ -217,7 +218,8 @@ export default {
           this.post_text(url, getHtmlEdit)
             .then(() => {
               this.uploadSuccesss();
-            }).catch(()=>{})
+            })
+            .catch(() => {});
         }
       });
     },
@@ -229,7 +231,8 @@ export default {
           if (res.data) {
             this.editor.html.insert(res.data);
           }
-        }).catch(()=>{})
+        })
+        .catch(() => {});
     },
     //设置上传成功
     uploadSuccesss() {
@@ -237,7 +240,7 @@ export default {
       $uploadId.removeClass("ivu-icon-md-cloud-upload");
       $uploadId.addClass("ivu-icon-md-cloud-done");
       $uploadId.addClass("uploadColor");
-      setTimeout(()=> {
+      setTimeout(() => {
         let $uploadId = $("#uploadFroalaExit");
         $uploadId.removeClass("ivu-icon-md-cloud-done");
         $uploadId.removeClass("uploadColor");
@@ -298,21 +301,22 @@ export default {
 .uploadColor {
   color: #2d8cf0;
 }
-.fr-wrapper>div[style*='z-index: 9999'] {
-    position: absolute;
-    top: -10000px;
-    opacity: 0;
+.fr-wrapper > div[style*="z-index: 9999"] {
+  position: absolute;
+  top: -10000px;
+  opacity: 0;
 }
 .fr-box.fr-basic .fr-element {
-   margin-top: -41px;
+  margin-top: -41px;
 }
-.fr-toolbar{
+.fr-toolbar {
   border: none;
 }
-.fr-toolbar.fr-ltr.fr-desktop.fr-top.fr-basic.fr-sticky-off{
+.fr-toolbar.fr-ltr.fr-desktop.fr-top.fr-basic.fr-sticky-off {
   border: none;
 }
-.fr-box.fr-basic .fr-wrapper,.second-toolbar{
+.fr-box.fr-basic .fr-wrapper,
+.second-toolbar {
   border: none;
 }
 </style>
