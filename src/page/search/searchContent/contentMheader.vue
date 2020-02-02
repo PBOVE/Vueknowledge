@@ -15,26 +15,47 @@
         </div>
         <div class="know-s-c-m-htn" title="总数据量">{{totalElements}}</div>
       </div>
-      <div class="know-s-c-m-attr" v-show="(handleShowData.LabelData.length)>0">
-        <div class="know-s-c-m-attr-tittle">属性</div>
-        <folding-panel :InitHeight='foldingPanelFlag'>
-            <span
-              v-for="item in handleShowData.LabelData"
-              :key="item"
-              class="know-s-c-m-attr-d-list"
-            >
-              “
-              <span>{{item}}</span>”
-            </span>
-        </folding-panel>
-      </div>
     </div>
+
     <div class="know-s-c-m-c">
-      <div v-for="(item) in reqShowData" :key="item.node.id" class="know-s-c-m-c-f">
-        <router-link :to="{path:'/search', query: {id:item.node.id,name:item.node.name}}">
-          <div class="s-c-m-c-title" v-html="item.nodeName"></div>
-        </router-link>
-        <div class="s-c-m-c-text" v-html="item.text?item.text+'...':'没有此节点信息。'"></div>
+      <div v-for="(item) in reqShowData" :key="item.nodeId" class="know-s-c-m-c-f">
+        <div class="s-c-m-b">
+          <router-link :to="{path:'/search', query: {id:item.nodeId,name:item.nodeName}}">
+            <div class="s-c-m-c-title" v-html="item.nodeTitleName"></div>
+          </router-link>
+          <div class="know-s-c-m-c-user">
+            来源:
+            <span class="know-s-c-m-c-username">{{item.Itemsource}}</span>
+          </div>
+          <div class="know-s-c-m-attr" v-if="item.labels">
+            <div class="know-s-c-m-attr-tittle">属性</div>
+            <folding-panel>
+              <span v-for="value in item.labels" :key="value" class="know-s-c-m-attr-d-list">
+                “
+                <span>{{value}}</span>”
+              </span>
+            </folding-panel>
+          </div>
+          <div class="know-s-c-m-attr" v-if="item.property.length >0">
+            <div class="know-s-c-m-attr-tittle">关系</div>
+            <folding-panel :showHeight="115">
+              <div class="know-property-list">
+                <div
+                  v-for="(value, index) in item.property"
+                  :key="index"
+                  class="know-property-list-row dis-fix"
+                >
+                  <span>{{value.title}}</span>
+                  <span>{{value.name}}</span>
+                </div>
+              </div>
+            </folding-panel>
+          </div>
+          <div class="know-s-c-m-attr">
+            <div class="know-s-c-m-attr-tittle">描述</div>
+            <div class="s-c-m-c-text" v-html="item.text?item.text+'...':'没有查询到该节点描述信息。'"></div>
+          </div>
+        </div>
       </div>
     </div>
     <div
@@ -55,7 +76,6 @@ export default {
   props: [
     "ShowSMeg",
     "totalElements",
-    "handleShowData",
     "reqShowData",
     "pageNum",
     "totalPages",
@@ -66,9 +86,7 @@ export default {
       //显示加载信息
       loadMsg: "加载更多",
       //显示加载标志位
-      loadFlag: true,
-      // 搜索结果发生变化 重新渲染 foldingPanel
-      foldingPanelFlag:''
+      loadFlag: true
     };
   },
   methods: {
@@ -86,8 +104,7 @@ export default {
   },
   watch: {
     reqSuccessFlag() {
-      this.loadMsg = "加载更多"; 
-      this.foldingPanelFlag = Math.random();
+      this.loadMsg = "加载更多";
       if (this.pageNum + 1 === this.totalPages || this.totalPages === 0) {
         this.loadFlag = false;
       } else {
@@ -145,6 +162,7 @@ export default {
 }
 .know-s-c-m-attr {
   border-top: 1px solid #dcdee2;
+  padding: 5px 0 10px;
 }
 .know-s-c-m-attr-tittle {
   padding: 5px 0 5px 10px;
@@ -155,7 +173,6 @@ export default {
 .know-s-c-m-attr-d-list {
   display: inline-block;
   font-size: 14px;
-
   margin: 5px 5px 2px 3px;
   cursor: default;
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
@@ -175,23 +192,21 @@ export default {
   color: #808695;
   cursor: pointer;
 }
-.know-s-c-m-c {
-  padding: 10px;
-}
 .s-c-m-c-title {
-  display: inline;
+  display: inline-block;
   font-size: 18px;
   color: #14181c;
   cursor: pointer;
+  padding: 0 10px 10px;
 }
 
 .s-c-m-c-text {
   margin-top: 8px;
-  /* text-indent: 2em; */
+  padding: 0 0 0 10px;
+  word-wrap: break-word;
+  word-break: normal;
 }
-.know-s-c-m-c-f:first-of-type {
-  margin-top: 10px;
-}
+
 .know-s-c-m-c-f {
   margin-top: 25px;
 }
@@ -215,5 +230,30 @@ export default {
 .know-s-c-m-footer-title {
   text-align: center;
   font-size: 15px;
+}
+.know-property-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+.know-property-list-row {
+  padding: 8px 10px;
+  margin: 5px;
+  width: calc(50% - 10px);
+  background: #f7f8f9;
+  border-radius: 8px;
+}
+.know-property-list-row span {
+  display: inline-block;
+  height: 30px;
+  line-height: 30px;
+}
+.know-property-list-row span:last-of-type {
+  background: rgba(40, 167, 69, 0.1);
+  padding: 0 5px;
+  border-radius: 4px;
+  border-bottom: 2px solid #28a745;
+}
+.know-s-c-m-c-f:last-of-type {
+  margin: 25px 0;
 }
 </style>

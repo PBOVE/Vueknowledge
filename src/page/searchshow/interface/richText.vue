@@ -6,17 +6,17 @@
 
 
 <template>
-  <div class="know-searchshow-text" ref='eixtText'></div>
+  <div class="know-searchshow-text" ref="eixtText"></div>
 </template>
 
 
 <script>
 export default {
-  props: ["showSelectNum",'nodeId'],
+  props: ["showSelectNum", "nodeId"],
   data() {
     return {
       // 获取数据 标志位
-      getDataFlag: false,
+      getDataFlag: false
     };
   },
   methods: {
@@ -28,15 +28,19 @@ export default {
       this.get(url)
         .then(res => {
           if (this.showSelectNum === 3) {
-						this.handlerTextData(res.data)
+            this.handlerTextData(res.data);
           }
         })
         .catch(() => {});
-		},
-		//处理富文本数据
-		handlerTextData(data){
-			this.$refs.eixtText.innerHTML = data;
-		}
+    },
+    //处理富文本数据
+    handlerTextData(data) {
+      if (data) {
+        this.$refs.eixtText.innerHTML = data;
+      } else {
+        this.$refs.eixtText.innerHTML = "来也匆匆,去也匆匆,什么都没有留下。";
+      }
+    }
   },
   watch: {
     showSelectNum: {
@@ -47,9 +51,9 @@ export default {
       // 代表在wacth里声明了firstName这个方法之后立即先去执行handler方法
       immediate: true
     },
-    nodeId(){
-      this.getDataFlag =false;
-      if(this.showSelectNum===3){
+    nodeId() {
+      this.getDataFlag = false;
+      if (this.showSelectNum === 3) {
         this.getforceData();
       }
     }
@@ -59,5 +63,4 @@ export default {
 
 
 <style scoped>
-
 </style>

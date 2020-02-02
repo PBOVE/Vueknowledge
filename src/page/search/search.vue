@@ -44,6 +44,7 @@
       <span>Knowledge&nbsp;Graph</span>
     </div>
     <search-content
+      ref="searchContent"
       :style="{height:setClientHeight}"
       :InnerHeight="InnerHeight"
       @SearchInFocus="SearchInFocus"
@@ -138,7 +139,7 @@ export default {
       };
       this.get(url, obj)
         .then(res => {
-          this.SearchLists(res.data.content);
+          this.SearchLists(res.data);
         })
         .catch(() => {});
     },
@@ -153,6 +154,10 @@ export default {
     SearchSelectShow(val) {
       this.handleInSearchMeg = val.replace(/^\s+|\s+$/g, "");
       if (this.handleInSearchMeg === "") {
+        return;
+      }
+      if(this.$route.query.q === this.InSearchMeg){
+        this.$refs.searchContent.InitData();
         return;
       }
       this.$router.push({

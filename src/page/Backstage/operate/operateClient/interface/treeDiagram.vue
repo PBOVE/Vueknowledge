@@ -36,49 +36,12 @@ export default {
       let url = "node/" + this.treeNode.id + "/link";
       this.get(url)
         .then(res => {
-          let child = this.ChildNodeProcessing(res.data.child);
-          let treeData = this.parentNodeProcessing(child, res.data.parent);
-          this.$refs.treechart.handletreeData(treeData);
+          this.spinShow = true;
+          this.$refs.treechart.handletreeData(res.data);
         })
         .catch(() => {
+          this.spinShow = true;
         });
-    },
-    //子节点处理
-    ChildNodeProcessing(child) {
-      //遍历数据
-      let nodeBFS = data => {
-        let Arr = [];
-        data.forEach(item => {
-          let obj = {
-            lineStyle:{color:'#76fb89'},
-            name: item.name,
-            child: item.child
-          };
-          Arr.push(obj);
-        });
-        return Arr;
-      };
-      return nodeBFS(child);
-    },
-    //父亲节点处理
-    parentNodeProcessing(childdata, parent) {
-      let treeData = childdata;
-      parent = parent.reverse();
-      parent.forEach(item => {
-        treeData = {
-          name: item.name,
-          children: treeData.constructor === Array ? treeData : [treeData]
-        };
-      });
-      return treeData;
-    },
-    // sord 排序
-    sortId(ObjA, ObjB) {
-      let valA = ObjA.sortId;
-      let valB = ObjB.sortId;
-      if (valA < valB) return -1;
-      else if (valA > valB) return 1;
-      else return 0;
     },
 
     //设置 数据重新获取

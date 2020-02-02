@@ -12,6 +12,7 @@
       <selete-button
         ref="OperateSelectBu"
         :showClientFlag="showClientFlag"
+        :itemExitFlag ='itemExitFlag'
         @oMainCallback="oMainCallback"
       ></selete-button>
     </div>

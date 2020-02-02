@@ -14,66 +14,70 @@
 //导入 d3 数据 包
 import * as d3 from "d3";
 export default {
-	props:['RightWeight'],
+  props: ["RightWeight"],
   data() {
-    return {
-      msg:234
-		};
+    return {};
   },
   methods: {
-    //处理 组件传来的 数据 
+    //处理 组件传来的 数据
     handlecomponentsforceData(data) {
       let hashMap = {}; //映射
       let hashnumI = 0; // 映射计数器
+      let hashLink = {}; // 相同数据何合并
       let Nodes = [];
       let Links = [];
       data.nodes.forEach((item, i) => {
-        Nodes.push({
-          name: item.name,
-          id: i,
-          Tid: item.id
-        });
-        hashMap[item.id] = hashnumI++;
+        if (!hashMap[item.id]) {
+          Nodes.push({
+            name: item.name,
+            id: i,
+            Tid: item.id
+          });
+          hashMap[item.id] = hashnumI++;
+        }
       });
       data.links.forEach(function(item) {
+        let index =
+          Nodes[hashMap[item.source]]["Tid"] +
+          "" +
+          Nodes[hashMap[item.target]]["Tid"];
+        if (!hashLink[index]) {
+          hashLink[index] = {
+            num: 0,
+            pos: 0
+          };
+        }
+        let relation;
+        if (item.relation === "parent" || item.relation === "child") {
+          relation = "";
+        } else {
+          relation = item.relation;
+        }
         Links.push({
-          relation: item.property.type || item.property.relation,
+          relation: relation,
+          hashPos: hashLink[index]["num"]++,
           source: hashMap[item.source],
           target: hashMap[item.target]
         });
-        if (item.property.relation) {
-          Nodes[hashMap[item.target]]["Pid"] = item.source;
-          Nodes[hashMap[item.target]]["PNid"] = hashMap[item.source];
-        }
+        Nodes[hashMap[item.target]]["Pid"] = item.source;
+        Nodes[hashMap[item.target]]["PNid"] = hashMap[item.source];
+        Nodes[hashMap[item.target]]["ColorId"] =
+          Nodes[hashMap[item.source]]["ColorId"] + 1 || 0;
       });
-      this.handleforceData(Nodes, Links);
+      this.handleforceData(Nodes, Links, hashLink);
     },
     //处理 渲染
-    handleforceData(Nodes, Links) {
+    handleforceData(Nodes, Links, hashLink) {
       if (this.$refs.knowForce.firstChild)
-				this.$refs.knowForce.removeChild(this.$refs.knowForce.firstChild);
-			this.CreateDjsPower(Nodes,Links)
+        this.$refs.knowForce.removeChild(this.$refs.knowForce.firstChild);
+      this.CreateDjsPower(Nodes, Links, hashLink);
     },
     //创建 力导向图
-    CreateDjsPower(nodes, edges) {
-      let width = this.$refs.knowForce.offsetWidth - this.RightWeight;
-      let height = this.$refs.knowForce.offsetHeight;
-      let svg = d3
-        .select(this.$refs.knowForce)
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .call(
-          d3.zoom().on("zoom", function() {
-            g.attr("transform", d3.event.transform);
-          })
-        );
-      let g = svg.append("g");
-      //设置一个color的颜色比例尺，为了让不同的扇形呈现不同的颜色
-      let colorScale = d3
-        .scaleOrdinal()
-        .domain(d3.range(nodes.length))
-        .range([
+    CreateDjsPower(nodes, edges, hashLink) {
+      const width = this.$refs.knowForce.offsetWidth - this.RightWeight;
+      const height = this.$refs.knowForce.offsetHeight;
+      const nodeConf = {
+        fillColor: [
           "#f9320c",
           "#00b9f1",
           "#f9c00c",
@@ -89,12 +93,39 @@ export default {
           "#df42d1",
           "#e26241",
           "#eea5f6"
-        ]);
+        ],
+        alpha: "4c",
+        strokeWidth: 10,
+        textFillColor: "#000",
+        textWeight: 900,
+        radius: {
+          child: 20,
+          root: 26
+        },
+        TextFontSize: {
+          child: "13px",
+          root: "16px"
+        }
+      };
+      const LineConf = {
+        TextFontSize: 12
+      };
+      let svg = d3
+        .select(this.$refs.knowForce)
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .call(
+          d3.zoom().on("zoom", function() {
+            g.attr("transform", d3.event.transform);
+          })
+        );
+      let g = svg.append("g");
       //新建一个力导向图
       let forceSimulation = d3
         .forceSimulation()
         .force("link", d3.forceLink())
-        .force("charge", d3.forceManyBody().strength(-100))
+        .force("charge", d3.forceManyBody().strength(-200))
         .force("center", d3.forceCenter());
       //生成节点数据
       forceSimulation.nodes(nodes).on("tick", ticked); //这个函数很重要，后面给出具体实现和说明
@@ -114,28 +145,14 @@ export default {
         .attr("id", "resolved")
         .attr("markerUnits", "userSpaceOnUse")
         .attr("viewBox", "0 -5 10 10") //坐标系的区域
-        .attr("refX", 25) //箭头坐标
-        .attr("refY", 0)
-        .attr("markerWidth", 12) //标识的大小
-        .attr("markerHeight", 12)
+        .attr("refX", nodeConf["radius"]["root"] + 10) //箭头坐标
+        .attr("refY", -0)
+        .attr("markerWidth", 10) //标识的大小
+        .attr("markerHeight", 8)
         .attr("orient", "auto") //绘制方向，可设定为：auto（自动确认方向）和 角度值
         .attr("stroke-width", 10) //箭头宽度
         .append("path")
         .attr("d", "M0,-5L10,0L0,5") //箭头的路径
-        .attr("fill", "#8B8989"); //箭头颜色
-      svg
-        .append("marker")
-        .attr("id", "resolvedI")
-        .attr("markerUnits", "userSpaceOnUse")
-        .attr("viewBox", "0 -5 10 10") //坐标系的区域
-        .attr("refX", -14) //箭头坐标
-        .attr("refY", 0)
-        .attr("markerWidth", 12) //标识的大小
-        .attr("markerHeight", 12)
-        .attr("orient", "auto") //绘制方向，可设定为：auto（自动确认方向）和 角度值
-        .attr("stroke-width", 3) //箭头宽度
-        .append("path")
-        .attr("d", "M10,-5L10,5L0,0") //箭头的路径
         .attr("fill", "#8B8989"); //箭头颜色
       //绘制边
       let links = g
@@ -147,15 +164,10 @@ export default {
         .attr("id", function(d, i) {
           return "edgepath" + i;
         })
-        .attr("stroke", "#8B8989")
+        .attr("fill", "transparent")
+        .attr("stroke", "#EFEFEF")
         .style("pointer-events", "none")
-        .attr("stroke-width", 3)
-        .attr("marker-end", function(d) {
-          return d.relation === "parent-relation" ? "" : "url(#resolved)";
-        })
-        .attr("marker-start", function(d) {
-          return d.relation === "parent-relation" ? "url(#resolvedI)" : "";
-        });
+        .attr("stroke-width", 2);
       //绘制边上的文字
       let linksText = g
         .append("g")
@@ -163,16 +175,13 @@ export default {
         .data(edges)
         .enter()
         .append("g")
-        .style("fill", "#fff")
+        .style("fill", "#EFEFEF")
         .append("text")
-        .style("pointer-events", "none")
-        .attr("dx", 50)
-        .attr("dy", -8);
-
+        .style("pointer-events", "none");
       linksText
         .append("textPath")
         .attr("class", "linksText")
-        .attr("xlink:href", function(d, i) {
+        .attr("xlink:href", (d, i) => {
           return "#edgepath" + i;
         })
         .style("pointer-events", "none")
@@ -180,13 +189,7 @@ export default {
         .style("font-size", "15px")
         .attr("fill", "#000")
         .text(function(d) {
-          return d.relation === "child-relation"
-            ? ""
-            : d.relation === "parent-relation"
-            ? "父节点"
-            : d.relation.length > 5
-            ? d.relation.substr(0, 5) + "..."
-            : d.relation;
+          return d.relation;
         })
         .attr("stroke", "#696969");
       //绘制节点
@@ -207,100 +210,109 @@ export default {
             .on("start", started)
             .on("drag", dragged)
             .on("end", ended)
-        ).on('click', (d)=>{
-          this.$emit('callback',d);
-        })
+        )
+        .on("click", d => {
+          this.$emit("callback", d);
+        });
       //绘制节点
       gs.append("circle")
-        .attr("r", function(d, i) {
-          return i === 0 ? 30 : 24;
+        .attr("r", (d, i) => {
+          return nodeConf["radius"][i === 0 ? "root" : "child"];
         })
-        .attr("fill", function(d) {
-          let randomColor = d.PNid !== undefined ? d.PNid + 1 : 0;
-          return colorRgba(colorScale(randomColor), 1);
+        .attr("fill", d => {
+          const color = (d.ColorId + 1 || 0) % nodeConf["fillColor"].length;
+          return nodeConf["fillColor"][color];
         })
-        .style("stroke-width", 10)
+        .style("stroke-width", nodeConf["strokeWidth"])
         .style("cursor", "pointer")
-        .attr("stroke", function(d) {
-          let randomColor = d.PNid !== undefined ? d.PNid + 1 : 0;
-          return colorRgba(colorScale(randomColor), 0.3);
-        })
-        .append("title")
-        .text(function(d) {
-          return d.name;
+        .attr("stroke", d => {
+          const color = (d.ColorId + 1 || 0) % nodeConf["fillColor"].length;
+          return nodeConf["fillColor"][color] + nodeConf["alpha"];
         });
       //文字
       gs.append("text")
         .attr("dy", function(d, i) {
           return i === 0 ? 5 : 4;
         })
-        .attr("dx", function(d, j) {
-          let lenStr = 0;
-          let Chinese = 9;
-          let English = 5;
-          let Namelength = d.name.length;
-          for (let i = 0; i < Namelength; i++) {
-            let c = d.name.charCodeAt(i);
-            if ((c >= 0x0001 && c <= 0x007e) || (0xff60 <= c && c <= 0xff9f)) {
-              if (j === 0) {
-                lenStr += English + 2;
-              } else {
-                lenStr += English;
-              }
-            } else {
-              if (j === 0) {
-                lenStr += Chinese + 5;
-              } else {
-                lenStr += Chinese;
-              }
-            }
-            if (i + 1 != d.name.length && i === 3) {
-              lenStr += 0;
-              break;
-            }
-          }
-
-          return (-1 * lenStr) / 2;
+        .attr("dx", (d, i) => {
+          const fontSize = parseInt(
+            i === 0
+              ? nodeConf["TextFontSize"]["root"]
+              : nodeConf["TextFontSize"]["child"]
+          );
+          return (-1 * (fontSize * d.name.length)) / 2;
         })
-        .style("fill", "#fdfdfd")
-        .style("font-size", function(d, i) {
-          return i === 0 ? "15px" : "10px";
+        .style("fill", nodeConf["textFillColor"])
+        .style("font-size", (d, i) => {
+          return i === 0
+            ? nodeConf["TextFontSize"]["root"]
+            : nodeConf["TextFontSize"]["child"];
         })
-        .text(function(d) {
-          return d.name.length > 4 ? d.name.substr(0, 3) + "...." : d.name;
-        })
+        .style("font-weight", 600)
         .style("cursor", "pointer")
-        .append("title")
-        .text(function(d) {
+        .text(d => {
           return d.name;
         });
-
       function ticked() {
         links.attr("d", function(d) {
           let sx = d.source.x;
           let sy = d.source.y;
           let tx = d.target.x;
           let ty = d.target.y;
-          let path = "M " + sx + " " + sy + " L " + tx + " " + ty;
-          return path;
-        });
+          let r = Math.hypot(tx - sx, ty - sy);
+          let id = d.source.Tid + "" + d.target.Tid;
 
-        linksText.attr("transform", function(d) {
-          if (d.target.x < d.source.x) {
-            let bbox = this.getBBox();
-            let rx = bbox.x + bbox.width / 2;
-            let ry = bbox.y + bbox.height / 2;
-            return "rotate(180 " + rx + " " + ry + ")";
+          if (hashLink[id]["num"] === 1) {
+            return `M${sx},${sy}A${0},${0} 0 0 1 ,${tx},${ty}`;
+          } else if (hashLink[id]["num"] % 2 === 0) {
+            let k = d.hashPos % 2;
+            let value = (d.hashPos % 2 === 0 ? d.hashPos : d.hashPos - 1) * 30;
+            return `M${sx},${sy}A${r - value},${r -
+              value} 0 0 ${k},${tx},${ty}`;
           } else {
-            return "rotate(0)";
+            let k = d.hashPos % 2;
+            let value =
+              (d.hashPos % 2 === 0 ? d.hashPos - 1 : d.hashPos - 0) * 30;
+            if (d.hashPos === 0) {
+              value = 0;
+              r = 0;
+            }
+            return `M${sx},${sy}A${r - value},${r -
+              value} 0 0 ${k},${tx},${ty}`;
           }
         });
-
+        linksText
+          .attr("transform", function(d) {
+            if (d.target.x < d.source.x) {
+              let bbox = this.getBBox();
+              let rx = bbox.x + bbox.width / 2;
+              let ry = bbox.y + bbox.height / 2;
+              linksText.attr("dy", 8);
+              return "rotate(180 " + rx + " " + ry + ")";
+            } else {
+              linksText.attr("dy", 5);
+              return "rotate(0)";
+            }
+          })
+          .attr("dx", d => {
+            const sr = nodeConf["radius"][d.source.PNid ? "child" : "root"];
+            // const tr = nodeConf["radius"][d.target.PNid ? "child" : "root"];
+            const sx = d.source.x;
+            const sy = d.source.y;
+            const tx = d.target.x;
+            const ty = d.target.y;
+            const distance = Math.hypot(tx - sx, ty - sy);
+            const textLength = d.relation.length;
+            const deviation = 16; //调整误差
+            const dx =
+              (distance - sr - textLength * LineConf["TextFontSize"]) / 2 +
+              deviation;
+            return dx;
+          });
         gs.attr("transform", function(d) {
           return "translate(" + d.x + "," + d.y + ")";
         });
       }
-
       function started(d) {
         if (!d3.event.active) {
           forceSimulation.alphaTarget(0.8).restart();
@@ -308,43 +320,16 @@ export default {
         d.fx = d.x;
         d.fy = d.y;
       }
-
       function dragged(d) {
         d.fx = d3.event.x;
         d.fy = d3.event.y;
       }
-
       function ended(d) {
         if (!d3.event.active) {
           forceSimulation.alphaTarget(0);
         }
         d.fx = null;
         d.fy = null;
-      }
-      // 16进制转rgba
-      function colorRgba(sColor, Opacity) {
-        sColor = sColor.toLowerCase();
-        //十六进制颜色值的正则表达式
-        let reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
-        // 如果是16进制颜色
-        if (sColor && reg.test(sColor)) {
-          if (sColor.length === 4) {
-            let sColorNew = "#";
-            for (let i = 1; i < 4; i += 1) {
-              sColorNew += sColor
-                .slice(i, i + 1)
-                .concat(sColor.slice(i, i + 1));
-            }
-            sColor = sColorNew;
-          }
-          //处理六位的颜色值
-          let sColorChange = [];
-          for (let i = 1; i < 7; i += 2) {
-            sColorChange.push(parseInt("0x" + sColor.slice(i, i + 2)));
-          }
-          return "RGBA(" + sColorChange.join(",") + "," + Opacity + ")";
-        }
-        return sColor;
       }
     }
   }

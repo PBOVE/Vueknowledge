@@ -107,7 +107,6 @@ export default {
       } else {
         let url = "node?itemId=" + this.itemId;
         let obj = this.NodeId;
-        window.console.log(obj);
         this.delete_json(url, obj)
           .then(() => {
             this.$emit("addNameS", 12, Math.random());

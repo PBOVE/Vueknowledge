@@ -33,11 +33,14 @@ export default {
       let url = "node/" + this.treeNode.id + "/graph";
       this.get(url)
         .then(res => {
+          this.spinShow = true;
           if (this.showSelectNum === 2) {
             this.$refs.forcechart.handlecomponentsforceData(res.data);
           }
         })
-        .catch(() => {});
+        .catch(() => {
+           this.spinShow = true;
+        });
     },
     //从新获取数据
     setForce() {
@@ -48,7 +51,7 @@ export default {
   },
   watch: {
     treeNode: {
-      handler(newval, oldval){
+      handler(newval, oldval) {
         if (newval === "" || newval.id === oldval.id) return;
         this.getDataFlag = false;
         if (this.showSelectNum === 2) {

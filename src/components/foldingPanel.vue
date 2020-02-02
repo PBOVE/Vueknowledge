@@ -24,7 +24,11 @@
 
 <script>
 export default {
-  props: ["InitHeight"],
+  props: {
+    showHeight:{
+      default:100
+    }
+  },
   data() {
     return {
       // 点击图标标志位
@@ -33,13 +37,16 @@ export default {
       IconShowFlag: true
     };
   },
+  mounted () {
+    this.InitSet();
+  },
   methods: {
     // 点击展开图标
     clickIcon() {
       this.clickIconFlag = !this.clickIconFlag;
 
       if (this.clickIconFlag) {
-        this.$refs.knowfoldcenter.style.height = "100px";
+        this.$refs.knowfoldcenter.style.height = this.showHeight + 'px';
       } else {
         this.$refs.knowfoldcenter.style.height =
           this.$refs.knowfoldcenter.scrollHeight + "px";
@@ -50,8 +57,8 @@ export default {
       this.clickIconFlag = true;
       this.$refs.knowfoldcenter.style.height = "auto";
       this.$nextTick(() => {
-				if(this.$refs.knowfoldcenter.scrollHeight>100){
-					this.$refs.knowfoldcenter.style.height = "100px";
+				if(this.$refs.knowfoldcenter.scrollHeight>this.showHeight){
+					this.$refs.knowfoldcenter.style.height = this.showHeight + 'px';
 					this.IconShowFlag =true;
 				}else{
 					this.IconShowFlag =false;
@@ -59,11 +66,6 @@ export default {
 				}
       });
      
-    }
-  },
-  watch: {
-    InitHeight() {
-      this.InitSet();
     }
   }
 };

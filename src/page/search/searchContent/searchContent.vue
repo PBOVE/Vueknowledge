@@ -12,7 +12,6 @@
         :reqSuccessFlag="reqSuccessFlag"
         :ShowSMeg="ShowSMeg"
         :totalElements="totalElements"
-        :handleShowData="handleShowData"
         :reqShowData="reqShowData"
         :totalPages="totalPages"
         :pageNum="pageNum"
@@ -27,7 +26,7 @@
 <script>
 import contentMheader from "./contentMheader";
 export default {
-  props: ['InnerHeight'],
+  props: ["InnerHeight"],
   components: { contentMheader },
   data() {
     return {
@@ -38,7 +37,7 @@ export default {
       // 分页 可以展示的总页数
       totalPages: "",
       // 当前请求的第几页
-      pageNum: 0,
+      pageNum: 1,
       // 一页可以展示的数据有多少
       pageSize: 8,
       // 总的数据有多少
@@ -47,17 +46,10 @@ export default {
       reqShowData: [],
       // 获取焦点标志位
       searchFocus: false,
-      // 处理过的请求数据
-      handleShowData: {
-        // 属性
-        LabelData: []
-      },
-      // 防止请求的属性重复
-      LabelDataFlag: new Set(),
       // 数据加载成功标志为
       reqSuccessFlag: "",
       //用户输入的数据
-      InSearchMeg: "",
+      InSearchMeg: ""
     };
   },
   methods: {
@@ -75,7 +67,8 @@ export default {
           this.handleServerData(res.data);
           this.reqSuccessFlag = Math.random();
         })
-        .catch(() => {});
+        .catch(() => {
+        });
     },
     // 处理请求的数据
     handleServerData(data) {
@@ -85,36 +78,42 @@ export default {
       this.totalPages = data.totalPages;
       let content = data.content;
       let reg = new RegExp(this.ShowSMeg, "gi");
+      if (this.pageNum === 0) {
+        this.reqShowData = [];
+      }
       content.forEach(item => {
         this.reqShowData.push({
           info: item.info,
-          node: item.node,
+          nodeId: item.nodeId,
+          labels: item.labels.labels,
+          property: this.handleServerProperty(item.property.property),
           text: this.html2Escape(item.text).replace(
             reg,
             '<span class="s-c-m-c-t-u">' + this.ShowSMeg + "</span>"
           ),
-          user: item.user,
-          nodeName:
-            this.html2Escape(item.node.name).replace(
-              reg,
-              '<span class="s-c-m-c-t-u">' + this.ShowSMeg + "</span>"
-            ) +
-            '<div class="know-s-c-m-c-user">编辑者: <span class="know-s-c-m-c-username">' +
-            item.user +
-            "</span></div>"
+          nodeName:item.nodeName,
+          Itemsource: item.nodeItemName,
+          nodeTitleName: this.html2Escape(item.nodeName).replace(
+            reg,
+            '<span class="s-c-m-c-t-u">' + this.ShowSMeg + "</span>"
+          )
         });
-        this.handleServerLabel(item.node.labels);
+        // this.handleServerLabel(item.labels);
       });
     },
     // 处理属性 数据
-    handleServerLabel(data) {
-      // 合并数组
-      data.forEach(val => {
-        if (!this.LabelDataFlag.has(val)) {
-          this.LabelDataFlag.add(val);
-          this.handleShowData.LabelData.push(val);
-        }
-      });
+    handleServerProperty(data) {
+      let Arr = [];
+      for (let key in data) {
+        data[key].forEach(item => {
+          Arr.push({
+            id: item.id,
+            name: key,
+            title: item.name
+          });
+        });
+      }
+      return Arr;
     },
     //HTML标签转义（< -> &lt;）
     html2Escape(sHtml) {
@@ -134,26 +133,26 @@ export default {
         }
       };
       statusMap[type]();
+    },
+    // 数据初始化
+    InitData() {
+      this.pageNum = 0;
+      this.getServerData();
     }
   },
   watch: {
     $route: {
       handler(to) {
-        if(!to.query.q){    
-          this.$emit('SearchInCancel');
-          this.$emit('setSearchMsg','');
+        if (!to.query.q) {
+          this.$emit("SearchInCancel");
+          this.$emit("setSearchMsg", "");
           this.searchFocus = false;
-          return
+          return;
         }
-        this.$emit('SearchInFocus');
-        this.$emit('setSearchMsg',to.query.q);
+        this.$emit("SearchInFocus");
+        this.$emit("setSearchMsg", to.query.q);
         this.InSearchMeg = to.query.q;
         this.pageNum = 0;
-        this.handleShowData = {
-          LabelData: []
-        };
-        this.reqShowData = [];
-        this.LabelDataFlag.clear();
         this.getServerData();
       },
       immediate: true

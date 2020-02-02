@@ -41,7 +41,7 @@
         class="know-Showclient-default"
       ></tree-diagram>
     </div>
-    <div v-show="showSelectNum === 4">
+    <div v-show="showSelectNum === 4" v-if="itemExitFlag">
       <journal-show
         ref="journalog"
         :treeNode="treeNode"
@@ -57,6 +57,7 @@
         :treeNode="treeNode"
         :showSelectNum="showSelectNum"
         :spinShow.sync="spinShow"
+        :itemExitFlag="itemExitFlag"
       ></rich-text>
     </div>
   </div>

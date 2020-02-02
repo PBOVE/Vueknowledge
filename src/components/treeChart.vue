@@ -20,14 +20,59 @@ export default {
   },
   methods: {
     //处理传来的数据
-    handletreeData(treeData) {
-      // if (this.$refs.knowtree.firstChild)
-      //   this.$refs.knowtree.removeChild(this.$refs.knowtree.firstChild);
+    handletreeData(data) {
+      let child = this.ChildNodeProcessing([data.child]);
+      let treeData = this.parentNodeProcessing(child, data.parent);
+      this.CreateD3jsTree(JSON.stringify(treeData));
+    },
+    //子节点处理
+    ChildNodeProcessing(child) {
+      //遍历数据
+      if (!child[0].child) {
+        return [];
+      }
+      let getRandomColor = () => {
+        let color = "#";
+        for (let i = 0; i < 6; i++) {
+          color += "0123456789abcdef"[Math.floor(Math.random() * 16)];
+        }
+        return color;
+      };
+      let nodeBFS = (data, val, color) => {
+        let Arr = [];
+        data.forEach(item => {
+          let randomColor = getRandomColor();
+          let obj = {
+            lineStyle: { color: color || randomColor },
+            name: item.name
+          };
+          if (item.child) {
+            if (val)
+              obj.children = nodeBFS(item.child, val, color || randomColor);
+            else obj.children = nodeBFS(item.child, ++val);
+          }
+          Arr.push(obj);
+        });
+        return Arr;
+      };
 
-      this.CreateD3jsTree(treeData);
+      return nodeBFS(child, 0);
+    },
+    //父亲节点处理
+    parentNodeProcessing(childdata, parent) {
+      let treeData = childdata;
+      parent = parent.reverse();
+      parent.forEach(item => {
+        treeData = {
+          name: item.name,
+          children: treeData.constructor === Array ? treeData : [treeData]
+        };
+      });
+      return treeData;
     },
     //树图渲染数据
     CreateD3jsTree(dataset) {
+      
       let option = {
         tooltip: {
           trigger: "item",
@@ -36,7 +81,7 @@ export default {
         series: [
           {
             type: "tree",
-            data: [dataset],
+            data: [JSON.parse(dataset)],
             top: "1%",
             left: "8%",
             bottom: "1%",
@@ -70,12 +115,13 @@ export default {
           }
         ]
       };
-      var myChart = echarts.init(this.$refs.knowtree);
+
+      let myChart = echarts.init(this.$refs.knowtree);
+      myChart.clear();
       myChart.setOption(option);
 
       // myChart.on("click", function(params) {
       //   // 控制台打印数据的名称
-      //   window.console.log(params);
       // });
     }
   }

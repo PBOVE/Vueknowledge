@@ -178,7 +178,7 @@ export default {
             property[item].forEach(element => {
               this.relationData.push({
                 name: item,
-                title: element
+                title: element.name
               });
             });
           }
@@ -382,7 +382,7 @@ export default {
       this.queryNode(title, this.pushServeR, [name, title]);
     },
     // 向服务器发送 添加关系的数据
-    pushServeR(name, title) {
+    pushServeR(name, title, nodeId) {
       let url = "node/" + this.treeNode.id;
       let obj = this.objDataR();
       let Nodename = this.treeNode.name;
@@ -394,13 +394,19 @@ export default {
         "] 添加新的关系,关系名称为 [" +
         name +
         "]";
+      const indexTitle = element => {
+        return element.name === title;
+      };
       if (!obj["property"].hasOwnProperty(name)) {
         obj["property"][name] = [];
-      } else if (obj["property"][name].indexOf(title) !== -1) {
+      } else if (obj["property"][name].findIndex(indexTitle) !== -1) {
         this.$Message.warning("请不要重复添加数据");
         return;
       }
-      obj["property"][name].push(title);
+      obj["property"][name].push({
+        id: nodeId,
+        name: title
+      });
       obj["record"] = {
         message: JSON.stringify({ message, name: Nodename }),
         operator: "ADD_NODE_PROPERTY"
@@ -414,8 +420,8 @@ export default {
             title
           });
           this.InputNodeName = this.RaNodeinput = "";
-          // // 力导图 树图 从新请求数据
-          // this.$emit("SClientCallback", 2);
+          // 力导图 树图 从新请求数据
+          this.$emit("SClientCallback", 2);
           // 重新 获取日志
           this.$emit("SClientCallback", 4);
         })
@@ -424,7 +430,6 @@ export default {
     // 删除 关系 数据
     delRelationData(val, inputIndex) {
       let obj = this.objDataR();
-      let index = obj["property"][val.name].indexOf(val.title);
       let name = this.treeNode.name;
       let message =
         "[" +
@@ -434,6 +439,10 @@ export default {
         "] 不在拥有 [" +
         val.name +
         "] 关系";
+      const indexTitle = element => {
+        return element.name === val.title;
+      };
+      let index = obj["property"][val.name].findIndex(indexTitle);
       obj["property"][val.name].splice(index, 1);
       if (!obj["property"][val.name].length) {
         delete obj["property"][val.name];
@@ -447,7 +456,6 @@ export default {
     // 更新 关系 属性
     putRelationName(inputVal, val, inputIndex, target) {
       let obj = this.objDataR();
-      let index = obj["property"][val.name].indexOf(val.title);
       let name = this.treeNode.name;
       let message =
         "[" +
@@ -459,14 +467,21 @@ export default {
         "] 修改为 [" +
         inputVal +
         "]";
+      const indexTitle = element => {
+        return element.name === val.title;
+      };
+      let index = obj["property"][val.name].findIndex(indexTitle);
       if (!obj["property"].hasOwnProperty(inputVal)) {
         obj["property"][inputVal] = [];
-      } else if (obj["property"][inputVal].indexOf(val.title) !== -1) {
+      } else if (obj["property"][inputVal].findIndex(indexTitle) !== -1) {
         this.$Message.warning("数据重复");
         target.value = val.name;
         return;
       }
-      obj["property"][inputVal].push(val.title);
+      obj["property"][inputVal].push({
+        id: obj["property"][val.name][index]["id"],
+        name: val.title
+      });
       obj["property"][val.name].splice(index, 1);
       obj["record"] = {
         message: JSON.stringify({ message, name }),
@@ -478,17 +493,26 @@ export default {
       this.poshServerR(inputVal, inputIndex, obj, "name");
     },
     // 更新 关系 键值
-    putRelationTitle(inputVal, val, inputIndex, target) {
+    putRelationTitle(inputVal, val, inputIndex, target, nodeId) {
       let obj = this.objDataR();
-      let index = obj["property"][val.name].indexOf(val.title);
       let name = this.treeNode.name;
       let message = "[" + val.title + "] 关系节点修改为 [" + inputVal + "]";
-      if (obj["property"][val.name].indexOf(inputVal) !== -1) {
+      const indexTitle = element => {
+        return element.name === val.title;
+      };
+      const indexInpuval = element => {
+        return element.name === inputVal;
+      };
+      let index = obj["property"][val.name].findIndex(indexTitle);
+      if (obj["property"][val.name].findIndex(indexInpuval) !== -1) {
         this.$Message.warning("数据重复");
         target.value = val.title;
         return;
       }
-      obj["property"][val.name][index] = inputVal;
+      obj["property"][val.name][index] = {
+        id: nodeId,
+        name: inputVal
+      };
       obj["record"] = {
         message: JSON.stringify({ message, name }),
         operator: "UPDATE_NODE_PROPERTYNAME"
@@ -508,7 +532,7 @@ export default {
             this.relationData.splice(inputIndex, 1);
           }
           //       // 力导图 树图 从新请求数据
-          //       this.$emit("SClientCallback", 2);
+          this.$emit("SClientCallback", 2);
           // 重新 获取日志
           this.$emit("SClientCallback", 4);
         })
@@ -566,13 +590,14 @@ export default {
       this.get(url, obj)
         .then(res => {
           const data = res.data;
+
           let val = data.findIndex(item => {
             return item["name"] === NodeName;
           });
           if (val === -1) {
             this.$Message.warning("关系节点名称错误,请重新输入");
           } else {
-            callback(...value);
+            callback(...value, data[val]["id"]);
           }
         })
         .catch(() => {});

@@ -6,7 +6,9 @@
 
 
 <template>
-  <div id="froala-editor"></div>
+  <div id="froala-editor">
+    <div v-if="!itemExitFlag" class="NText" v-html="getText"></div>
+  </div>
 </template>
 
 <script>
@@ -33,7 +35,7 @@ require("froala-editor/js/plugins/video.min");
 require("froala-editor/js/plugins/help.min");
 import $ from "../../../../../assets/jquery-vendor";
 export default {
-  props: ["treeNode", "showSelectNum", "InnerHeight"],
+  props: ["treeNode", "showSelectNum", "InnerHeight", "itemExitFlag"],
   data() {
     return {
       getDataFlag: false,
@@ -41,6 +43,8 @@ export default {
       TopHeight: 190,
       //上传的内容
       editor: "",
+      // 获取文本内容
+      getText: "",
       // 在小型设备
       toolbarButtonsMD: {
         moreText: {
@@ -101,7 +105,6 @@ export default {
     getExitText() {
       if (this.getDataFlag) return;
       this.getDataFlag = true;
-
       $(".fr-element.fr-view").empty();
       $(".fr-wrapper").css("height", this.InnerHeight - this.TopHeight + "px");
       this.getExitTextData();
@@ -228,11 +231,20 @@ export default {
       let url = "storage/text/" + this.treeNode.id;
       this.get(url)
         .then(res => {
+          this.spinShow = true;
           if (res.data) {
-            this.editor.html.insert(res.data);
+            if (this.itemExitFlag) {
+              this.editor.html.insert(res.data);
+            } else {
+              this.getText = res.data;
+            }
+          } else {
+            this.getText = "来也匆匆,去也匆匆,什么都没有留下。";
           }
         })
-        .catch(() => {});
+        .catch(() => {
+          this.spinShow = true;
+        });
     },
     //设置上传成功
     uploadSuccesss() {
@@ -248,10 +260,6 @@ export default {
       }, 2000);
     }
   },
-  mounted() {
-    this.customButton();
-    this.createExitText();
-  },
   watch: {
     treeNode: {
       handler(newval, oldval) {
@@ -266,11 +274,23 @@ export default {
     showSelectNum(val) {
       if (val !== 5) return;
       this.getExitText();
+    },
+    itemExitFlag(val) {
+      if (val) {
+        this.customButton();
+        this.createExitText();
+      }
     }
   }
 };
 </script>
-
+<style scoped>
+.NText {
+  padding: 20px;
+  font-size: 16px;
+  letter-spacing: 0.1em;
+}
+</style>
 <style>
 .fr-box.fr-basic .fr-element {
   padding: 10px;

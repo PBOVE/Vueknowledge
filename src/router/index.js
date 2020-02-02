@@ -112,11 +112,7 @@ router.beforeEach((to, from, next) => {
         let token = sessionStorage.getItem('token');
         if (to.matched.some(r => r.meta.requireAuth)) {
             if (token) {
-                // if (to.name === 'manage' && (!to.query.itemId || !to.query.name)) {
-                //     next('/project')
-                // } else {
-                    next();
-                // }
+                next();
             } else {
                 next('/login');
             }
