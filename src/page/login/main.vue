@@ -10,7 +10,7 @@
     <Spin size="large" fix v-if="spinShow"></Spin>
     <div class="know-login-icon">
       <router-link to="/">
-        <Icon type="md-apps" />
+      <Icon type="ios-keypad"/>
       </router-link>
     </div>
     <div class="know-login-box">
