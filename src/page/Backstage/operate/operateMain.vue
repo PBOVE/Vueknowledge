@@ -111,9 +111,8 @@ export default {
   font-size: 18px;
   line-height: 25px;
   padding: 5px 10px 3px 10px;
-  border-bottom: 1px solid #dcdee2;
-  background-color: #dcdee2;
   height: 40px;
+  line-height: 40px;
 }
 .know-operate-mian-header-select {
   height: 50px;
@@ -121,6 +120,7 @@ export default {
 }
 .know-operate-mian-content {
   background-color: #fff;
+  box-shadow: 0 1px 10px rgba(56, 37, 37, 0.08);
   border-radius: 10px;
   padding: 0px;
   overflow: auto;

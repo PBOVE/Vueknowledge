@@ -65,22 +65,22 @@
 
 <script>
 //导入详情界面
-import detailsShow from "./interface/details";
+import detailsShow from './interface/details';
 //导入 日志
-import journalShow from "./interface/journal";
+import journalShow from './interface/journal';
 //导入 树图
-import treeDiagram from "./interface/treeDiagram";
+import treeDiagram from './interface/treeDiagram';
 //导入力导图
-import forceDiagram from "./interface/forceDiagram";
+import forceDiagram from './interface/forceDiagram';
 //导入富文本
-import richText from "./interface/richText";
+import richText from './interface/richText';
 export default {
-  props: ["treeNode", "showSelectNum", "InnerHeight", "itemId", "itemExitFlag"],
+  props: ['treeNode', 'showSelectNum', 'InnerHeight', 'itemId', 'itemExitFlag'],
   components: { detailsShow, journalShow, treeDiagram, forceDiagram, richText },
   data() {
     return {
       // 加载 信息 动画
-      spinShow: false
+      spinShow: false,
     };
   },
   watch: {},
@@ -89,7 +89,7 @@ export default {
       const statusMap = {
         // 名称 改变
         1: () => {
-          this.$emit("oMainCallback", 2, val);
+          this.$emit('oMainCallback', 2, val);
           this.$refs.forcediagram.setForce();
           this.$refs.treediagram.setForce();
         },
@@ -109,11 +109,11 @@ export default {
         // 名称 改变 details 发送数据
         5: () => {
           this.$refs.detailsShow.putServerName(val);
-        }
+        },
       };
       statusMap[type]();
-    }
-  }
+    },
+  },
 };
 </script>
 

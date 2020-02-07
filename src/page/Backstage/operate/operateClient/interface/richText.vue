@@ -52,7 +52,16 @@ export default {
       // 在小型设备
       toolbarButtonsMD: {
         moreText: {
-          buttons: ['fontFamily', 'fontSize', 'bold', 'italic', 'underline', 'strikeThrough', 'textColor', 'backgroundColor'],
+          buttons: [
+            'fontFamily',
+            'fontSize',
+            'bold',
+            'italic',
+            'underline',
+            'strikeThrough',
+            'textColor',
+            'backgroundColor',
+          ],
           buttonsVisible: 1,
         },
         moreParagraph: {
@@ -78,7 +87,17 @@ export default {
           buttonsVisible: 1,
         },
         moreMisc: {
-          buttons: ['saveSelection', 'undo', 'redo', 'fullscreen', 'print', 'spellChecker', 'selectAll', 'html', 'help'],
+          buttons: [
+            'saveSelection',
+            'undo',
+            'redo',
+            'fullscreen',
+            'print',
+            'spellChecker',
+            'selectAll',
+            'html',
+            'help',
+          ],
           align: 'right',
           buttonsVisible: 1,
         },
@@ -102,7 +121,16 @@ export default {
         placeholder: '输入内容',
         toolbarButtons: {
           moreText: {
-            buttons: ['fontFamily', 'fontSize', 'bold', 'italic', 'underline', 'strikeThrough', 'textColor', 'backgroundColor'],
+            buttons: [
+              'fontFamily',
+              'fontSize',
+              'bold',
+              'italic',
+              'underline',
+              'strikeThrough',
+              'textColor',
+              'backgroundColor',
+            ],
             buttonsVisible: 8,
           },
           moreParagraph: {
@@ -128,7 +156,17 @@ export default {
             buttonsVisible: 4,
           },
           moreMisc: {
-            buttons: ['saveSelection', 'undo', 'redo', 'fullscreen', 'print', 'spellChecker', 'selectAll', 'html', 'help'],
+            buttons: [
+              'saveSelection',
+              'undo',
+              'redo',
+              'fullscreen',
+              'print',
+              'spellChecker',
+              'selectAll',
+              'html',
+              'help',
+            ],
             align: 'right',
             buttonsVisible: 3,
           },
@@ -168,14 +206,20 @@ export default {
               $uploadId.removeClass('Froalachange');
             }
           },
-          'commands.before': cmd => {
+          'commands.before': (cmd) => {
             if (cmd === 'moreMisc') {
               if (this.moreMisc) {
                 this.moreMisc = false;
-                $('.fr-wrapper').css('height', this.InnerHeight - this.TopHeight + 'px');
+                $('.fr-wrapper').css(
+                  'height',
+                  this.InnerHeight - this.TopHeight + 'px',
+                );
               } else {
                 this.moreMisc = true;
-                $('.fr-wrapper').css('height', this.InnerHeight - this.TopHeight - 49 + 'px');
+                $('.fr-wrapper').css(
+                  'height',
+                  this.InnerHeight - this.TopHeight - 49 + 'px',
+                );
               }
             }
           },
@@ -185,7 +229,10 @@ export default {
     // 自定义按钮
     customButton() {
       // 设置上传按键
-      FroalaEditor.DefineIconTemplate('material_upload', '<i id="uploadFroalaExit" class="ivu-icon ivu-icon-md-cloud-upload Froalachange"></i>');
+      FroalaEditor.DefineIconTemplate(
+        'material_upload',
+        '<i id="uploadFroalaExit" class="ivu-icon ivu-icon-md-cloud-upload Froalachange"></i>',
+      );
       FroalaEditor.DefineIcon('saveSelection', {
         NAME: 'upload',
         template: 'material_upload',
@@ -197,7 +244,10 @@ export default {
         refreshAfterCallback: false,
         callback: () => {
           let $uploadId = $('#uploadFroalaExit');
-          if ($uploadId.hasClass('Froalachange') || $uploadId.hasClass('uploadColor')) {
+          if (
+            $uploadId.hasClass('Froalachange') ||
+            $uploadId.hasClass('uploadColor')
+          ) {
             return;
           }
           let url = 'storage/text/' + this.treeNode.id;
@@ -216,7 +266,7 @@ export default {
     getExitTextData() {
       let url = 'storage/text/' + this.treeNode.id;
       this.get(url)
-        .then(res => {
+        .then((res) => {
           this.spinShow = true;
           if (res.data) {
             if (this.itemExitFlag) {

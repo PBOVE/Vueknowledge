@@ -8,44 +8,42 @@
 <template>
   <div id="know-tree-list">
     <div class="know-tree-list-header-title">类层次结构</div>
-    <Layout>
-      <Header class="know-tree-default know-tree-header-select">
-        <div v-if="itemExitFlag">
-          <div
-            class="know-tree-header-button know-tree-header-button-add"
-            @click="TLCallback(4)"
-            :class="{'know-tree-header-button-no-selete':ctrlButtonFlag}"
-          >
-            <Icon type="md-add-circle" size="20" />
-            <div class="know-tree-header-button-title">添加</div>
-          </div>
-
-          <div
-            class="know-tree-header-button know-tree-header-button-del"
-            :class="{'know-tree-header-button-no-selete':!SeleteNodeFlag}"
-            @click="TLCallback(5)"
-          >
-            <Icon type="ios-close-circle" size="20" />
-            <div class="know-tree-header-button-title">删除</div>
-          </div>
-
-          <div
-            class="know-tree-header-button know-tree-header-button-exit"
-            :class="{'know-tree-header-button-no-selete':!SeleteNodeFlag||ctrlButtonFlag}"
-            @click="TLCallback(6)"
-          >
-            <Icon type="ios-create" size="22" />
-            <div class="know-tree-header-button-title">编辑</div>
-          </div>
+    <div class="know-tree-default know-tree-header-select">
+      <div v-if="itemExitFlag">
+        <div
+          class="know-tree-header-button know-tree-header-button-add"
+          @click="TLCallback(4)"
+          :class="{'know-tree-header-button-no-selete':ctrlButtonFlag}"
+        >
+          <Icon type="md-add-circle" size="20" />
+          <div class="know-tree-header-button-title">添加</div>
         </div>
-      </Header>
-      <Content
-        class="know-tree-default know-tree-main-content scroll"
-        :style="{height:setTreeClientHeight}"
-      >
-        <tree-z @selectNode="TLCallback" :treelistVal="treeZ" :itemId="itemId" ref="treeZ"></tree-z>
-      </Content>
-    </Layout>
+
+        <div
+          class="know-tree-header-button know-tree-header-button-del"
+          :class="{'know-tree-header-button-no-selete':!SeleteNodeFlag}"
+          @click="TLCallback(5)"
+        >
+          <Icon type="ios-close-circle" size="20" />
+          <div class="know-tree-header-button-title">删除</div>
+        </div>
+
+        <div
+          class="know-tree-header-button know-tree-header-button-exit"
+          :class="{'know-tree-header-button-no-selete':!SeleteNodeFlag||ctrlButtonFlag}"
+          @click="TLCallback(6)"
+        >
+          <Icon type="ios-create" size="22" />
+          <div class="know-tree-header-button-title">编辑</div>
+        </div>
+      </div>
+    </div>
+    <Content
+      class="know-tree-default know-tree-main-content scroll"
+      :style="{height:setTreeClientHeight}"
+    >
+      <tree-z @selectNode="TLCallback" :treelistVal="treeZ" :itemId="itemId" ref="treeZ"></tree-z>
+    </Content>
 
     <modal-a
       :AddModalFlag="buttonAddFlag"
@@ -72,45 +70,45 @@
 
 <script>
 // 导入 删除 modal
-import modalD from "./modalADE/modalD";
+import modalD from './modalADE/modalD';
 // 导入 添加 modal
-import modalA from "./modalADE/modalA";
+import modalA from './modalADE/modalA';
 // 导入 编辑 modeal
-import modalE from "./modalADE/modalE";
+import modalE from './modalADE/modalE';
 // 导入 树
-import treeZ from "./tree/treeJquery";
+import treeZ from './tree/treeJquery';
 export default {
   components: { modalD, modalA, modalE, treeZ },
-  props: ["InnerHeight", "itemId", "itemExitFlag"],
+  props: ['InnerHeight', 'itemId', 'itemExitFlag'],
   data() {
     return {
       // ctrl 点击标志 位
       ctrlButtonFlag: false,
       // 点击 添加标志 位
-      buttonAddFlag: "",
+      buttonAddFlag: '',
       // 点击 删除标志 位
-      buttonDelFlag: "",
+      buttonDelFlag: '',
       // 点击 编辑标志 位
-      buttonExitFlag: "",
+      buttonExitFlag: '',
       // 删除 节点
-      selectNodeName: "",
+      selectNodeName: '',
       // 设置top高度
       TopHeight: 100,
       //  树节点 点击标志位
       SeleteNodeFlag: false,
       // 树节点 值\
-      treeNode: "",
+      treeNode: '',
       //传给treeZ组件的值
       treeZ: {
-        ExitName: "",
-        addName: "",
-        delName: "",
-        delNodes: ""
+        ExitName: '',
+        addName: '',
+        delName: '',
+        delNodes: '',
       },
       // 根节点数量
-      rootNodeNum: "",
+      rootNodeNum: '',
       // 选择多个节点 id + name
-      selectNodes: []
+      selectNodes: [],
     };
   },
   methods: {
@@ -125,17 +123,17 @@ export default {
         2: () => {
           let node = {
             name: val.name,
-            id: val.id
+            id: val.id,
           };
           this.selectNodeName = val.name;
           this.treeNode = node;
-          this.$emit("MangageCallback", 1, node);
+          this.$emit('MangageCallback', 1, node);
         },
         //modal修改 触发
         3: () => {
           this.treeZ.ExitName = val;
           this.selectNodeName = val;
-          this.$emit("MangageCallback", 3, Math.random());
+          this.$emit('MangageCallback', 3, Math.random());
         },
         // 点击 添加按键
         4: () => {
@@ -156,14 +154,14 @@ export default {
         // modal 创建 触发
         7: () => {
           this.treeZ.addName = val;
-          this.$emit("MangageCallback", 3, Math.random());
+          this.$emit('MangageCallback', 3, Math.random());
         },
         // modal 删除 触发
         8: () => {
-          this.selectNodeName = "";
-          this.treeNode = "";
-          this.$emit("MangageCallback", 1, "");
-          this.$emit("MangageCallback", 3, Math.random());
+          this.selectNodeName = '';
+          this.treeNode = '';
+          this.$emit('MangageCallback', 1, '');
+          this.$emit('MangageCallback', 3, Math.random());
           this.treeZ.delName = val;
         },
         //根节点 数量 获取
@@ -187,29 +185,29 @@ export default {
         },
         //删除 多节点 包括选中 treeNode
         13: () => {
-          this.selectNodeName = "";
-          this.treeNode = "";
-          this.$emit("MangageCallback", 1, "");
-          this.$emit("MangageCallback", 3, Math.random());
+          this.selectNodeName = '';
+          this.treeNode = '';
+          this.$emit('MangageCallback', 1, '');
+          this.$emit('MangageCallback', 3, Math.random());
         },
         // 名称 改变 details发送
         14: () => {
-          this.$emit("MangageCallback", 4, val);
+          this.$emit('MangageCallback', 4, val);
         },
         // 树数据请求
         15: () => {
           this.$refs.treeZ.getTreeData();
-        }
+        },
       };
       statusMap[type]();
-    }
+    },
   },
   computed: {
     //设置 树 可视区 高度
     setTreeClientHeight() {
-      return this.InnerHeight - this.TopHeight + "px";
-    }
-  }
+      return this.InnerHeight - this.TopHeight + 'px';
+    },
+  },
 };
 </script>
 
@@ -226,13 +224,11 @@ export default {
   font-size: 18px;
   line-height: 25px;
   padding: 5px 10px 3px 10px;
-  border-bottom: 1px solid #dcdee2;
-  background-color: #dcdee2;
+  /* background-color: #dcdee2; */
   height: 40px;
+  line-height: 40px;
 }
 .know-tree-default {
-  background-color: #f5f7f9;
-  border-radius: 10px;
 }
 .know-tree-header-button-title {
   display: inline-block;
@@ -282,8 +278,8 @@ export default {
   color: #2d8cf0;
 }
 .know-tree-main-content {
-  box-shadow: 0 0 5px #e8eaec;
-  background-color: #fff;
+  box-shadow: 0 1px 10px rgba(56, 37, 37, 0.08);
+  border-radius: 10px;
   padding: 10px;
   box-sizing: border-box;
   overflow: auto;

@@ -15,17 +15,17 @@
 </template>
 
 <script>
-import treeChart from "../../../../../components/treeChart";
+import treeChart from '../../../../../components/treeChart';
 export default {
   components: { treeChart },
-  props: ["treeNode", "showSelectNum", "InnerHeight"],
+  props: ['treeNode', 'showSelectNum', 'InnerHeight'],
   data() {
     return {
       getDataFlag: false,
       //设置top高
       TopHeight: 120,
       //设置right宽度
-      RightWeight: 20
+      RightWeight: 20,
     };
   },
   methods: {
@@ -33,9 +33,9 @@ export default {
     getTreeData() {
       if (this.getDataFlag) return;
       this.getDataFlag = true;
-      let url = "node/" + this.treeNode.id + "/link";
+      let url = 'node/' + this.treeNode.id + '/link';
       this.get(url)
-        .then(res => {
+        .then((res) => {
           this.spinShow = true;
           this.$refs.treechart.handletreeData(res.data);
         })
@@ -50,30 +50,30 @@ export default {
       this.getDataFlag = false;
       if (this.showSelectNum !== 3) return;
       this.getTreeData();
-    }
+    },
   },
   watch: {
     treeNode: {
       handler(newval, oldval) {
-        if (newval === "" || newval.id === oldval.id) return;
+        if (newval === '' || newval.id === oldval.id) return;
         this.getDataFlag = false;
         if (this.showSelectNum === 3) {
           this.getTreeData();
         }
       },
-      deep: true
+      deep: true,
     },
     showSelectNum(val) {
       if (val !== 3) return;
       this.getTreeData();
-    }
+    },
   },
   computed: {
     //设置  可视区 高度
     SetHeight() {
-      return this.InnerHeight - this.TopHeight + "px";
-    }
-  }
+      return this.InnerHeight - this.TopHeight + 'px';
+    },
+  },
 };
 </script>
 
