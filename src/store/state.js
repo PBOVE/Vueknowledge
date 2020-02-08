@@ -7,15 +7,9 @@
 
 export default {
     // token
-    token: '',
+    token: sessionStorage.getItem('access_token') || '',
     // 用户所有信息
-    user: '',
-    // 用户昵称
-    nickName: '',
-    // 用户更新时间
-    updateTime:'',
-    // 用户照片
-    images:'',
+    user: JSON.parse(sessionStorage.getItem('user_roles') )|| '',
     // 高度
     headerHeight: 60
 }

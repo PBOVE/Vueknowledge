@@ -14,7 +14,7 @@
       <div class="item-modal-title">项目封面</div>
       <div class="item-modal-cover">
         <div class="item-modal-upload item-upload-default"></div>
-        <Button class="modal-cover-button" v-if="status||JSON.parse(user).username === submitMsg.userName">上传新的封面</Button>
+        <Button class="modal-cover-button" v-if="status||user.userName === submitMsg.userName">上传新的封面</Button>
       </div>
       <div class="item-modal-title">项目作者</div>
       <div class="item-border">{{submitMsg.nickName}}</div>
@@ -25,24 +25,24 @@
         v-model="submitMsg.name"
         @on-change="changeEvent"
         maxlength="20"
-        v-if="status||JSON.parse(user).username === submitMsg.userName"
+        v-if="status||user.userName === submitMsg.userName"
       />
       <div v-else class="item-border">{{submitMsg.name}}</div>
       <div class="item-modal-title">项目描述</div>
       <Input
         class="textarea-i"
         type="textarea"
-        placeholder="项目描述"
+        placeholder="项目描述..."
         v-model="submitMsg.description"
         :autosize="{minRows: 2,maxRows: 6}"
-        maxlength="3000"
+        maxlength="200"
         show-word-limit
         @on-change="changeEvent"
-        v-if="status||JSON.parse(user).username === submitMsg.userName"
+        v-if="status||user.userName === submitMsg.userName"
       />
       <div v-else class="item-border">{{submitMsg.description}}</div>
       <div class="item-modal-title">项目公开性</div>
-      <Select v-model="submitMsg.share" @on-change="changeEvent" v-if="status||JSON.parse(user).username === submitMsg.userName">
+      <Select v-model="submitMsg.share" @on-change="changeEvent" v-if="status||user.userName === submitMsg.userName">
         <Option v-for="item in shareList" :value="item.value" :key="item.value">{{ item.label }}</Option>
       </Select>
       <div
@@ -60,7 +60,7 @@
         type="primary"
         @click="keepSetting"
         :disabled="allowFlag"
-        v-if="status||JSON.parse(user).username === submitMsg.userName"
+        v-if="status||user.userName === submitMsg.userName"
         :loading="serveLoadFlag"
       >
         <span v-if="!serveLoadFlag">保存</span>
@@ -246,8 +246,9 @@ export default {
   overflow: auto;
 }
 .item-border {
-  border: 1px solid #dadce0;
   padding: 5px 10px;
+  min-height: 32px;
+  border: 1px solid #dadce0;
   border-radius: 4px;
 }
 </style>

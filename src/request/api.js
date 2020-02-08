@@ -175,8 +175,8 @@ const showStatus = (err) => {
     case 404:
       router.replace({
         path: '/login',
-      });
-      store.commit('delToken');
+      }).catch(() => { });
+      // store.commit('delToken');
       notify('error', '登录失效，请重新登录');
       break;
     case 500:

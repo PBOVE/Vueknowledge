@@ -9,7 +9,7 @@
   <div class="know-search">
     <header class="know-search-header" ref="knowSearchHeader">
       <router-link to="/project">
-      <Icon type="ios-keypad" class="know-search-header-icon cup" />
+        <Icon type="ios-keypad" class="know-search-header-icon cup" />
       </router-link>
       <router-link to="/login" v-if="!userStatusFlag&&userStatusLoadFlag">
         <span class="know-search-header-login cup">登录</span>
@@ -55,10 +55,9 @@
 </template>
 
 <script>
-import searchContent from "./searchContent/searchContent";
-import dropDown from "../../components/dropdown";
-import { mapState } from "vuex";
-
+import searchContent from './searchContent/searchContent';
+import dropDown from '../../components/dropdown';
+import { mapMutations, mapGetters } from 'vuex';
 export default {
   components: { searchContent, dropDown },
   data() {
@@ -70,33 +69,37 @@ export default {
       //联想 请求的数据
       searchData: [],
       //用户输入的数据
-      InSearchMeg: "",
+      InSearchMeg: '',
       //处理过用户输入的数据
-      handleInSearchMeg: "",
+      handleInSearchMeg: '',
       // 获取 innerHeight
-      InnerHeight: "",
+      InnerHeight: '',
       // 获取 innerWidth
-      InnerWidth: "",
+      InnerWidth: '',
       // 距离顶部的高度
-      TopHeight: 60
+      TopHeight: 60,
     };
   },
   computed: {
-    ...mapState(["nickName", "images"]),
+    ...mapMutations(['setUserData']),
+    ...mapGetters({
+      images: 'getImageSrc',
+      nickName: 'getnickName',
+    }),
     //设置 树 可视区 高度
     setClientHeight() {
-      return this.InnerHeight - this.TopHeight + "px";
-    }
+      return this.InnerHeight - this.TopHeight + 'px';
+    },
   },
   mounted() {
     this.MonitoringlAddInput();
     this.getUser();
     this.InnerHeight = window.innerHeight;
     this.InnerWidth = window.innerWidth;
-    window.addEventListener("resize", this.getInner);
+    window.addEventListener('resize', this.getInner);
   },
   beforeDestroy() {
-    window.removeEventListener("resize", this.getInner);
+    window.removeEventListener('resize', this.getInner);
   },
   methods: {
     //获取 浏览器 高度
@@ -106,39 +109,39 @@ export default {
     },
     // 搜索框 获取焦点触发的函数
     SearchInFocus() {
-      this.$refs.knowSearchBoxCn.style.display = "none";
-      this.$refs.knowSearchBoxEn.style.display = "none";
-      this.$refs.knowSearchBox.classList.add("know-search-box-focus");
+      this.$refs.knowSearchBoxCn.style.display = 'none';
+      this.$refs.knowSearchBoxEn.style.display = 'none';
+      this.$refs.knowSearchBox.classList.add('know-search-box-focus');
       this.$refs.knowSearchHeaderLogo.classList.add(
-        "know-search-header-logo-focus"
+        'know-search-header-logo-focus',
       );
-      this.$refs.knowSearchHeader.classList.add("know-search-header-focus");
+      this.$refs.knowSearchHeader.classList.add('know-search-header-focus');
     },
     // 搜索框 恢复到原来的状态
     SearchInCancel() {
-      this.$refs.knowSearchBoxCn.style.display = "block";
-      this.$refs.knowSearchBoxEn.style.display = "block";
-      this.$refs.knowSearchBox.classList.remove("know-search-box-focus");
+      this.$refs.knowSearchBoxCn.style.display = 'block';
+      this.$refs.knowSearchBoxEn.style.display = 'block';
+      this.$refs.knowSearchBox.classList.remove('know-search-box-focus');
       this.$refs.knowSearchHeaderLogo.classList.remove(
-        "know-search-header-logo-focus"
+        'know-search-header-logo-focus',
       );
-      this.$refs.knowSearchHeader.classList.remove("know-search-header-focus");
+      this.$refs.knowSearchHeader.classList.remove('know-search-header-focus');
     },
     //input change select 改变时 触发的函数
     SearchChangeOrselect(val) {
       let name = this.InSearchMeg;
-      name = name.replace(/^\s+|\s+$/g, "");
-      if (name === "") {
+      name = name.replace(/^\s+|\s+$/g, '');
+      if (name === '') {
         this.searchData = [];
         return;
       }
-      let url = "search";
+      let url = 'search';
       let obj = {
         q: name,
-        tips: val
+        tips: val,
       };
       this.get(url, obj)
-        .then(res => {
+        .then((res) => {
           this.SearchLists(res.data);
         })
         .catch(() => {});
@@ -146,25 +149,25 @@ export default {
     //下拉列表搜索显示的
     SearchLists(data) {
       this.searchData = [];
-      data.forEach(item => {
+      data.forEach((item) => {
         this.searchData.push(item.name);
       });
     },
     // 请求 数据 展示 向 main 传数据
     SearchSelectShow(val) {
-      this.handleInSearchMeg = val.replace(/^\s+|\s+$/g, "");
-      if (this.handleInSearchMeg === "") {
+      this.handleInSearchMeg = val.replace(/^\s+|\s+$/g, '');
+      if (this.handleInSearchMeg === '') {
         return;
       }
-      if(this.$route.query.q === this.InSearchMeg){
+      if (this.$route.query.q === this.InSearchMeg) {
         this.$refs.searchContent.InitData();
         return;
       }
       this.$router.push({
-        path: "/",
+        path: '/',
         query: {
-          q: this.InSearchMeg
-        }
+          q: this.InSearchMeg,
+        },
       });
     },
     // 回车请求数据
@@ -176,19 +179,19 @@ export default {
     },
     // 绑定 enter 监听事件
     MonitoringlAddInput() {
-      let InP = document.querySelector("#know-search-box-input-In");
-      InP.addEventListener("keyup", this.SearchReqData);
+      let InP = document.querySelector('#know-search-box-input-In');
+      InP.addEventListener('keyup', this.SearchReqData);
     },
     // 获取  user信息
     getUser() {
-      const url = "user/me";
+      const url = 'user/me';
       this.get(url)
-        .then(res => {
+        .then((res) => {
           this.userStatusLoadFlag = true;
           if (res.data.user.id) {
             let data = res.data;
             this.userStatusFlag = true;
-            this.$store.commit("setUserData", data);
+            this.setUserData(data);
           }
         })
         .catch(() => {});
@@ -196,8 +199,8 @@ export default {
     // 设置用户输入的数据
     setSearchMsg(val) {
       this.InSearchMeg = val;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -215,7 +218,7 @@ export default {
   align-items: center;
 }
 .know-search-header-focus {
- box-shadow: 0 1px 10px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.08);
 }
 .know-search-header-login {
   display: inline-block;
@@ -236,7 +239,7 @@ export default {
   background-color: RGBA(45, 140, 240, 0.8);
 }
 .know-search-header-icon {
-  font-size: 24px;
+  font-size: 25px;
   margin-right: 15px;
   color: #808695;
   transition: color 0.5s;
@@ -281,7 +284,7 @@ export default {
   font-family: Georgia;
 }
 .kown-search-title-logo {
-  background-image: url("../../assets/images/logo.png");
+  background-image: url('../../assets/images/logo.png');
   background-repeat: no-repeat;
   background-position: 0px 12px;
   background-size: 70% 70%;
@@ -327,7 +330,7 @@ export default {
   display: inline-block;
   width: 20px;
   height: 20px;
-  background-image: url("../../assets/images/logo.png");
+  background-image: url('../../assets/images/logo.png');
   background-size: 100% 100%;
 }
 

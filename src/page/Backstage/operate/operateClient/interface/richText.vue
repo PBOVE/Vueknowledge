@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import FroalaEditor from 'froala-editor';
 import { baseUrl } from '../../../../../request/http';
 require('froala-editor/js/languages/zh_cn');
@@ -34,6 +35,7 @@ require('froala-editor/js/plugins/table.min');
 require('froala-editor/js/plugins/video.min');
 require('froala-editor/js/plugins/help.min');
 import $ from '../../../../../assets/jquery-vendor';
+
 export default {
   props: ['treeNode', 'showSelectNum', 'InnerHeight', 'itemExitFlag'],
   data() {
@@ -103,6 +105,11 @@ export default {
         },
       },
     };
+  },
+  computed: {
+    ...mapGetters({
+      access_token: 'getToken',
+    }),
   },
   methods: {
     // 获取数据
@@ -197,7 +204,7 @@ export default {
         imageUploadURL: baseUrl + 'storage',
         videoUploadURL: baseUrl + 'storage',
         requestHeaders: {
-          'X-XSRF-TOKEN': this.$store.getters.getToken,
+          'X-XSRF-TOKEN': this.access_token,
         },
         events: {
           contentChanged: () => {
@@ -276,7 +283,7 @@ export default {
               this.getText = res.data;
             }
           } else {
-            this.getText = '来也匆匆,去也匆匆,什么都没有留下。';
+            this.getText = '作者没有再此节点编辑任何信息。';
           }
         })
         .catch(() => {

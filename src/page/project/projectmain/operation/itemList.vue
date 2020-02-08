@@ -29,7 +29,7 @@
             <Tooltip
               content="项目删除"
               placement="top"
-              v-if="status !== 'false'||JSON.parse(user).username === item.author.userName"
+              v-if="status !== 'false'||user.userName === item.author.userName"
             >
               <Icon type="ios-trash" class="item-box-icon" @click.stop="selectItemDelete(index)" />
             </Tooltip>
@@ -59,7 +59,6 @@ export default {
   data() {
     return {
       modalFlag: false
-      // userName:JSON.parse(this.user)
     };
   },
   computed: {

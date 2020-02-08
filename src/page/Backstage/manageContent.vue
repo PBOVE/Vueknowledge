@@ -118,10 +118,10 @@ export default {
           this.loadingFlag = false;
           const data = res.data;
           const user = data.author.userName;
-          const usetWeb = this.$route.params.user;
-          if (user === usetWeb) {
+          const userWeb = this.$route.params.user;
+          if (user === userWeb) {
             this.$emit('sendItem', data.name);
-            if (JSON.parse(this.user).username === user) {
+            if (this.user.userName === user) {
               this.itemExitFlag = true;
               this.$refs.treelist.TLCallback(15);
             } else if (data.share) {
@@ -169,7 +169,7 @@ export default {
 }
 
 .know-manage-split {
-  height: 200px;
+  background: #f0f2f5;
 }
 .know-manage-split-pane {
   padding: 0px;

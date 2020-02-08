@@ -23,12 +23,16 @@
             </div>
           </div>
           <div class="box-header-nickname">{{nickName}}</div>
-          <div class="box-header-username">{{user.username}}</div>
-          <div class="box-header-m curP box-button" @click="ClickStatus(2)">管理您的 Knowledge Graph 账号</div>
+          <div class="box-header-username">{{username}}</div>
+          <router-link to="/user" class="box-header-m curP box-button">管理您的 Knowledge Graph 账号</router-link>
         </div>
         <Divider />
         <div class="drop-box-main">
-          <div class="drop-box-main-button curP box-button" @click="ClickStatus(3)" :class="{'drop-box-main-button-loading':logoutLoad}">
+          <div
+            class="drop-box-main-button curP box-button"
+            @click="ClickStatus(3)"
+            :class="{'drop-box-main-button-loading':logoutLoad}"
+          >
             <Icon type="md-refresh" class="drop-box-main-button-icon" v-show="logoutLoad" />退出
           </div>
         </div>
@@ -40,27 +44,30 @@
 
 
 <script>
-import { mapState } from "vuex";
+import { mapGetters, mapMutations } from 'vuex';
 // 点击上传照片
-import uploadImages from "./uploadImages";
+import uploadImages from './uploadImages';
 
 export default {
   components: { uploadImages },
   data() {
     return {
-      user: JSON.parse(this.$store.state.user),
       // 管理页面展示标志位
       showViewFlag: false,
       // 字母表
-      wordList: "abcdefghigklmnopqrstuvwxyz1234567890",
+      wordList: 'abcdefghigklmnopqrstuvwxyz1234567890',
       // 随机
-      randomPass: "",
+      randomPass: '',
       // 退出标志位
-      logoutLoad: false
+      logoutLoad: false,
     };
   },
   computed: {
-    ...mapState(["nickName", "images"])
+    ...mapGetters({
+      username: 'getuserName',
+      images: 'getImageSrc',
+      nickName: 'getnickName',
+    }),
   },
   created() {
     for (let i = 0; i < 8; i++) {
@@ -69,12 +76,13 @@ export default {
   },
   mounted() {
     this.$refs.dropWarpS.dataset.k = this.randomPass;
-    window.addEventListener("click", this.showUserView);
+    window.addEventListener('click', this.showUserView);
   },
   beforeDestroy() {
-    window.removeEventListener("click", this.showUserView);
+    window.removeEventListener('click', this.showUserView);
   },
   methods: {
+    ...mapMutations(['delToken']),
     // 点击事件
     ClickStatus(type) {
       const statusMap = {
@@ -86,20 +94,19 @@ export default {
         },
         // 点击跳转 user页面
         2: () => {
-          this.$router.push({ path: "/user" });
+          this.$router.push({ path: '/user' });
         },
         // 点击 退出
         3: () => {
-          if(this.logoutLoad){
+          if (this.logoutLoad) {
             return;
           }
-          const url = "user/logout";
+          const url = 'user/logout';
           this.logoutLoad = true;
           this.post_json(url)
             .then(() => {
-              this.$store.commit("delToken");
-              this.$router.push({ path: "/login" });
-              this.logoutLoad = false;
+              this.delToken();
+              this.$router.push({ path: '/login' });
             })
             .catch(() => {
               this.logoutLoad = false;
@@ -109,7 +116,7 @@ export default {
         4: () => {
           this.showViewFlag = false;
           this.$refs.uploadImages.clickStatus(3);
-        }
+        },
       };
       statusMap[type]();
     },
@@ -125,8 +132,8 @@ export default {
       } else {
         this.showViewFlag = false;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -250,11 +257,10 @@ export default {
 }
 .drop-box-main-button-icon {
   animation: ani-demo-load 2.5s linear infinite;
-  margin:0 5px 0 0;
+  margin: 0 5px 0 0;
   font-size: 16px;
-  
 }
-.drop-box-main-button.drop-box-main-button-loading{
+.drop-box-main-button.drop-box-main-button-loading {
   background: rgba(0, 0, 0, 0.3);
   color: #fff;
   cursor: default;

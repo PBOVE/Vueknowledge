@@ -36,7 +36,7 @@
       <div class="msg-row-content dis-flex" @click="selectRow(2)">
         <div class="dis-flex-left">
           <div class="msg-row-name">昵称</div>
-          <div class="msg-row-title">{{this.$store.state.nickName}}</div>
+          <div class="msg-row-title">{{nickName}}</div>
         </div>
         <div class="dis-flex-right">
           <Icon type="ios-arrow-forward" size="20" />
@@ -52,7 +52,7 @@
     <div class="main-content-msg-row">
       <div class="msg-row-content">
         <div class="msg-row-name">更新时间</div>
-        <div class="msg-row-title">{{TimeConversion(this.$store.state.updateTime)}}</div>
+        <div class="msg-row-title">{{TimeConversion(updateTime)}}</div>
       </div>
     </div>
     <div class="main-content-msg-row">
@@ -71,42 +71,46 @@
 
 
 <script>
-import { mapState } from "vuex";
+import { mapGetters } from 'vuex';
 
 export default {
   data() {
     return {
-      user: JSON.parse(this.$store.state.user)
     };
   },
   computed: {
-    ...mapState(["nickName", "images"])
+    ...mapGetters({
+      user: 'getUser',
+      images: 'getImageSrc',
+      nickName: 'getnickName',
+      updateTime:'getUpdateTime'
+    }),
   },
   methods: {
     // 时间转换函数
     TimeConversion(time) {
       const date = new Date(time);
-      const completion = num => {
-        return num.toString().padStart(2, "0");
+      const completion = (num) => {
+        return num.toString().padStart(2, '0');
       };
       return (
         date.getFullYear() +
-        "年" +
+        '年' +
         completion(date.getMonth() + 1) +
-        "月" +
+        '月' +
         completion(date.getDate()) +
-        "日"
+        '日'
       );
     },
     // 选择行
     selectRow(val) {
       if (val === 1) {
-        this.$emit("userMainCallback", 2, val);
+        this.$emit('userMainCallback', 2, val);
       } else {
-        this.$emit("userMainCallback", 1, val);
+        this.$emit('userMainCallback', 1, val);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

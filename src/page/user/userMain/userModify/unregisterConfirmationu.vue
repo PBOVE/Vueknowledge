@@ -42,34 +42,36 @@
 
 
 <script>
+import { mapMutations } from 'vuex';
+
 export default {
   data() {
     return {
       // 判断用户选择
-      checkFlag: false
+      checkFlag: false,
     };
   },
   methods: {
+    ...mapMutations(['delToken']),
     // 发送修改名称到服务器
     modifyServer() {
       if (!this.checkFlag) {
-        this.$Message.info("请勾选注销");
+        this.$Message.info('请勾选注销');
         return;
       }
-      const url = "user/me";
+      const url = 'user/me';
       this.delete_string(url)
         .then(() => {
-            this.$store.commit("delToken");
-            this.$router.push({ path: "/login" });
-          
+          this.delToken();
+          this.$router.push({ path: '/login' });
         })
         .catch(() => {});
     },
     // 选择回退
     selectBack() {
-      this.$emit("userMainCallback", 1, 1);
-    }
-  }
+      this.$emit('userMainCallback', 1, 1);
+    },
+  },
 };
 </script>
 

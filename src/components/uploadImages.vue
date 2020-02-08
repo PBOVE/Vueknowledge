@@ -53,6 +53,8 @@
 
 
 <script>
+import { mapMutations } from 'vuex';
+
 export default {
   data() {
     return {
@@ -65,21 +67,21 @@ export default {
       // 显示 照片 标志位
       showImgFlag: 1,
       // 图片 连接地址
-      srcImage: "",
+      srcImage: '',
       // 设置按钮可点击 标志位
       disabledFlag: true,
       // 照片名称
-      ImagesName: ""
+      ImagesName: '',
     };
   },
-
   mounted() {
-    window.addEventListener("click", this.showModalView);
+    window.addEventListener('click', this.showModalView);
   },
   beforeDestroy() {
-    window.removeEventListener("click", this.showModalView);
+    window.removeEventListener('click', this.showModalView);
   },
   methods: {
+    ...mapMutations({ modifyImg: 'modify' }),
     // 状态选择函数
     clickStatus(type) {
       const statusMap = {
@@ -109,14 +111,14 @@ export default {
           this.ImagesName = file.name;
           this.uploadStatus = 2;
           let data = new FormData();
-          let url = "storage";
-          data.append("file", file);
-          this.post_progress(url, data, res => {
+          let url = 'storage';
+          data.append('file', file);
+          this.post_progress(url, data, (res) => {
             let loaded = res.loaded;
             let total = res.total;
             this.precent = (loaded / total) * 100;
           })
-            .then(res => {
+            .then((res) => {
               this.showImgFlag = 2;
               this.srcImage = res.link;
               this.disabledFlag = false;
@@ -132,19 +134,19 @@ export default {
         },
         // 设置上传个人照片
         6: () => {
-          const url = "user/me";
+          const url = 'user/me';
           const obj = {
-            image: this.srcImage
+            image: this.srcImage,
           };
           this.patch_json(url, obj)
-            .then(res => {
+            .then((res) => {
               const data = res.data;
-              this.$store.commit("modify", data);
-              this.$Message.success("修改成功");
+              this.modifyImg(data);
+              this.$Message.success('修改成功');
               this.uploadShowFlag = false;
             })
             .catch(() => {});
-        }
+        },
       };
       statusMap[type]();
     },
@@ -153,8 +155,8 @@ export default {
       if (this.uploadShowFlag) {
         this.uploadShowFlag = false;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

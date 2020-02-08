@@ -38,7 +38,7 @@ export default {
       if (data) {
         this.$refs.eixtText.innerHTML = data;
       } else {
-        this.$refs.eixtText.innerHTML = "来也匆匆,去也匆匆,什么都没有留下。";
+        this.$refs.eixtText.innerHTML = "作者没有再此节点编辑任何信息。";
       }
     }
   },

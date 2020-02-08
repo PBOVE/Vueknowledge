@@ -7,13 +7,14 @@
 
 <template>
   <div class="user-wrap">
-    <public-header :RouterFlag='true'></public-header>
+    <public-header :RouterFlag="true"></public-header>
     <user-main :style="{height:ClientHeight}"></user-main>
   </div>
 </template>
 
 
 <script>
+import { mapGetters } from 'vuex';
 // 导入头
 import publicHeader from "../../components/publicHeader";
 // 导入内容
@@ -22,8 +23,6 @@ export default {
   components: { publicHeader, userMain },
   data() {
     return {
-      //TopHeigh高度
-      topHeight: this.$store.state.headerHeight,
       // 获取 innerHeight
       InnerHeight: "",
       // 获取 innerWidth
@@ -31,6 +30,9 @@ export default {
     };
   },
   computed: {
+    ...mapGetters({
+       topHeight: 'getTopHeigt',
+    }),
     // 可视区高度
     ClientHeight(){
       return this.InnerHeight - this.topHeight + 'px';

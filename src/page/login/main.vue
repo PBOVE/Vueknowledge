@@ -10,15 +10,17 @@
     <Spin size="large" fix v-if="spinShow"></Spin>
     <div class="know-login-icon">
       <router-link to="/">
-      <Icon type="ios-keypad"/>
+        <Icon type="ios-keypad" />
       </router-link>
     </div>
     <div class="know-login-box">
       <div class="know-login-title">
-        <div class="know-login-title-en">
-          <span class="kown-login-title-logo"></span>
-          <span>Knowledge&nbsp;Graph</span>
-        </div>
+        <router-link to="/">
+          <div class="know-login-title-en">
+            <span class="kown-login-title-logo"></span>
+            <span>Knowledge&nbsp;Graph</span>
+          </div>
+        </router-link>
         <div class="know-login-title-cn">
           <span>知识图谱构建平台</span>
         </div>
@@ -49,8 +51,10 @@
 
 
 <script>
-import loginContent from "./login/login";
-import registerContent from "./register/register";
+import { mapMutations } from 'vuex';
+import loginContent from './login/login';
+import registerContent from './register/register';
+
 export default {
   components: { loginContent, registerContent },
   data() {
@@ -58,10 +62,11 @@ export default {
       //设置免密登录加载
       spinShow: true,
       // 登陆 和 注册 之间 跳转
-      showLoginRegister: true
+      showLoginRegister: true,
     };
   },
   methods: {
+    ...mapMutations(['setUserData', 'setToken']),
     //登录 注册 切换 函数
     loginRegister(val) {
       switch (val) {
@@ -78,29 +83,29 @@ export default {
       const statusMap = {
         1: () => {
           this.showLoginRegister = val;
-        }
+        },
       };
       statusMap[type]();
     },
     // 获取  token
     getuserToken() {
-      this.get("user/me")
-        .then(res => {
+      this.get('user/me')
+        .then((res) => {
           this.spinShow = false;
           if (res.data.user.id) {
             let data = res.data;
-            this.$store.commit("setUserData", data);
-            this.$router.push({ path: "/project" });
+            this.setUserData(data);
+            this.$router.push({ path: '/project' });
           } else {
-            this.$store.commit("setToken", res.data._csrf.token);
+            this.setToken(res.data._csrf.token);
           }
         })
         .catch(() => {});
-    }
+    },
   },
   mounted() {
     this.getuserToken();
-  }
+  },
 };
 </script>
 
@@ -110,7 +115,7 @@ export default {
   position: relative;
   height: 100vh;
   width: 100vw;
-  background-image: url("../../assets/images/backgroudLogin.svg");
+  background-image: url('../../assets/images/backgroudLogin.svg');
   background-color: #f0f2f5;
 }
 #loginBox .know-login-box {
@@ -144,7 +149,7 @@ export default {
   text-align: center;
 }
 #loginBox .kown-login-title-logo {
-  background-image: url("../../assets/images/logo.png");
+  background-image: url('../../assets/images/logo.png');
   background-repeat: no-repeat;
   background-position: 0px 12px;
   background-size: 70% 70%;

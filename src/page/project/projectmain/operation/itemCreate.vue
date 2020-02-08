@@ -28,9 +28,9 @@
         v-model="submitMsg.description"
         type="textarea"
         :autosize="{minRows: 2,maxRows: 6}"
-        maxlength="3000"
+        maxlength="200"
         show-word-limit
-        placeholder="项目描述"
+        placeholder="项目描述..."
       />
       <div class="item-modal-title">是否分享 :</div>
       <RadioGroup v-model="submitMsg.share">

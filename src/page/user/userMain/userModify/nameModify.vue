@@ -15,7 +15,7 @@
       <div class="box-msg-header-title">对您的昵称所做的更改将反映在您的 “知识图谱构建平台” 帐号中</div>
     </div>
     <div class="box-msg-row">
-      <div class="box-msg-row-i">{{nickName}}</div>
+      <div class="box-msg-row-i">{{nickName.charAt(0).toUpperCase()}}</div>
       <div class="box-msg-row-confirm curpoin" @click="Statustriger(6)">
         <Icon type="md-create" size="20" />
       </div>
@@ -53,56 +53,59 @@
 
 
 <script>
-import { mapState } from "vuex";
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
   data() {
     return {
-      // 用户修改名称
-      userRName: this.$store.state.nickName,
       // 编辑名称框展示 标志位
       ExitModalFlag: false,
       // 昵称 修改
-      nickNameM: ""
+      nickNameM: '',
     };
   },
   computed: {
-    ...mapState(["nickName"])
+    ...mapGetters({
+      nickName: 'getnickName',
+    }),
   },
   watch: {
-    nickNameM(val){
-      if(val !== ''){
-        this.$refs.FullName.classList.remove("Editmodal-error");
+    nickNameM(val) {
+      if (val !== '') {
+        this.$refs.FullName.classList.remove('Editmodal-error');
       }
     },
-    ExitModalFlag(val){
-      if(val){
-        document.addEventListener('keyup',this.keyupEsc);
-      }else{  
-        document.removeEventListener('keyup',this.keyupEsc);
-      } 
-    }
+    ExitModalFlag(val) {
+      if (val) {
+        document.addEventListener('keyup', this.keyupEsc);
+      } else {
+        document.removeEventListener('keyup', this.keyupEsc);
+      }
+    },
   },
   methods: {
+    ...mapMutations({
+      storeModify: 'modify',
+    }),
     // 发送修改名称到服务器
     modifyServer() {
-      let nickName = this.nickNameM.replace(/^\s+|\s+$/g, "");
+      let nickName = this.nickNameM.replace(/^\s+|\s+$/g, '');
       if (nickName === this.nickName) {
         this.ExitModalFlag = false;
         return;
-      } else if (nickName === "") {
-        this.$refs.FullName.classList.add("Editmodal-error");
+      } else if (nickName === '') {
+        this.$refs.FullName.classList.add('Editmodal-error');
         return;
       }
-      const url = "user/me";
+      const url = 'user/me';
       const obj = {
-        nickName
+        nickName,
       };
       this.patch_json(url, obj)
-        .then(res => {
+        .then((res) => {
           const data = res.data;
-          this.$store.commit("modify", data);
-          this.$Message.success("修改成功");
+          this.storeModify(data);
+          this.$Message.success('修改成功');
           this.ExitModalFlag = false;
         })
         .catch(() => {});
@@ -111,11 +114,11 @@ export default {
       const statusMap = {
         // 昵称input focus触发函数
         1: () => {
-          this.$refs.FullName.classList.add("Editmodal-color");
+          this.$refs.FullName.classList.add('Editmodal-color');
         },
         // 昵称 input blur触发函数
         3: () => {
-          this.$refs.FullName.classList.remove("Editmodal-color");
+          this.$refs.FullName.classList.remove('Editmodal-color');
         },
         // 名称 关闭
         5: () => {
@@ -138,15 +141,15 @@ export default {
     },
     // 选择回退
     selectBack() {
-      this.$emit("userMainCallback", 1, 1);
+      this.$emit('userMainCallback', 1, 1);
     },
     // 注册按键事件
-    keyupEsc(e){
-      if(e.keyCode === 27){
+    keyupEsc(e) {
+      if (e.keyCode === 27) {
         this.Statustriger(5);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

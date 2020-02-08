@@ -104,6 +104,7 @@ export default {
 }
 .know-operate-header-button {
   box-sizing: border-box;
+  min-width: 80px;
   height: 40px;
   padding: 0 10px;
   text-align: center;
@@ -113,7 +114,7 @@ export default {
 }
 .know-operate-header-button:hover {
   transition: background-color 0.5s;
-  background-color: #e8eaec;
+  background: #dcdee2;
 }
 .know-operate-header-button:hover .ivu-icon,
 .know-operate-header-button:hover .iconfont {

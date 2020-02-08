@@ -54,5 +54,4 @@ export default {
   padding: 10px;
   overflow: auto;
 }
-
 </style>

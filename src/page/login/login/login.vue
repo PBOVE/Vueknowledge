@@ -65,8 +65,10 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+
 export default {
-  props: ["showLoginRegister"],
+  props: ['showLoginRegister'],
   data() {
     return {
       // 用户名 警告 标志位
@@ -77,27 +79,28 @@ export default {
       formloginFlag: false,
       //登陆 上传 的 信息
       formlogin: {
-        username: "",
-        password: "",
-        remeberMe: false
+        username: '',
+        password: '',
+        remeberMe: false,
       },
       //防止 多次登陆错误信息
       repeatFrom: {
-        username: "",
-        password: "",
-        remeberMe: false
+        username: '',
+        password: '',
+        remeberMe: false,
       },
       //感叹号
-      information: "ios-information-circle"
+      information: 'ios-information-circle',
     };
   },
   methods: {
+    ...mapMutations(['setUserData']),
     //登录
     Submitlanding() {
-      if (this.formlogin.username === "") {
+      if (this.formlogin.username === '') {
         this.showuserwarn = true;
       }
-      if (this.formlogin.password === "") {
+      if (this.formlogin.password === '') {
         this.showpasswordwarn = true;
       }
       if (this.formloginFlag || this.showuserwarn || this.showpasswordwarn) {
@@ -111,8 +114,8 @@ export default {
       ) {
         //防止提交多次重复数据
         this.$Message.warning({
-          content: "请不要重复提交！",
-          duration: 2
+          content: '请不要重复提交！',
+          duration: 2,
         });
         return;
       }
@@ -120,25 +123,23 @@ export default {
       this.repeatFrom = {
         username: this.formlogin.username,
         password: this.formlogin.password,
-        remeberMe: this.formlogin.remeberMe
+        remeberMe: this.formlogin.remeberMe,
       };
       let register = {
         username: this.formlogin.username,
         password: this.formlogin.password,
-        "remember-me": this.formlogin.remeberMe ? "on" : "off"
+        'remember-me': this.formlogin.remeberMe ? 'on' : 'off',
       };
-      let url = "user/login";
+      let url = 'user/login';
       this.post_string(url, register)
         .then(() => {
-          // this.$store.getters.getToken
           return Promise.resolve();
         })
         .then(() => {
-          this.get("user/me").then(res => {
+          this.get('user/me').then((res) => {
             let data = res.data;
-            this.$store.commit("setUserData", data);
-            this.$router.push({ path:"/project" });
-            this.formloginFlag = false;
+            this.setUserData(data);
+            this.$router.push({ path: '/project' });
           });
         })
         .catch(() => {
@@ -148,11 +149,11 @@ export default {
     //检测 信息 有误 change
     checkIswarn(val) {
       if (val === 1) {
-        if (this.formlogin.username !== "") {
+        if (this.formlogin.username !== '') {
           this.showuserwarn = false;
         }
       } else if (val === 2) {
-        if (this.formlogin.password !== "") {
+        if (this.formlogin.password !== '') {
           this.showpasswordwarn = false;
         }
       }
@@ -160,36 +161,36 @@ export default {
     //失去 焦点
     blurIswarn(val) {
       if (val === 1) {
-        if (this.formlogin.username === "") {
+        if (this.formlogin.username === '') {
           this.showuserwarn = true;
         } else {
           this.showuserwarn = false;
         }
       } else if (val === 2) {
-        if (this.formlogin.password === "") {
+        if (this.formlogin.password === '') {
           this.showpasswordwarn = true;
         } else {
           this.showpasswordwarn = false;
         }
       }
-    }
+    },
   },
   watch: {
     showLoginRegister() {
       this.showuserwarn = false;
       this.showpasswordwarn = false;
       this.formlogin = {
-        username: "",
-        password: "",
-        remeberMe: false
+        username: '',
+        password: '',
+        remeberMe: false,
       };
       this.repeatFrom = {
-        username: "",
-        password: "",
-        remeberMe: false
+        username: '',
+        password: '',
+        remeberMe: false,
       };
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -212,5 +213,4 @@ export default {
   color: #fff;
   display: none;
 }
-
 </style>

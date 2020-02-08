@@ -8,40 +8,39 @@
 <template>
   <div id="know-tree-list">
     <div class="know-tree-list-header-title">类层次结构</div>
-    <div class="know-tree-default know-tree-header-select">
-      <div v-if="itemExitFlag">
-        <div
-          class="know-tree-header-button know-tree-header-button-add"
-          @click="TLCallback(4)"
-          :class="{'know-tree-header-button-no-selete':ctrlButtonFlag}"
-        >
-          <Icon type="md-add-circle" size="20" />
-          <div class="know-tree-header-button-title">添加</div>
-        </div>
+    <div class="know-tree-header-select df" v-if="itemExitFlag">
+      <div
+        class="know-tree-header-button df"
+        @click="TLCallback(4)"
+        :class="{'know-tree-header-button-no-selete':ctrlButtonFlag}"
+      >
+        <!-- <Icon type="md-add-circle" size="20" /> -->
+        <div class="g-action-add g-action"></div>
+        <div class="g-button-tip">添加</div>
+      </div>
 
-        <div
-          class="know-tree-header-button know-tree-header-button-del"
-          :class="{'know-tree-header-button-no-selete':!SeleteNodeFlag}"
-          @click="TLCallback(5)"
-        >
-          <Icon type="ios-close-circle" size="20" />
-          <div class="know-tree-header-button-title">删除</div>
-        </div>
+      <div
+        class="know-tree-header-button df"
+        :class="{'know-tree-header-button-no-selete':!SeleteNodeFlag}"
+        @click="TLCallback(5)"
+      >
+        <!-- <Icon type="ios-close-circle" size="20" /> -->
+        <div class="g-action-del g-action"></div>
+        <div class="g-button-tip">删除</div>
+      </div>
 
-        <div
-          class="know-tree-header-button know-tree-header-button-exit"
-          :class="{'know-tree-header-button-no-selete':!SeleteNodeFlag||ctrlButtonFlag}"
-          @click="TLCallback(6)"
-        >
-          <Icon type="ios-create" size="22" />
-          <div class="know-tree-header-button-title">编辑</div>
-        </div>
+      <div
+        class="know-tree-header-button df"
+        :class="{'know-tree-header-button-no-selete':!SeleteNodeFlag||ctrlButtonFlag}"
+        @click="TLCallback(6)"
+      >
+        <!-- <Icon type="ios-create" size="22" /> -->
+        <div class="g-action-exit g-action"></div>
+        <div class="g-button-tip">编辑</div>
       </div>
     </div>
-    <Content
-      class="know-tree-default know-tree-main-content scroll"
-      :style="{height:setTreeClientHeight}"
-    >
+    <div v-else class="know-tree-header-select"></div>
+    <Content class="know-tree-main-content scroll" :style="{height:setTreeClientHeight}">
       <tree-z @selectNode="TLCallback" :treelistVal="treeZ" :itemId="itemId" ref="treeZ"></tree-z>
     </Content>
 
@@ -224,11 +223,8 @@ export default {
   font-size: 18px;
   line-height: 25px;
   padding: 5px 10px 3px 10px;
-  /* background-color: #dcdee2; */
   height: 40px;
   line-height: 40px;
-}
-.know-tree-default {
 }
 .know-tree-header-button-title {
   display: inline-block;
@@ -238,56 +234,50 @@ export default {
   text-indent: 0.4em;
 }
 .know-tree-header-select {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   height: 50px;
   padding: 0;
 }
 .know-tree-header-button {
-  box-sizing: border-box;
   height: 40px;
   width: 80px;
-  text-align: center;
-  cursor: pointer;
-  border-radius: 5px;
   margin: 0 5px;
-  display: inline-block;
+  border-radius: 5px;
   color: #505050;
+  cursor: pointer;
 }
 .know-tree-header-button:hover {
-  background-color: #e8eaec;
+  background-color: #dcdee2;
   transition: all 0.5s;
 }
-.know-tree-header-button-add:hover .ivu-icon {
-  color: #19be6b;
-}
-.know-tree-header-button-del:hover .ivu-icon {
-  color: #f16643;
-}
-.know-tree-header-button-exit:hover .ivu-icon {
-  color: #2d8cf0;
-}
-.know-tree-header-button-add:active {
-  color: #19be6b;
-}
-.know-tree-header-button-del:active {
-  color: #f16643;
-}
-.know-tree-header-button-exit:active {
-  color: #2d8cf0;
-}
 .know-tree-main-content {
-  box-shadow: 0 1px 10px rgba(56, 37, 37, 0.08);
-  border-radius: 10px;
-  padding: 10px;
-  box-sizing: border-box;
   overflow: auto;
+  padding: 10px;
+  border-radius: 10px;
+  box-sizing: border-box;
+  box-shadow: 0 1px 10px rgba(56, 37, 37, 0.08);
+  background: #fff;
 }
 .know-tree-header-button-no-selete {
   color: #a0a0a0;
 }
 .know-tree-header-button-no-selete:hover {
   color: #a0a0a0;
+}
+.g-action {
+  height: 15px;
+  width: 15px;
+}
+.g-action-add {
+  background: url('../../../assets/images/add.png') no-repeat 100%/100%;
+}
+.g-action-del {
+  background: url('../../../assets/images/delete.png') no-repeat 100%/100%;
+}
+.g-action-exit {
+  background: url('../../../assets/images/exit.png') no-repeat 100%/100%;
+}
+.g-button-tip {
+  margin: 0 0 0 8px;
+  font-size: 16px;
 }
 </style>

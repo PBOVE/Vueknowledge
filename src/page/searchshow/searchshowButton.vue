@@ -8,7 +8,7 @@
 <template>
   <div class="know-searchshow-select">
     <div
-      class="know-searchshow-Button"
+      class="know-searchshow-Button cup"
       :class="{'know-searchshow-Button-select':selectNum === 1}"
       @click="clickButton(1,selectNum)"
     >
@@ -16,7 +16,7 @@
       <div class="know-searchshow-Button-titlt">力导图</div>
     </div>
     <div
-      class="know-searchshow-Button"
+      class="know-searchshow-Button cup"
       :class="{'know-searchshow-Button-select':selectNum === 2}"
       @click="clickButton(2,selectNum)"
     >
@@ -24,7 +24,7 @@
       <div class="know-searchshow-Button-titlt">树图</div>
     </div>
     <div
-      class="know-searchshow-Button"
+      class="know-searchshow-Button cup"
       :class="{'know-searchshow-Button-select':selectNum === 3}"
       @click="clickButton(3,selectNum)"
     >
@@ -36,25 +36,24 @@
 
 
 <script>
-import "../../assets/css/font.css";
+import '../../assets/css/font.css';
 export default {
-  props: ["selectNum"],
+  props: ['selectNum'],
   data() {
-    return {
-    };
+    return {};
   },
   methods: {
     // 按钮点击事件
     clickButton(newval, oldval) {
       if (newval === oldval) return;
       this.selectNum = newval;
-      this.$emit("searchIdCallback", 1, newval);
+      this.$emit('searchIdCallback', 1, newval);
     },
     //设置按键颜色
-    setselectNum(val){
+    setselectNum(val) {
       this.selectNum = val;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -67,16 +66,21 @@ export default {
   align-items: center;
 }
 .know-searchshow-Button {
+  margin: 0 10px;
+  padding: 0 10px;
   height: 40px;
+  min-width: 80px;
   line-height: 40px;
   text-align: center;
-  margin: 0 10px;
-  cursor: pointer;
+  border-radius: 5px;
+}
+.know-searchshow-Button:hover {
+  background: #dcdee2;
 }
 .know-searchshow-Button-titlt {
   display: inline;
   font-size: 16px;
-  padding-left: 5px;
+  padding-left: 8px;
 }
 .know-searchshow-Button:hover .know-searchshow-Button-icon {
   color: #2d8cf0;

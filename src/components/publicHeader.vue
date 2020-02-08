@@ -26,8 +26,7 @@
       </div>
     </div>
     <div class="know-public-header-right df">
-      <router-link :to="routerTO?routerTO:'/project'">
-        <Icon type="ios-keypad" class="know-public-header-icon cup" />
+      <router-link :to="routerTO?routerTO:'/project'" class="know-public-header-icon cup ivu-icon ivu-icon-ios-keypad">
       </router-link>
       <router-link to="/login" v-if="!userStatusFlag&&userStatusLoadFlag">
         <span class="know-public-header-login cup">登录</span>
@@ -43,48 +42,52 @@
 
 
 <script>
-import dropDown from "./dropdown";
-import { mapState } from "vuex";
+import dropDown from './dropdown';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
   components: { dropDown },
-  props: ["routerTO", "RouterFlag", "itemName", "TitleShow", "title"],
+  props: ['routerTO', 'RouterFlag', 'itemName', 'TitleShow', 'title'],
   data() {
     return {
       // 判断用户是否登录 标志位
       userStatusFlag: false,
       // 判断 用户 登录 加载标志位
-      userStatusLoadFlag: false
+      userStatusLoadFlag: false,
     };
   },
   computed: {
-    ...mapState(["nickName", "images"])
+    ...mapGetters({
+      images: 'getImageSrc',
+      nickName: 'getnickName',
+    }),
   },
   mounted() {
     this.getUser();
   },
   methods: {
+    ...mapMutations(['setUserData','delToken']),
     // 获取token 判断用户登录
     getUser() {
-      const url = "user/me";
+      const url = 'user/me';
       this.get(url)
-        .then(res => {
+        .then((res) => {
           this.userStatusLoadFlag = true;
           if (res.data.user.id) {
             let data = res.data;
             this.userStatusFlag = true;
-            this.$store.commit("setUserData", data);
+            this.setUserData(data);
           } else {
             this.userStatusFlag = false;
-            this.$store.commit("delToken");
+            this.delToken();
             if (this.RouterFlag) {
-              this.$router.push({ path: "/login" });
+              this.$router.push({ path: '/login' });
             }
           }
         })
         .catch(() => {});
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -100,7 +103,7 @@ export default {
 }
 .know-public-logo {
   display: inline-block;
-  background-image: url("../assets/images/logo.png");
+  background-image: url('../assets/images/logo.png');
   background-size: 100% 100%;
   background-repeat: no-repeat;
   height: 20px;
@@ -114,7 +117,7 @@ export default {
   color: #17233d;
 }
 .know-public-header-icon {
-  font-size: 24px;
+  font-size: 25px;
   margin-right: 15px;
   color: #808695;
   transition: color 0.5s;
