@@ -6,8 +6,14 @@
 
 
 <template>
-  <div id="know-fourzerofour">
-    <a  ondragstart='return false;' href='javascript:void(0);'><img src="../../assets/images/404.jpg" /></a>
+  <div class="g-error">
+    <div class="g-error-box">
+      <img src="@/assets/images/404.svg" alt />
+      <div class="g-error-tips">抱歉，你访问的页面不存在。</div>
+      <Button type="primary">
+        <router-link to="/" class="g-error-a">返回首页</router-link>
+      </Button>
+    </div>
   </div>
 </template>
 
@@ -15,27 +21,27 @@
 export default {
   data() {
     return {};
-  }
+  },
 };
 </script>
 
 <style  scoped>
-#know-fourzerofour {
+.g-error {
+  overflow: hidden;
   width: 100vw;
   height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-content: center;
 }
-#know-fourzerofour a {
-  display: block;
-  margin: auto;
-  user-select: none;
+.g-error-box {
+  margin: 100px auto;
+  width: 400px;
+  height: 400px;
+  text-align: center;
 }
-@media screen and (max-height: 650px) {
-  #know-fourzerofour a {
-    width: 100%;
-    height: 100%;
-  }
+.g-error-tips {
+  margin: 20px 0;
+}
+.g-error-a,
+.g-error-a:hover {
+  color: #fff;
 }
 </style>
