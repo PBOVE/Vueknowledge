@@ -29,7 +29,7 @@
     <div class="main-content-msg-row">
       <div class="msg-row-content">
         <div class="msg-row-name">用户名</div>
-        <div class="msg-row-title">{{user.username}}</div>
+        <div class="msg-row-title">{{user.userName}}</div>
       </div>
     </div>
     <div class="main-content-msg-row">

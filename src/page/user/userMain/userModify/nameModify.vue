@@ -15,7 +15,7 @@
       <div class="box-msg-header-title">对您的昵称所做的更改将反映在您的 “知识图谱构建平台” 帐号中</div>
     </div>
     <div class="box-msg-row">
-      <div class="box-msg-row-i">{{nickName.charAt(0).toUpperCase()}}</div>
+      <div class="box-msg-row-i">{{nickName}}</div>
       <div class="box-msg-row-confirm curpoin" @click="Statustriger(6)">
         <Icon type="md-create" size="20" />
       </div>
