@@ -81,7 +81,6 @@ export default {
     };
   },
   computed: {
-    ...mapMutations(['setUserData']),
     ...mapGetters({
       images: 'getImageSrc',
       nickName: 'getnickName',
@@ -102,6 +101,7 @@ export default {
     window.removeEventListener('resize', this.getInner);
   },
   methods: {
+    ...mapMutations(['setUserData']),
     //获取 浏览器 高度
     getInner() {
       this.InnerHeight = window.innerHeight;
