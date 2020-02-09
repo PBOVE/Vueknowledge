@@ -67,7 +67,7 @@ export default {
         itemId: this.itemId,
       };
       this.get(url, obj)
-        .then(res => {
+        .then((res) => {
           this.HandleData(res.data);
         })
         .catch(() => {});
@@ -76,7 +76,7 @@ export default {
     HandleData(data) {
       let Arr = [];
       this.$emit('selectNode', 9, data.length);
-      data.forEach(item => {
+      data.forEach((item) => {
         let obj = {
           id: item.id,
           name: item.name,
@@ -94,7 +94,10 @@ export default {
       switchObj.remove();
       icoObj.before(switchObj);
       if (treeNode.level > 0) {
-        let spaceStr = `<span  id='${treeNode.tId}_space' style='display: inline-block;width:${spaceWidth * treeNode.level}px'></span>`;
+        let spaceStr = `<span  id='${
+          treeNode.tId
+        }_space' style='display: inline-block;width:${spaceWidth *
+          treeNode.level}px'></span>`;
         switchObj.before(spaceStr);
       }
     },
@@ -112,17 +115,17 @@ export default {
       this.$emit('selectNode', 2, treeNode);
     },
     // 双击 节点 展开 节点 函数
-    showChildClik(treeId, treeNode, callback) {
+    showChildClik(treeId, treeNode, callback, parameter) {
       if (!treeNode) return;
       if (!treeNode.isParent || treeNode.asyncParent) return 1;
       //异步加载 防止重复加载
       treeNode.asyncParent = true;
       let url = 'node/' + treeNode.id + '/child';
       this.get(url)
-        .then(res => {
+        .then((res) => {
           let data = res.data;
           let Arr = [];
-          data.forEach(item => {
+          data.forEach((item) => {
             Arr.push({
               id: item.id,
               name: item.name,
@@ -131,7 +134,7 @@ export default {
           });
           this.zTree.addNodes(treeNode, Arr, false);
           if (callback) {
-            callback();
+            callback(...parameter);
           }
         })
         .catch(() => {});
@@ -157,9 +160,14 @@ export default {
     zTreeBeforeDrop(treeId, treeNodes, targetNode, moveType) {
       if (!(targetNode === null || moveType !== 'inner')) {
         let treeNode = treeNodes[0];
-        if (this.showChildClik('', targetNode, this.pushServeDrop(treeNode,targetNode)) === 1) {
+        if (
+          this.showChildClik('', targetNode, this.pushServeDrop, {
+            treeNode,
+            targetNode,
+          }) === 1
+        ) {
           // 加载过数据
-          this.pushServeDrop(treeNode,targetNode);
+          this.pushServeDrop(treeNode, targetNode);
         }
       }
       return false;
@@ -167,17 +175,20 @@ export default {
     // 拖拽结束,并向服务器发送请求成功
     DropSuccess(treeNodes) {
       let spaceWidth = 15;
-      let treeNodeBFS = Node => {
-        let spaceNum = parseInt($(`#${Node.parentTId}_space`).css('width') || 0) / spaceWidth + 1;
+      let treeNodeBFS = (Node) => {
+        let spaceNum =
+          parseInt($(`#${Node.parentTId}_space`).css('width') || 0) /
+            spaceWidth +
+          1;
         $(`#${Node.tId}_space`).css('width', spaceWidth * spaceNum + 'px');
         if (Node.isParent && Node.asyncParent) {
           let childNode = Node.children;
-          childNode.forEach(item => {
+          childNode.forEach((item) => {
             treeNodeBFS(item);
           });
         }
       };
-      treeNodes.forEach(item => {
+      treeNodes.forEach((item) => {
         treeNodeBFS(item);
       });
     },
@@ -232,7 +243,7 @@ export default {
     'treelistVal.delNodes': {
       handler: function() {
         let Nodes = this.zTree.getSelectedNodes();
-        Nodes.forEach(item => {
+        Nodes.forEach((item) => {
           if (this.StreeNode.id === item.id) {
             this.StreeNode = '';
             this.$emit('selectNode', 1, false);

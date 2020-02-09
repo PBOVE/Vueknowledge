@@ -38,7 +38,12 @@
           <div class="k-d-i-d k-d-i-dd" v-else>{{item}}</div>
         </div>
         <div class="know-details-right" v-if="itemExitFlag">
-          <Icon type="ios-close" class="know-datails-del" @click="delAttrData(index)" size="20" />
+          <Icon
+            type="ios-close"
+            class="know-datails-del"
+            @click="delAttrData(item,index)"
+            size="20"
+          />
         </div>
       </div>
 
@@ -132,21 +137,21 @@
 
 <script>
 export default {
-  props: ["treeNode", "showSelectNum", "itemId", "spinShow", "itemExitFlag"],
+  props: ['treeNode', 'showSelectNum', 'itemId', 'spinShow', 'itemExitFlag'],
   data() {
     return {
       // 节点名称
-      NodeName: "",
+      NodeName: '',
       // 属性 输入
-      labelsInput: "",
+      labelsInput: '',
       // 获取 输入框node数据
-      RaNodeinput: "",
+      RaNodeinput: '',
       //节点关系名称输入
-      InputNodeName: "",
+      InputNodeName: '',
       //请求数据标志位
       getDataFlag: false,
       // 点击inpul 获取val 防止输入空格
-      oldAttrInputVal: "",
+      oldAttrInputVal: '',
       // 获取 服务器数据
       AttrButeData: [],
       relationData: [],
@@ -154,20 +159,20 @@ export default {
       relationformat: {},
       AttrButeformat: [],
       // 请求联想框数据
-      searchdata: []
+      searchdata: [],
     };
   },
   methods: {
     // 获取 服务器 节点属性 节点关系
     getAttriBute() {
       if (this.getDataFlag) return;
-      this.$emit("update:spinShow", true);
+      this.$emit('update:spinShow', true);
       this.getDataFlag = true;
       this.NodeName = this.treeNode.name;
-      let url = "node/" + this.treeNode.id;
+      let url = 'node/' + this.treeNode.id;
       this.get(url)
-        .then(res => {
-          this.$emit("update:spinShow", false);
+        .then((res) => {
+          this.$emit('update:spinShow', false);
           let labels = JSON.stringify(res.data.labels || []);
           this.AttrButeformat = JSON.parse(labels);
           this.AttrButeData = JSON.parse(labels);
@@ -175,10 +180,10 @@ export default {
           this.relationformat = property;
           this.relationData = [];
           for (let item in property) {
-            property[item].forEach(element => {
+            property[item].forEach((element) => {
               this.relationData.push({
                 name: item,
-                title: element.name
+                title: element.name,
               });
             });
           }
@@ -190,23 +195,23 @@ export default {
       let target = e.target;
       let Ptarget = target.parentNode;
       target.focus();
-      Ptarget.style.outline = "1px solid #2db7f5";
+      Ptarget.style.outline = '1px solid #2db7f5';
       this.oldAttrInputVal = target.value;
     },
     // 搜索框点击事件
     CSerachshowInput(e) {
       let target = e.target;
       let Ptarget = target.parentNode.parentNode.parentNode.parentNode;
-      target.style.borderBottom = "1px solid #2db7f5";
-      Ptarget.style.outline = "1px solid #2db7f5";
+      target.style.borderBottom = '1px solid #2db7f5';
+      Ptarget.style.outline = '1px solid #2db7f5';
       this.searchdata = [];
     },
     // 搜索框失去焦点事件
     CSerchBlurInput(e) {
       let target = e.target;
       let Ptarget = target.parentNode.parentNode.parentNode.parentNode;
-      target.style.borderBottom = "1px solid #e8eaec";
-      Ptarget.style.outline = "none";
+      target.style.borderBottom = '1px solid #e8eaec';
+      Ptarget.style.outline = 'none';
       this.$nextTick(() => {
         this.addrelation();
       });
@@ -215,7 +220,7 @@ export default {
     LossFocusA(type, index) {
       let target = event.target;
       let Ptarget = target.parentNode;
-      let inputVal = target.value.replace(/^\s+|\s+$/g, "");
+      let inputVal = target.value.replace(/^\s+|\s+$/g, '');
       const statusMap = {
         // 添加 属性
         add: () => {
@@ -224,11 +229,11 @@ export default {
         // 编辑 属性
         exit: () => {
           this.changExit(inputVal, index, target);
-        }
+        },
       };
-      Ptarget.style.outline = "none";
-      if (inputVal === "" || (index && inputVal === this.AttrButeData[index])) {
-        target.value = index !== undefined ? this.AttrButeData[index] : "";
+      Ptarget.style.outline = 'none';
+      if (inputVal === '' || (index && inputVal === this.AttrButeData[index])) {
+        target.value = index !== undefined ? this.AttrButeData[index] : '';
         return;
       }
 
@@ -249,18 +254,18 @@ export default {
             inputVal,
             val,
             index,
-            target
+            target,
           ]);
         },
         // 添加 关系属性
         add: () => {
           this.addrelation();
-        }
+        },
       };
-      let inputVal = target.value.replace(/^\s+|\s+$/g, "");
-      Ptarget.style.outline = "none";
-      if (inputVal === "" || (val && target.value === val[type])) {
-        target.value = val ? val[type] : "";
+      let inputVal = target.value.replace(/^\s+|\s+$/g, '');
+      Ptarget.style.outline = 'none';
+      if (inputVal === '' || (val && target.value === val[type])) {
+        target.value = val ? val[type] : '';
         return;
       }
       statusMap[type]();
@@ -269,7 +274,7 @@ export default {
     changName() {
       let target = event.target;
       let Ptarget = target.parentNode;
-      Ptarget.style.outline = "none";
+      Ptarget.style.outline = 'none';
       if (this.NodeName === this.treeNode.name) {
         return;
       }
@@ -277,153 +282,154 @@ export default {
     },
     // 向 服务器发送 改变的名称
     putServerName(name) {
-      let url = "node/" + this.treeNode.id;
+      let url = 'node/' + this.treeNode.id;
       let message =
-        "[" + this.treeNode.name + "] 节点名称修改为 [" + name + "]";
+        '[' + this.treeNode.name + '] 节点名称修改为 [' + name + ']';
       let obj = {
         name,
         itemId: this.itemId,
         record: {
           message: JSON.stringify({ message, name }),
-          operator: "UPDATE_NODE_NAME"
-        }
+          operator: 'UPDATE_NODE_NAME',
+        },
       };
       this.put_json(url, obj)
-        .then(res => {
+        .then((res) => {
           this.NodeName = res.data.name;
           // 重新 获取日志
-          this.$emit("SClientCallback", 4);
+          this.$emit('SClientCallback', 4);
           // 告诉其他 名称修改成功
-          this.$emit("SClientCallback", 1, res.data.name);
+          this.$emit('SClientCallback', 1, res.data.name);
         })
         .catch(() => {});
     },
     // 添加 属性
     addLabels() {
-      let url = "node/" + this.treeNode.id;
+      let url = 'node/' + this.treeNode.id;
       let obj = this.ObjDataA();
-      let message = "添加新的节点属性，属性名称为 [" + this.labelsInput + "]";
+      let message = '添加新的节点属性，属性名称为 [' + this.labelsInput + ']';
       let name = this.treeNode.name;
-      if (obj["labels"].indexOf(this.labelsInput) !== -1) {
-        this.$Message.warning("请不要重复添加数据");
+      if (obj['labels'].indexOf(this.labelsInput) !== -1) {
+        this.$Message.warning('请不要重复添加数据');
         return;
       }
-      obj["labels"].push(this.labelsInput);
-      obj["record"] = {
+      obj['labels'].push(this.labelsInput);
+      obj['record'] = {
         message: JSON.stringify({ message, name }),
-        operator: "ADD_NODE_PROPER"
+        operator: 'ADD_NODE_PROPER',
       };
       this.put_json(url, obj)
-        .then(res => {
-          let labels = res.data.labels;
+        .then((res) => {
+          const labels = res.data.labels;
           this.AttrButeformat = labels;
           this.AttrButeData.push(this.labelsInput);
-          this.labelsInput = "";
+          this.labelsInput = '';
           // 重新 获取日志
-          this.$emit("SClientCallback", 4);
+          this.$emit('SClientCallback', 4);
         })
         .catch(() => {});
     },
     //改变属性名称
     changExit(inputVal, index, target) {
-      let url = "node/" + this.treeNode.id;
+      let url = 'node/' + this.treeNode.id;
       let obj = this.ObjDataA();
       let message =
-        "[" + obj["labels"][index] + "] 属性名称修改为 [" + inputVal + "]";
+        '[' + obj['labels'][index] + '] 属性名称修改为 [' + inputVal + ']';
       let name = this.treeNode.name;
-      if (obj["labels"].indexOf(inputVal) !== -1) {
-        this.$Message.warning("数据重复");
-        target.value = obj["labels"][index];
+      if (obj['labels'].indexOf(inputVal) !== -1) {
+        this.$Message.warning('数据重复');
+        target.value = obj['labels'][index];
         return;
       }
-      obj["labels"][index] = inputVal;
-      obj["record"] = {
+      obj['labels'][index] = inputVal;
+      obj['record'] = {
         message: JSON.stringify({ message, name }),
-        operator: "UPDATE_NODE_PROPER"
+        operator: 'UPDATE_NODE_PROPER',
       };
       this.put_json(url, obj)
-        .then(res => {
+        .then((res) => {
           let labels = res.data.labels;
           this.AttrButeformat = labels;
           this.$set(this.AttrButeData, index, inputVal);
           // 重新 获取日志
-          this.$emit("SClientCallback", 4);
+          this.$emit('SClientCallback', 4);
         })
         .catch(() => {});
     },
     // 删除属性数据
-    delAttrData(index) {
-      let url = "node/" + this.treeNode.id;
+    delAttrData(attr, attrIndx) {
+      let url = 'node/' + this.treeNode.id;
       let obj = this.ObjDataA();
-      let message = "[" + obj["labels"][index] + "] 属性被删除";
+      let message = '[' + attr + '] 属性被删除';
       let name = this.treeNode.name;
-      obj["labels"].splice(index, 1);
-      obj["record"] = {
+      let index = obj['labels'].indexOf(attr);
+      obj['labels'].splice(index, 1);
+      obj['record'] = {
         message: JSON.stringify({ message, name }),
-        operator: "DELETE_NODE_PROPER"
+        operator: 'DELETE_NODE_PROPER',
       };
       this.put_json(url, obj)
-        .then(res => {
+        .then((res) => {
           let labels = res.data.labels;
           this.AttrButeformat = labels;
-          this.AttrButeData.splice(index, 1);
+          this.AttrButeData.splice(attrIndx, 1);
           // 重新 获取日志
-          this.$emit("SClientCallback", 4);
+          this.$emit('SClientCallback', 4);
         })
         .catch(() => {});
     },
     // 添加 关系 数据
     addrelation() {
-      let name = this.InputNodeName.replace(/^\s+|\s+$/g, "");
-      let title = this.RaNodeinput.replace(/^\s+|\s+$/g, "");
-      if (name === "" || title === "") {
+      let name = this.InputNodeName.replace(/^\s+|\s+$/g, '');
+      let title = this.RaNodeinput.replace(/^\s+|\s+$/g, '');
+      if (name === '' || title === '') {
         return;
       }
       this.queryNode(title, this.pushServeR, [name, title]);
     },
     // 向服务器发送 添加关系的数据
     pushServeR(name, title, nodeId) {
-      let url = "node/" + this.treeNode.id;
+      let url = 'node/' + this.treeNode.id;
       let obj = this.objDataR();
       let Nodename = this.treeNode.name;
       let message =
-        "[" +
+        '[' +
         Nodename +
-        "] 与 [" +
+        '] 与 [' +
         title +
-        "] 添加新的关系,关系名称为 [" +
+        '] 添加新的关系,关系名称为 [' +
         name +
-        "]";
-      const indexTitle = element => {
+        ']';
+      const indexTitle = (element) => {
         return element.name === title;
       };
-      if (!obj["property"].hasOwnProperty(name)) {
-        obj["property"][name] = [];
-      } else if (obj["property"][name].findIndex(indexTitle) !== -1) {
-        this.$Message.warning("请不要重复添加数据");
+      if (!obj['property'].hasOwnProperty(name)) {
+        obj['property'][name] = [];
+      } else if (obj['property'][name].findIndex(indexTitle) !== -1) {
+        this.$Message.warning('请不要重复添加数据');
         return;
       }
-      obj["property"][name].push({
+      obj['property'][name].push({
         id: nodeId,
-        name: title
+        name: title,
       });
-      obj["record"] = {
+      obj['record'] = {
         message: JSON.stringify({ message, name: Nodename }),
-        operator: "ADD_NODE_PROPERTY"
+        operator: 'ADD_NODE_PROPERTY',
       };
       this.put_json(url, obj)
-        .then(res => {
+        .then((res) => {
           const property = res.data.property;
           this.relationformat = property;
           this.relationData.push({
             name,
-            title
+            title,
           });
-          this.InputNodeName = this.RaNodeinput = "";
+          this.InputNodeName = this.RaNodeinput = '';
           // 力导图 树图 从新请求数据
-          this.$emit("SClientCallback", 2);
+          this.$emit('SClientCallback', 2);
           // 重新 获取日志
-          this.$emit("SClientCallback", 4);
+          this.$emit('SClientCallback', 4);
         })
         .catch(() => {});
     },
@@ -432,98 +438,98 @@ export default {
       let obj = this.objDataR();
       let name = this.treeNode.name;
       let message =
-        "[" +
+        '[' +
         name +
-        "] 与 [" +
+        '] 与 [' +
         val.title +
-        "] 不在拥有 [" +
+        '] 不在拥有 [' +
         val.name +
-        "] 关系";
-      const indexTitle = element => {
+        '] 关系';
+      const indexTitle = (element) => {
         return element.name === val.title;
       };
-      let index = obj["property"][val.name].findIndex(indexTitle);
-      obj["property"][val.name].splice(index, 1);
-      if (!obj["property"][val.name].length) {
-        delete obj["property"][val.name];
+      let index = obj['property'][val.name].findIndex(indexTitle);
+      obj['property'][val.name].splice(index, 1);
+      if (!obj['property'][val.name].length) {
+        delete obj['property'][val.name];
       }
-      obj["record"] = {
+      obj['record'] = {
         message: JSON.stringify({ message, name }),
-        operator: "DELETE_NODE_PROPERTY"
+        operator: 'DELETE_NODE_PROPERTY',
       };
-      this.poshServerR("", inputIndex, obj);
+      this.poshServerR('', inputIndex, obj);
     },
     // 更新 关系 属性
     putRelationName(inputVal, val, inputIndex, target) {
       let obj = this.objDataR();
       let name = this.treeNode.name;
       let message =
-        "[" +
+        '[' +
         name +
-        "] 与 [" +
+        '] 与 [' +
         val.title +
-        "] 关系名称由 [" +
+        '] 关系名称由 [' +
         val.name +
-        "] 修改为 [" +
+        '] 修改为 [' +
         inputVal +
-        "]";
-      const indexTitle = element => {
+        ']';
+      const indexTitle = (element) => {
         return element.name === val.title;
       };
-      let index = obj["property"][val.name].findIndex(indexTitle);
-      if (!obj["property"].hasOwnProperty(inputVal)) {
-        obj["property"][inputVal] = [];
-      } else if (obj["property"][inputVal].findIndex(indexTitle) !== -1) {
-        this.$Message.warning("数据重复");
+      let index = obj['property'][val.name].findIndex(indexTitle);
+      if (!obj['property'].hasOwnProperty(inputVal)) {
+        obj['property'][inputVal] = [];
+      } else if (obj['property'][inputVal].findIndex(indexTitle) !== -1) {
+        this.$Message.warning('数据重复');
         target.value = val.name;
         return;
       }
-      obj["property"][inputVal].push({
-        id: obj["property"][val.name][index]["id"],
-        name: val.title
+      obj['property'][inputVal].push({
+        id: obj['property'][val.name][index]['id'],
+        name: val.title,
       });
-      obj["property"][val.name].splice(index, 1);
-      obj["record"] = {
+      obj['property'][val.name].splice(index, 1);
+      obj['record'] = {
         message: JSON.stringify({ message, name }),
-        operator: "UPDATE_NODE_PROPERTY"
+        operator: 'UPDATE_NODE_PROPERTY',
       };
-      if (!obj["property"][val.name].length) {
-        delete obj["property"][val.name];
+      if (!obj['property'][val.name].length) {
+        delete obj['property'][val.name];
       }
-      this.poshServerR(inputVal, inputIndex, obj, "name");
+      this.poshServerR(inputVal, inputIndex, obj, 'name');
     },
     // 更新 关系 键值
     putRelationTitle(inputVal, val, inputIndex, target, nodeId) {
       let obj = this.objDataR();
       let name = this.treeNode.name;
-      let message = "[" + val.title + "] 关系节点修改为 [" + inputVal + "]";
-      const indexTitle = element => {
+      let message = '[' + val.title + '] 关系节点修改为 [' + inputVal + ']';
+      const indexTitle = (element) => {
         return element.name === val.title;
       };
-      const indexInpuval = element => {
+      const indexInpuval = (element) => {
         return element.name === inputVal;
       };
-      let index = obj["property"][val.name].findIndex(indexTitle);
-      if (obj["property"][val.name].findIndex(indexInpuval) !== -1) {
-        this.$Message.warning("数据重复");
+      let index = obj['property'][val.name].findIndex(indexTitle);
+      if (obj['property'][val.name].findIndex(indexInpuval) !== -1) {
+        this.$Message.warning('数据重复');
         target.value = val.title;
         return;
       }
-      obj["property"][val.name][index] = {
+      obj['property'][val.name][index] = {
         id: nodeId,
-        name: inputVal
+        name: inputVal,
       };
-      obj["record"] = {
+      obj['record'] = {
         message: JSON.stringify({ message, name }),
-        operator: "UPDATE_NODE_PROPERTYNAME"
+        operator: 'UPDATE_NODE_PROPERTYNAME',
       };
-      this.poshServerR(inputVal, inputIndex, obj, "title");
+      this.poshServerR(inputVal, inputIndex, obj, 'title');
     },
     // 向服务器发送 关系数据
     poshServerR(inputVal, inputIndex, obj, updataKey) {
-      const url = "node/" + this.treeNode.id;
+      const url = 'node/' + this.treeNode.id;
       this.put_json(url, obj)
-        .then(res => {
+        .then((res) => {
           const property = res.data.property;
           this.relationformat = property;
           if (updataKey) {
@@ -532,9 +538,9 @@ export default {
             this.relationData.splice(inputIndex, 1);
           }
           //       // 力导图 树图 从新请求数据
-          this.$emit("SClientCallback", 2);
+          this.$emit('SClientCallback', 2);
           // 重新 获取日志
-          this.$emit("SClientCallback", 4);
+          this.$emit('SClientCallback', 4);
         })
         .catch(() => {});
     },
@@ -542,7 +548,7 @@ export default {
     objDataR() {
       let obj = {
         itemId: this.itemId,
-        property: { ...this.relationformat }
+        property: { ...this.relationformat },
       };
       return obj;
     },
@@ -550,19 +556,19 @@ export default {
     ObjDataA() {
       let obj = {
         labels: this.AttrButeformat,
-        itemId: this.itemId
+        itemId: this.itemId,
       };
       return obj;
     },
     // 根据节点 name 模糊匹配返回节点列表
     getVagueName(val) {
-      let url = "node/name";
+      let url = 'node/name';
       let obj = {
         query: val,
-        itemId: this.itemId
+        itemId: this.itemId,
       };
       this.get(url, obj)
-        .then(res => {
+        .then((res) => {
           let data = res.data;
           this.searchdata = [];
           data.forEach((item, index) => {
@@ -576,41 +582,41 @@ export default {
     },
     // 搜索框change事件时调用
     ChangeSearch() {
-      let Ival = this.RaNodeinput.replace(/^\s+|\s+$/g, "");
-      if (Ival === "") return;
+      let Ival = this.RaNodeinput.replace(/^\s+|\s+$/g, '');
+      if (Ival === '') return;
       this.getVagueName(Ival);
     },
     // 查询该节点是否存在
     queryNode(NodeName, callback, value) {
-      let url = "node/name";
+      let url = 'node/name';
       let obj = {
         query: NodeName,
-        itemId: this.itemId
+        itemId: this.itemId,
       };
       this.get(url, obj)
-        .then(res => {
+        .then((res) => {
           const data = res.data;
 
-          let val = data.findIndex(item => {
-            return item["name"] === NodeName;
+          let val = data.findIndex((item) => {
+            return item['name'] === NodeName;
           });
           if (val === -1) {
-            this.$Message.warning("关系节点名称错误,请重新输入");
+            this.$Message.warning('关系节点名称错误,请重新输入');
           } else {
-            callback(...value, data[val]["id"]);
+            callback(...value, data[val]['id']);
           }
         })
         .catch(() => {});
-    }
+    },
   },
   watch: {
     treeNode: {
       handler(newval, oldval) {
-        if (newval === "" || newval.id === oldval.id) return;
+        if (newval === '' || newval.id === oldval.id) return;
         this.getDataFlag = false;
-        this.RaNodeinput = "";
-        this.InputNodeName = "";
-        this.labelsInput = "";
+        this.RaNodeinput = '';
+        this.InputNodeName = '';
+        this.labelsInput = '';
         this.AttrButeData = [];
         this.relationData = [];
         this.relationformat = {};
@@ -619,13 +625,13 @@ export default {
           this.getAttriBute();
         }
       },
-      deep: true
+      deep: true,
     },
     showSelectNum(val) {
       if (val !== 1) return;
       this.getAttriBute();
-    }
-  }
+    },
+  },
 };
 </script>
 
