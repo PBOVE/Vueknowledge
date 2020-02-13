@@ -6,137 +6,124 @@
 
 
 <template>
-  <div>
+  <div class="container">
     <div
-      class="item-box box"
+      class="g-dis-fc g-list-row cup"
       v-for="(item,index) in itemData"
       :key="item.id"
       @click.stop="selectItem(index)"
     >
-      <div class="item-box-bgc">
-        <div class="dis-fix item-box-f">
-          <Tooltip max-width="280" placement="top" :content="item.name">
-            <div class="item-box-name">{{item.name}}</div>
-          </Tooltip>
-          <div class="dis-operation">
-            <Tooltip content="打开项目设置" placement="top">
-              <Icon
-                type="ios-settings"
-                class="item-box-icon"
-                @click.stop="selectItemSetting(index)"
-              />
-            </Tooltip>
-            <Tooltip
-              content="项目删除"
-              placement="top"
-              v-if="status !== 'false'||user.userName === item.author.userName"
-            >
-              <Icon type="ios-trash" class="item-box-icon" @click.stop="selectItemDelete(index)" />
-            </Tooltip>
-          </div>
+      <div class="g-list-left">
+        <div class="g-row-img"></div>
+      </div>
+      <div class="g-list-right g-dis-fc">
+        <div class="g-right-main">
+          <div class="g-list-title">{{item.name}}</div>
+          <div class="g-list-content">{{item.description}}</div>
         </div>
-        <Tooltip
-          :content="item.description"
-          placement="bottom"
-          max-width="280"
-          transfer
-          v-if="item.description"
-        >
-          <div class="item-description">{{item.description}}</div>
-        </Tooltip>
+        <div class="g-right-select">
+          <Tooltip content="打开项目设置" placement="top" class="g-tooltip">
+            <Icon type="ios-settings" class="g-right-icon cup" @click.stop="selectAction(1,index)" />
+          </Tooltip>
+          <Tooltip
+            content="项目删除"
+            placement="top"
+            class="g-tooltip"
+            v-if="status !== 'false'||user.userName === item.author.userName"
+          >
+            <Icon type="ios-trash" class="g-right-icon cup" @click.stop="selectAction(2,index)" />
+          </Tooltip>
+        </div>
       </div>
     </div>
+    <slot></slot>
   </div>
 </template>
 
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex';
 
 export default {
-  components: {},
-  props: ["itemData", "status"],
+  props: ['itemData', 'status'],
   data() {
-    return {
-      modalFlag: false
-    };
+    return {};
   },
   computed: {
-    ...mapState(["user"])
+    ...mapState(['user']),
   },
-  watch: {},
   methods: {
-    // 选中 项目设置
-    selectItemSetting(index) {
-      this.$emit("selectItem", index, this.status);
-    },
-    // 选中 删除
-    selectItemDelete(index) {
-      this.$emit("selectDelete", index);
-    },
     // 选中的项目
     selectItem(index) {
       this.$router.push({
-        path: `/manage/${this.itemData[index]["author"]["userName"]}/${this.itemData[index].id}`
+        path: `/manage/${this.itemData[index]['author']['userName']}/${this.itemData[index].id}`,
       });
-    }
-  }
+    },
+    // 状态选中
+    selectAction(val, index) {
+      if (val === 1) {
+        this.$emit('on-setting', index);
+      } else if (val === 2) {
+        this.$emit('on-delete', index);
+      }
+    },
+  },
 };
 </script>
 
 
 <style scoped>
-.box {
-  width: 240px;
-  height: 120px;
-  border-radius: 8px;
-  box-sizing: border-box;
-  cursor: pointer;
+.g-list-row:hover .g-list-title {
+  color: #2b85e4;
 }
-.item-box {
-  background: url("../../../../assets/images/itembg.jpg");
-  background-size: 100% 100%;
-  margin: 0 20px 20px 0;
-  transition: all 0.2s;
-  color: #fff;
+.g-list-row:hover .g-tooltip {
+  display: inline-block;
 }
-.item-box-bgc {
-  width: 100%;
-  height: 100%;
-  padding: 5px 10px;
-  border-radius: 8px;
-  background-image: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0.35) 0%,
-    transparent
-  );
-}
-.item-box:hover {
-  box-shadow: 0 6px 12px rgba(38, 38, 38, 0.1);
-  transform: translateY(-4px);
-}
-.item-box-f {
+.g-dis-fc {
+  display: flex;
   align-items: center;
 }
-.item-box-name {
-  font-size: 16px;
-  font-weight: 600;
+.g-row-img {
+  width: 40px;
+  height: 40px;
+  background: url('https://knowledge.pchelper666.com/api/storage/preview/1519B57D88D32D5DC227BF7510A3C2727860DEAE')
+    100%/100%;
 }
-.item-description {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
+.g-list-left {
+  margin: 0 30px 0 0;
+  padding: 20px 0 20px;
+}
+.g-list-right {
+  flex-grow: 1;
+  padding: 20px 0 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.g-list-title {
+  font-size: 15px;
+  color: #000;
+}
+.g-list-content {
   font-size: 12px;
-  width: 215px;
 }
-.item-box-icon {
-  font-size: 20px;
+.g-right-main {
+  flex-grow: 1;
 }
-.item-box-title {
-  font-size: 13px;
-  overflow: hidden;
+.g-right-select {
+  flex-shrink: 0;
+  width: 50px;
+  margin: 0 0 0 20px;
 }
-.ivu-tooltip {
-  margin: 0 0 0 5px;
+.g-right-icon {
+  font-size: 18px;
+  color: #808695;
+}
+.g-tooltip {
+  display: none;
+}
+.g-tooltip:not(:first-of-type) {
+  margin: 0 0 0 10px;
+}
+.g-right-icon:hover {
+  color: #2db7f5;
 }
 </style>

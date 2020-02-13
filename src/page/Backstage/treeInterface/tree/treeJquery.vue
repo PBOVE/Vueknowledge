@@ -38,7 +38,7 @@ export default {
             isMove: true,
             inner: true,
           },
-          enable: true,
+          enable: false,
           showRemoveBtn: false,
           showRenameBtn: false,
         },

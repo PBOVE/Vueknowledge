@@ -14,7 +14,10 @@
       <div class="item-modal-title">项目封面</div>
       <div class="item-modal-cover">
         <div class="item-modal-upload item-upload-default"></div>
-        <Button class="modal-cover-button" v-if="status||user.userName === submitMsg.userName">上传新的封面</Button>
+        <Button
+          class="modal-cover-button"
+          v-if="status||user.userName === submitMsg.userName"
+        >上传新的封面</Button>
       </div>
       <div class="item-modal-title">项目作者</div>
       <div class="item-border">{{submitMsg.nickName}}</div>
@@ -40,9 +43,13 @@
         @on-change="changeEvent"
         v-if="status||user.userName === submitMsg.userName"
       />
-      <div v-else class="item-border">{{submitMsg.description}}</div>
+      <div v-else class="item-border">{{submitMsg.description||'无'}}</div>
       <div class="item-modal-title">项目公开性</div>
-      <Select v-model="submitMsg.share" @on-change="changeEvent" v-if="status||user.userName === submitMsg.userName">
+      <Select
+        v-model="submitMsg.share"
+        @on-change="changeEvent"
+        v-if="status||user.userName === submitMsg.userName"
+      >
         <Option v-for="item in shareList" :value="item.value" :key="item.value">{{ item.label }}</Option>
       </Select>
       <div
@@ -73,7 +80,7 @@
 
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex';
 
 export default {
   data() {
@@ -84,37 +91,37 @@ export default {
       allowFlag: true,
       shareList: [
         {
-          value: "false",
-          label: "私有项目 (仅项目成员可查看和编辑)"
+          value: 'false',
+          label: '私有项目 (仅项目成员可查看和编辑)',
         },
         {
-          value: "true",
-          label: "公开项目 (所有成员可见，仅项目成员可编辑)"
-        }
+          value: 'true',
+          label: '公开项目 (所有成员可见，仅项目成员可编辑)',
+        },
       ],
       // 向服务器上传信息
       submitMsg: {
-        share: "",
-        name: "",
-        description: "",
-        updateTime: "",
-        createTime: "",
-        id: ""
+        share: '',
+        name: '',
+        description: '',
+        updateTime: '',
+        createTime: '',
+        id: '',
       },
       // 检测数据是否一样
       oldMsg: {
-        share: "",
-        name: "",
-        description: ""
+        share: '',
+        name: '',
+        description: '',
       },
       // 设置查看状态还是分享状态
-      status: "",
+      status: '',
       // 向服务器发送 标志位
-      serveLoadFlag: false
+      serveLoadFlag: false,
     };
   },
   computed: {
-    ...mapState(["user"])
+    ...mapState(['user']),
   },
   methods: {
     // chang 事件触发的函数
@@ -134,65 +141,65 @@ export default {
     // 时间转换函数
     TimeConversion(time) {
       const date = new Date(time);
-      const completion = num => {
-        return num.toString().padStart(2, "0");
+      const completion = (num) => {
+        return num.toString().padStart(2, '0');
       };
       return (
         date.getFullYear() +
-        " 年 " +
+        ' 年 ' +
         completion(date.getMonth() + 1) +
-        " 月 " +
+        ' 月 ' +
         completion(date.getDate()) +
-        " 日 "
+        ' 日 '
       );
     },
     // 展示 设置modal
     showView(val, status) {
       this.ModalFalg = true;
-      this.status = status === "true" ? true : false;
+      this.status = status === 'true' ? true : false;
       this.submitMsg = {
         name: val.name,
-        share: val.share ? "true" : "false",
+        share: val.share ? 'true' : 'false',
         description: val.description,
         createTime: val.createTime,
         updateTime: val.updateTime,
         nickName: val.author.nickName,
         userName: val.author.userName,
-        id: val.id
+        id: val.id,
       };
       this.oldMsg = {
         name: val.name,
-        share: val.share ? "true" : "false",
-        description: val.description
+        share: val.share ? 'true' : 'false',
+        description: val.description,
       };
     },
     // 保存设置 并向服务器发送数据
     keepSetting() {
-      const url = "item/" + this.submitMsg.id;
+      const url = 'item/' + this.submitMsg.id;
       const obj = {
-        share: this.submitMsg.share === "true" ? true : false,
+        share: this.submitMsg.share === 'true' ? true : false,
         name: this.submitMsg.name,
-        description: this.submitMsg.description
+        description: this.submitMsg.description,
       };
       this.serveLoadFlag = true;
       this.put_json(url, obj)
-        .then(res => {
+        .then((res) => {
           const data = res.data;
-          this.$Message.success("保存成功");
+          this.$Message.success('保存成功');
           this.oldMsg = {
             name: data.name,
-            share: data.share ? "true" : "false",
-            description: data.description
+            share: data.share ? 'true' : 'false',
+            description: data.description,
           };
           this.allowFlag = true;
-          this.$emit("updataItem", data);
+          this.$emit('updataItem', data);
           this.serveLoadFlag = false;
         })
         .catch(() => {
           this.serveLoadFlag = false;
         });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -238,7 +245,7 @@ export default {
   border-radius: 8px;
 }
 .item-upload-default {
-  background: url("../../../../assets/images/itembg.jpg");
+  background: url('../../../../assets/images/itembg.jpg');
   background-size: 100% 100%;
 }
 .item-modal-main {

@@ -6,7 +6,7 @@
 
 
 <template>
-  <div id="loginBox">
+  <div id="loginBox" v-title='知识图谱构建平台'>
     <Spin size="large" fix v-if="spinShow"></Spin>
     <div class="know-login-icon">
       <router-link to="/">

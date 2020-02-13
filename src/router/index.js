@@ -64,6 +64,23 @@ let router = new vueRouter({
 		path: '/project',
 		name: 'project',
 		component: () => import('../page/project/project'),
+		children: [
+			{
+				path: '/',
+				name: 'home',
+				component: () => import('@/page/project/projectmain/projectHome.vue'),
+			},
+			{
+				path: 'list',
+				name: 'list',
+				component: () => import('@/page/project/projectmain/projectList.vue'),
+			},
+			{
+				path: 'share',
+				name: 'share',
+				component: () => import('@/page/project/projectmain/projectShare.vue'),
+			},
+		],
 		meta: {
 			requireAuth: true
 		}

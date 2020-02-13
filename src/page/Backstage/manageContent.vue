@@ -121,6 +121,7 @@ export default {
           const userWeb = this.$route.params.user;
           if (user === userWeb) {
             this.$emit('sendItem', data.name);
+            this.setTitleLabel(data.name);
             if (this.user.userName === user) {
               this.itemExitFlag = true;
               this.$refs.treelist.TLCallback(15);
@@ -136,6 +137,10 @@ export default {
           this.showErrorFlag = false;
           this.loadingFlag = false;
         });
+    },
+    // 设置title标签
+    setTitleLabel(title) {
+      document.title = `${title} ● Knowledge Graph`;
     },
     // 子组件 调用函数
     MangageCallback(type, val) {
@@ -198,7 +203,7 @@ export default {
 .g-error-a:hover {
   color: #fff;
 }
-.g-lodding{
+.g-lodding {
   z-index: 11;
 }
 @media screen and (max-width: 800px) {

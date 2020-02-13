@@ -6,7 +6,7 @@
 
 
 <template>
-  <div class="g-error">
+  <div class="g-error" v-title='知识图谱构建平台'>
     <div class="g-error-box">
       <img src="@/assets/images/404.svg" alt />
       <div class="g-error-tips">抱歉，你访问的页面不存在。</div>

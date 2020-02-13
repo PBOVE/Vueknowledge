@@ -6,7 +6,7 @@
 
 
 <template>
-  <div class="user-wrap">
+  <div class="user-wrap" v-title='知识图谱构建平台'>
     <public-header :RouterFlag="true"></public-header>
     <user-main :style="{height:ClientHeight}"></user-main>
   </div>

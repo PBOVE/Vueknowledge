@@ -9,7 +9,7 @@
     <public-header :routerTO="routerTO"></public-header>
     <div class="g-content" :style="{'height':clientHeight}">
       <div class="know-searchshow-titlte">
-        <router-link to='/' class="g-router-a">搜索</router-link>
+        <router-link to="/" class="g-router-a">搜索</router-link>
         <Icon type="md-arrow-round-forward" class="g-tip-icon" />
         <span>{{nodeName}}</span>
       </div>
@@ -66,6 +66,7 @@ export default {
       handler(to) {
         this.nodeName = to.query.name;
         this.nodeId = to.query.id;
+        this.setTitleLabel(this.nodeName);
         if (to.query.q) {
           this.showSelectNum = parseInt(to.query.q);
         } else {
@@ -106,6 +107,10 @@ export default {
       };
       statusMap[type]();
     },
+    // 设置title标签
+    setTitleLabel(title) {
+      document.title = `${title} ● Knowledge Graph`;
+    },
   },
 };
 </script>
@@ -128,7 +133,7 @@ export default {
 .g-tip-icon {
   margin: 0 10px;
 }
-.g-router-a{
+.g-router-a {
   color: #515a6e;
 }
 </style>

@@ -6,7 +6,7 @@
 
 
 <template>
-  <div class="know-search">
+  <div class="know-search" v-title='知识图谱平台搜索'>
     <header class="know-search-header" ref="knowSearchHeader">
       <router-link to="/project">
         <Icon type="ios-keypad" class="know-search-header-icon cup" />

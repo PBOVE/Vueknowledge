@@ -7,13 +7,13 @@
 
 <template>
   <ul class="project-aside-ul">
-    <li class="project-aside-li" @click="selectStatus(1,1)" :class="{'select-li':selectLI === 1}">
+    <li class="project-aside-li" @click="SelectRow(0)" :class="{'select-li':selectLI === 0}">
       <Icon type="ios-home" />首页
     </li>
-    <li class="project-aside-li" @click="selectStatus(1,2)" :class="{'select-li':selectLI === 2}">
+    <li class="project-aside-li" @click="SelectRow(1)" :class="{'select-li':selectLI === 1}">
       <Icon type="logo-buffer" />项目
     </li>
-    <li class="project-aside-li" @click="selectStatus(1,3)" :class="{'select-li':selectLI=== 3}">
+    <li class="project-aside-li" @click="SelectRow(2)" :class="{'select-li':selectLI=== 2}">
       <Icon type="md-share" />分享
     </li>
   </ul>
@@ -25,21 +25,40 @@ export default {
   data() {
     return {
       // 选中的 li
-      selectLI: 1
+      selectLI: 0,
+      // 路由
+      router: ['', 'list', 'share'],
     };
   },
+  watch: {
+    $route: {
+      handler() {
+        this.InitAside();
+      },
+      immediate: true,
+    },
+  },
+  mounted() {
+    this.InitAside();
+  },
   methods: {
-    // 获取选中 的 状态
-    selectStatus(type, val) {
-      const statusMap = {
-        1: () => {
-          this.selectLI = val;
-          this.$emit("Callback", 1, val);
-        }
-      };
-      statusMap[type]();
-    }
-  }
+    InitAside() {
+      const path = this.$route.path.replace(/\/.+\//g, '');
+      const index = this.router.indexOf(path);
+      this.selectLI = index === -1 ? 0 : index;
+    },
+    // 设置选中行
+    SelectRow(val) {
+      const path = `/project/${this.router[val]}`;
+      if (this.selectLI === val) {
+        return;
+      }
+      this.selectLI = val;
+      this.$router.push({
+        path,
+      });
+    },
+  },
 };
 </script>
 

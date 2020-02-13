@@ -36,7 +36,6 @@
 
 
 <script>
-import '../../assets/css/font.css';
 export default {
   props: ['selectNum'],
   data() {

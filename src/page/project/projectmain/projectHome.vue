@@ -10,33 +10,43 @@
     <div class="title-h1">项目创建</div>
     <div class="title-tips">欢迎使用 “知识图谱构建平台” ,尝试新建一个项目给自己</div>
     <div class="item-create">
-      <div class="create-box box dis-fixc" @click="statusSelect(1)">
+      <div class="create-box box dis-fixc g-item-box" @click="statusSelect(1)">
         <Icon type="md-add" size="22" />
         <div class="create-box-title">创建项目</div>
       </div>
     </div>
-    <div class="title-h1">我创建的</div>
-    <div class="item-load" v-if="itemLoadFlag">
-      <Icon type="md-ionic" class="item-load-icon" />
+    <div class="item-load" v-if="shareitemLoadFlag">
+      <Icon type="md-star-half" class="item-load-icon" />
     </div>
-    <item-list
-      class="item-row"
+    <div v-if="itemData.length" class="title-h1">我参与的</div>
+    <item-card
+      v-if="itemData.length"
       :itemData="itemData"
       @selectItem="selectItem"
       @selectDelete="selectDelete"
       status="true"
-    ></item-list>
-    <div class="title-h1">成员分享的</div>
+    >
+      <div class="g-item-box box dis-fixc" @click="statusSelect(2)">
+        <Icon type="logo-buffer" size="22" />
+        <div class="create-box-title">查看更多我参与的项目</div>
+      </div>
+    </item-card>
     <div class="item-load" v-if="shareitemLoadFlag">
-      <Icon type="md-ionic" class="item-load-icon" />
+      <Icon type="md-star-half" class="item-load-icon" />
     </div>
-    <item-list
-      class="item-row"
+    <div v-if="itemShareData.length" class="title-h1">分享项目</div>
+    <item-card
+      v-if="itemShareData.length"
       :itemData="itemShareData"
       @selectItem="selectItem"
       @selectDelete="selectDelete"
       status="false"
-    ></item-list>
+    >
+      <div class="g-item-box box dis-fixc" @click="statusSelect(3)">
+        <Icon type="md-share" size="22" />
+        <div class="create-box-title">查看更多分享项目</div>
+      </div>
+    </item-card>
     <item-create ref="modalC" @addItem="addItem"></item-create>
     <item-setting ref="modalS" @updataItem="updataItem"></item-setting>
     <item-delete ref="modalD" @delItem="delItem"></item-delete>
@@ -45,25 +55,25 @@
 
 
 <script>
-import itemList from "./operation/itemList";
-import itemCreate from "./operation/itemCreate";
-import itemSetting from "./operation/itemSetting";
-import itemDelete from "./operation/itemDelete";
+import itemCard from './operation/itemCard.vue';
+import itemCreate from './operation/itemCreate.vue';
+import itemSetting from './operation/itemSetting.vue';
+import itemDelete from './operation/itemDelete.vue';
 
 export default {
-  components: { itemList, itemCreate, itemSetting, itemDelete },
+  components: { itemCard, itemCreate, itemSetting, itemDelete },
   data() {
     return {
       // 项目数据
-      itemData: "",
+      itemData: [],
       // 分享项目数据
-      itemShareData: "",
+      itemShareData: [],
       // 选中的数据下标
-      selectIndex: "",
+      selectIndex: '',
       // 项目加载标志位
       itemLoadFlag: true,
       // 分享项目加载标志位
-      shareitemLoadFlag: true
+      shareitemLoadFlag: true,
     };
   },
   mounted() {
@@ -73,22 +83,27 @@ export default {
   methods: {
     // 获取服务器里面的项目
     getServeItem() {
-      const url = "item";
-      this.get(url)
-        .then(res => {
+      const url = 'item';
+      const OBJ = {
+        size: 4,
+      };
+      this.get(url, OBJ)
+        .then((res) => {
           this.itemLoadFlag = false;
-          this.itemData = res.data;
+          this.itemData = res.data.content;
         })
         .catch(() => {});
     },
     // 获取服务器里面分享的项目
     getServeShareItem() {
-      const url = "item/share";
-      this.get(url)
-        .then(res => {
-
+      const url = 'item/share';
+      const OBJ = {
+        size: 4,
+      };
+      this.get(url, OBJ)
+        .then((res) => {
           this.shareitemLoadFlag = false;
-          this.itemShareData = res.data;
+          this.itemShareData = res.data.content;
         })
         .catch(() => {});
     },
@@ -98,14 +113,22 @@ export default {
         // 点击创建
         1: () => {
           this.$refs.modalC.setModalStatus();
-        }
+        },
+        // 点击查看更多项目
+        2: () => {
+          this.$router.push('/project/list');
+        },
+        // 点击查看分享项目
+        3: () => {
+          this.$router.push('/project/share');
+        },
       };
       statusMap[type]();
     },
     // 选中 项目设置
     selectItem(index, status) {
       this.selectIndex = index;
-      if (status === "true") {
+      if (status === 'true') {
         this.$refs.modalS.showView(this.itemData[index], status);
       } else {
         this.$refs.modalS.showView(this.itemShareData[index], status);
@@ -113,7 +136,6 @@ export default {
     },
     // 选中 项目删除
     selectDelete(index) {
-      this.selectIndex = index;
       this.$refs.modalD.showView(this.itemData[index]);
     },
     // 创建成功 添加数据
@@ -128,10 +150,10 @@ export default {
     },
     // 删除项目
     delItem() {
-      this.itemData.splice(this.selectIndex, 1);
       this.getServeShareItem();
-    }
-  }
+      this.getServeItem();
+    },
+  },
 };
 </script>
 
@@ -157,17 +179,20 @@ export default {
   box-sizing: border-box;
   cursor: pointer;
 }
-.create-box {
+.g-item-box {
   background: #f7f7f7;
 }
-.create-box:hover {
+.g-item-box:hover {
   background: #e8f0fe;
   color: #1b9aee;
+}
+.create-box:hover {
   border: 1px solid #87d2ff;
   box-shadow: 0 8px 16px rgba(27, 154, 238, 0.2);
 }
 .create-box-title {
   font-size: 15px;
+  margin: 5px 0 0 0;
   letter-spacing: 0.1em;
 }
 .item-load {
@@ -178,6 +203,17 @@ export default {
   font-size: 30px;
 }
 .item-load-icon {
-  animation: ani-demo-load 2.5s linear infinite;
+  animation: star-load-iocn 2.5s linear infinite;
+}
+@keyframes star-load-iocn {
+  0% {
+    transform: rotateY(0);
+  }
+  50% {
+    transform: rotateY(180deg);
+  }
+  100% {
+    transform: rotateY(0);
+  }
 }
 </style>

@@ -25,5 +25,8 @@ export default {
     },
     getUpdateTime: (state) => {
         return state.user.updateTime || '';
+    },
+    getShowType: (state) => {
+        return state.userShowType;
     }
 }

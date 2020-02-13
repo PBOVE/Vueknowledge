@@ -24,8 +24,13 @@ Vue.prototype.delete_json = delete_json;
 Vue.prototype.put_json = put_json;
 
 
-
 Vue.config.productionTip = false;
+
+Vue.directive('title', {
+  inserted(el, binding) {
+    document.title = binding.expression;
+  }
+})
 
 new Vue({
   render: h => h(App),

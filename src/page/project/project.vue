@@ -6,11 +6,11 @@
 
 
 <template>
-  <div class="project">
+  <div class="project" v-title="知识图谱构建平台">
     <public-header :RouterFlag="true"></public-header>
-    <div class="project-content scroll" :style="{height:ClientHeight}">
-      <project-aside class="project-aside" @Callback="Callback"></project-aside>
-      <project-main class="project-main" ref="projectMain"></project-main>
+    <div class="project-content" :style="{height:ClientHeight}">
+      <project-aside class="project-aside"></project-aside>
+      <project-main class="project-main"></project-main>
     </div>
   </div>
 </template>
@@ -18,33 +18,33 @@
 
 <script>
 //导入 header 模板
-import publicHeader from "../../components/publicHeader";
-import projectAside from "./projectaside/projectAside";
-import projectMain from "./projectmain/projectMain";
-import { mapState } from "vuex";
+import publicHeader from '../../components/publicHeader';
+import projectAside from './projectaside/projectAside';
+import projectMain from './projectmain/projectMain';
+import { mapState } from 'vuex';
 
 export default {
   components: { publicHeader, projectAside, projectMain },
   data() {
     return {
-      InnerHeight: "",
-      InnerWidth: ""
+      InnerHeight: '',
+      InnerWidth: '',
     };
   },
   computed: {
-    ...mapState(["headerHeight"]),
+    ...mapState(['headerHeight']),
     // 可视区高度
     ClientHeight() {
-      return this.InnerHeight - this.headerHeight + "px";
-    }
+      return this.InnerHeight - this.headerHeight + 'px';
+    },
   },
   mounted() {
     this.InnerHeight = window.innerHeight;
     this.InnerWidth = window.innerWidth;
-    window.addEventListener("resize", this.getInner);
+    window.addEventListener('resize', this.getInner);
   },
   beforeDestroy() {
-    window.removeEventListener("resize", this.getInner);
+    window.removeEventListener('resize', this.getInner);
   },
   methods: {
     //获取 浏览器 高度
@@ -52,16 +52,7 @@ export default {
       this.InnerHeight = window.innerHeight;
       this.InnerWidth = window.innerWidth;
     },
-    // 回调函数
-    Callback(type, val) {
-      const statusMap = {
-        1: () => {
-          this.$refs.projectMain.setStatus(val);
-        }
-      };
-      statusMap[type]();
-    }
-  }
+  },
 };
 </script>
 
@@ -69,25 +60,25 @@ export default {
 <style scoped>
 .project-content {
   display: flex;
-  padding: 30px;
   overflow: auto;
 }
 .project-aside {
-  width: 280px;
   flex-shrink: 0;
-  margin: 0 40px 0 0;
+  width: 280px; 
+  padding: 30px 0 30px 30px;
+  margin: 0 10px 0 0;
 }
 .project-main {
   flex-grow: 1;
 }
 @media screen and (max-width: 1000px) {
-  .project-content{
+  .project-content {
     flex-direction: column;
-    
   }
-  .project-aside{
+  .project-aside {
     width: 100%;
-    margin: 0 0 40px 0;
+    margin: 0;
+    padding:  30px 30px 0;
   }
 }
 </style>

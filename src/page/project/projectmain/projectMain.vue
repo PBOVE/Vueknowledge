@@ -6,40 +6,25 @@
 
 
 <template>
-  <div>
-    <div v-if='selectStatus === 1'>
-      <project-home></project-home> 
-    </div>
-    <div v-else-if="selectStatus === 2">
-      project
-    </div>
-    <div v-else-if="selectStatus === 3">
-      share
-    </div>
+  <div class="g-main-wrap scroll">
+    <router-view></router-view>
   </div>
 </template>
 
 
 <script>
-import projectHome from './projectHome'
-
 export default {
-  components:{projectHome},
   data() {
-    return {
-      // 状态选中
-      selectStatus:1
-    };
+    return {};
   },
-  methods: {
-    // 设置 选中 的状态
-    setStatus(val){
-      this.selectStatus = val;
-    }
-  },
+  methods: {},
 };
 </script>
 
 
 <style scoped>
+.g-main-wrap {
+  padding: 30px;
+  overflow: auto;
+}
 </style>
