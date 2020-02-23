@@ -51,6 +51,10 @@ export default {
       userStatusFlag: 0,
       //联想 请求的数据
       searchData: [],
+      // 联系请求异步
+      searchDataAsyn: '',
+      // 联系请求异步 标志位
+      searchDataAsynFlag: false,
       //用户输入的数据
       InSearchMeg: '',
     };
@@ -94,21 +98,29 @@ export default {
     },
     // change 事件触发的函数
     changeEvent() {
-      const q = this.InSearchMeg.replace(/\s+/, '');
-      if (!q) {
-        this.searchData = [];
+      this.searchDataAsyn = this.InSearchMeg.replace(/\s+/, '');
+      if (!this.searchDataAsyn) {
+        this.searchData = '';
         return;
       }
+      if (this.searchDataAsynFlag) {
+        return;
+      }
+      const q = this.searchDataAsyn;
       const URL = 'search';
       const OBJ = {
         q,
         tips: true,
       };
+      this.searchDataAsynFlag = true;
       this.get(URL, OBJ)
         .then((res) => {
+          this.searchDataAsynFlag = false;
           this.SearchLists(res.data);
         })
-        .catch(() => {});
+        .catch(() => {
+          this.searchDataAsynFlag = false;
+        });
     },
     //下拉列表搜索显示的
     SearchLists(data) {

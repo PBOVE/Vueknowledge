@@ -29,8 +29,8 @@
       >{{index + 1}}.&nbsp;{{item}}</p>
     </div>
     <div slot="footer">
-      <Button type="info" @click="modalFlag=false">取&nbsp;消</Button>
-      <Button type="text" @click.stop="userDelfun" class="know-modal-footer-del">删&nbsp;除</Button>
+      <Button type="text" @click="modalFlag=false">取&nbsp;消</Button>
+      <Button type="error" @click.stop="userDelfun">删&nbsp;除</Button>
     </div>
   </Modal>
 </template>
@@ -38,11 +38,11 @@
 <script>
 export default {
   props: [
-    "DelModalFlag",
-    "selectNodeName",
-    "treeNodeId",
-    "selectNodes",
-    "itemId"
+    'DelModalFlag',
+    'selectNodeName',
+    'treeNodeId',
+    'selectNodes',
+    'itemId',
   ],
   data() {
     return {
@@ -51,9 +51,9 @@ export default {
       // 多节点按下 标志位
       selectNodesFlag: false,
       // 多节点
-      Nodes: "",
+      Nodes: '',
       // 多节点 id
-      NodeId: ""
+      NodeId: '',
     };
   },
   watch: {
@@ -66,7 +66,7 @@ export default {
         // 多节点
         let arr = [];
         let arrId = [];
-        this.selectNodes.forEach(item => {
+        this.selectNodes.forEach((item) => {
           arr.push(item.name);
           arrId.push(item.id);
         });
@@ -80,36 +80,36 @@ export default {
     // 监听 modalflag = true
     modalFlag(val) {
       if (val) {
-        document.addEventListener("keyup", this.upCtrlEnter);
+        document.addEventListener('keyup', this.upCtrlEnter);
       } else {
-        document.removeEventListener("keyup", this.upCtrlEnter);
+        document.removeEventListener('keyup', this.upCtrlEnter);
       }
-    }
+    },
   },
   methods: {
     //点击 删除 按键
     userDelfun() {
       this.modalFlag = false;
       if (this.selectNodesFlag) {
-        let url = "node/" + this.treeNodeId;
+        let url = 'node/' + this.treeNodeId;
         let obj = {
-          itemId: this.itemId
+          itemId: this.itemId,
         };
         this.delete_string(url, obj)
-          .then(res => {
+          .then((res) => {
             if (res.data) {
-              this.$emit("addNameS", 8, Math.random());
+              this.$emit('addNameS', 8, Math.random());
             } else {
-              this.$Message.error("删除失败");
+              this.$Message.error('删除失败');
             }
           })
           .catch(() => {});
       } else {
-        let url = "node?itemId=" + this.itemId;
+        let url = 'node?itemId=' + this.itemId;
         let obj = this.NodeId;
         this.delete_json(url, obj)
           .then(() => {
-            this.$emit("addNameS", 12, Math.random());
+            this.$emit('addNameS', 12, Math.random());
           })
           .catch(() => {});
       }
@@ -127,8 +127,8 @@ export default {
       if (valA < valB) return -1;
       else if (valA > valB) return 1;
       else return 0;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -138,11 +138,6 @@ export default {
   text-align: center;
   user-select: none;
 }
-/* .know-modal-text p:nth-of-type(2){
-        text-align: center;
-        font-size: 16px;
-        font-weight: bold;
-    } */
 .know-modal-text-center {
   text-align: center;
   font-size: 16px;
@@ -154,14 +149,5 @@ export default {
 }
 .Tips {
   color: #c5c8ce;
-}
-.know-modal-footer-del:hover {
-  color: #ed4014;
-}
-.know-modal-footer-del:focus {
-  box-shadow: 0 0 0 2px rgba(237, 64, 20, 0.2);
-}
-.know-modal-footer-del:active {
-  color: #ed4014;
 }
 </style>

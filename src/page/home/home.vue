@@ -6,7 +6,7 @@
 
 
 <template>
-  <div class="g-home-wrap" v-title="知识图谱搜索">
+  <div class="g-home-wrap" v-title="知识图谱节点搜索">
     <div class="g-header-warp">
       <div class="g-right">
         <router-link to="/project" class="g-link-keypad">
@@ -28,7 +28,7 @@
           <span class="g-title-logo"></span>
           <span>Knowledge Graph</span>
         </div>
-        <div class="g-title-cn">知识图谱搜索</div>
+        <div class="g-title-cn">知识图谱节点搜索</div>
       </div>
       <AutoComplete
         class="b-auto-complete"
@@ -40,10 +40,10 @@
         @on-change="changeEvent"
         @on-select="SearchSelectShow"
       >
-        <div v-if="searchData">
+        <div v-if="searchData.length">
           <Option v-for="(item,index) in searchData" :key="index" :value="item">{{item}}</Option>
         </div>
-        <div v-else>
+        <div v-else-if="searcHistory.length">
           <Option
             v-for="(item,index) in searcHistory"
             :key="index"
@@ -74,7 +74,7 @@ import { mapMutations, mapGetters } from 'vuex';
 
 export default {
   components: { dropDown },
-  filters:{
+  filters: {
     LunarYYMMDD(time) {
       const YY = time.getFullYear();
       const MM = time.getMonth() + 1;
@@ -88,8 +88,12 @@ export default {
     return {
       // 判断用户状态
       userStatusFlag: 0,
-      //联想 请求的数据
-      searchData: '',
+      // 联想 请求的数据
+      searchData: [],
+      // 联系请求异步
+      searchDataAsyn: '',
+      // 联系请求异步 标志位
+      searchDataAsynFlag: false,
       //用户输入的数据
       InSearchMeg: '',
       // 时间
@@ -136,21 +140,29 @@ export default {
     },
     // change 事件触发的函数
     changeEvent() {
-      const q = this.InSearchMeg.replace(/\s+/, '');
-      if (!q) {
-        this.searchData = '';
+      this.searchDataAsyn = this.InSearchMeg.replace(/\s+/, '');
+      if (!this.searchDataAsyn) {
+        this.searchData = [];
         return;
       }
+      if (this.searchDataAsynFlag) {
+        return;
+      }
+      const q = this.searchDataAsyn;
       const URL = 'search';
       const OBJ = {
         q,
         tips: true,
       };
+      this.searchDataAsynFlag = true;
       this.get(URL, OBJ)
         .then((res) => {
+          this.searchDataAsynFlag = false;
           this.SearchLists(res.data);
         })
-        .catch(() => {});
+        .catch(() => {
+          this.searchDataAsynFlag = false;
+        });
     },
     //下拉列表搜索显示的
     SearchLists(data) {
@@ -352,7 +364,7 @@ export default {
   background-image: linear-gradient(top, #f8f8f8, #f1f1f1);
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
-.g-footer-button:active{
+.g-footer-button:active {
   border: 1px solid #4d90fe;
 }
 </style>
