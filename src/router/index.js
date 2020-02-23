@@ -55,12 +55,12 @@ let router = new vueRouter({
 	{
 		path: '/login',
 		name: 'login',
-		component: () => import('@/page/login/main'),
+		component: () => import('@/page/login/main.vue'),
 	},
 	{
 		path: '/manage/:user/:itemId',
 		name: 'manage',
-		component: () => import('@/page/Backstage/manage'),
+		component: () => import('@/page/Backstage/manage.vue'),
 		meta: {
 			requireAuth: true
 		}
@@ -68,7 +68,7 @@ let router = new vueRouter({
 	{
 		path: '/project',
 		name: 'project',
-		component: () => import('@/page/project/project'),
+		component: () => import('@/page/project/project.vue'),
 		children: [
 			{
 				path: '/',
@@ -93,7 +93,7 @@ let router = new vueRouter({
 	{
 		path: '/user',
 		name: 'user',
-		component: () => import('@/page/user/user'),
+		component: () => import('@/page/user/user.vue'),
 		meta: {
 			requireAuth: true
 		}
@@ -106,7 +106,7 @@ let router = new vueRouter({
 	{
 		path: '*',
 		name: 'nofound',
-		component: () => import('@/page/noFound/nofound')
+		component: () => import('@/page/noFound/nofound.vue')
 	}
 	]
 })
