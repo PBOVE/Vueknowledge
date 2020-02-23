@@ -16,10 +16,10 @@
 
 
 <script>
-import forceChart from "../../../components/forceChart";
+import forceChart from '../../../components/forceChart';
 export default {
   components: { forceChart },
-  props: ["showSelectNum", "InnerHeight",'nodeId'],
+  props: ['showSelectNum', 'InnerHeight', 'nodeId'],
   data() {
     return {
       // 获取数据 标志位
@@ -27,7 +27,7 @@ export default {
       //设置top高
       TopHeight: 120,
       //设置right宽度
-      RightWeight: 0
+      RightWeight: 0,
     };
   },
   methods: {
@@ -35,10 +35,10 @@ export default {
     getforceData() {
       if (this.getDataFlag || !this.nodeId) return;
       this.getDataFlag = true;
-      
-      let url = "node/" + this.nodeId + "/graph";
+
+      let url = 'node/' + this.nodeId + '/graph';
       this.get(url)
-        .then(res => {
+        .then((res) => {
           if (this.showSelectNum === 1) {
             this.$refs.forcechart.handlecomponentsforceData(res.data);
           }
@@ -46,41 +46,37 @@ export default {
         .catch(() => {});
     },
     forceCallback(d) {
-      if(d.Tid === this.nodeId)
-        return;
+      if (d.Tid === this.nodeId) return;
       this.$router.push({
-        path:'/search',
-        query:{
-          name:d.name,
-          id:d.Tid,
-          q:3
-        }
-      })
- 
-    }
+        path: `/node/${d.Tid}/${d.name}`,
+        query: {
+          q: 3,
+        },
+      });
+    },
   },
   watch: {
     showSelectNum: {
-      handler(val) {  
+      handler(val) {
         if (val !== 1) return;
         this.getforceData();
       },
       // 代表在wacth里声明了firstName这个方法之后立即先去执行handler方法
-      immediate: true
+      immediate: true,
     },
-    nodeId(){
-      this.getDataFlag =false;
-      if(this.showSelectNum===1){
+    nodeId() {
+      this.getDataFlag = false;
+      if (this.showSelectNum === 1) {
         this.getforceData();
       }
-    }
+    },
   },
   computed: {
     //设置  可视区 高度
     SetHeight() {
-      return this.InnerHeight - this.TopHeight + "px";
-    }
-  }
+      return this.InnerHeight - this.TopHeight + 'px';
+    },
+  },
 };
 </script>
 

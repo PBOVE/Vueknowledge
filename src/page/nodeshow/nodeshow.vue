@@ -5,25 +5,23 @@
 */
 
 <template>
-  <div class="know-searchshow">
-    <public-header :routerTO="routerTO"></public-header>
+  <div class="g-node-show">
+    <search-header  />
     <div class="g-content" :style="{'height':clientHeight}">
-      <div class="know-searchshow-titlte">
-        <router-link to="/" class="g-router-a">搜索</router-link>
-        <Icon type="md-arrow-round-forward" class="g-tip-icon" />
+      <div class="g-node-show-titlte">
         <span>{{nodeName}}</span>
       </div>
-      <search-select
+      <node-select
         @searchIdCallback="searchIdCallback"
         ref="searchidselect"
         :selectNum="showSelectNum"
-      ></search-select>
-      <search-content
+      ></node-select>
+      <node-content
         :showSelectNum="showSelectNum"
         :InnerHeight="InnerHeight - topHeight"
         :nodeId="nodeId"
         ref="searchcontent"
-      ></search-content>
+      ></node-content>
     </div>
   </div>
 </template>
@@ -31,11 +29,11 @@
 <script>
 import { mapGetters } from 'vuex';
 // 导入头
-import publicHeader from '../../components/publicHeader';
-import searchSelect from './searchshowButton';
-import searchContent from './searchContent';
+import searchHeader from '@/components/searchHeader.vue';
+import nodeSelect from './nodeshowButton.vue';
+import nodeContent from './nodeContent.vue';
 export default {
-  components: { publicHeader, searchSelect, searchContent },
+  components: { searchHeader, nodeSelect, nodeContent },
   data() {
     return {
       // 节点名称
@@ -43,7 +41,7 @@ export default {
       // 选中的按钮
       showSelectNum: '',
       // 选中的节点 id
-      nodeId: this.$route.query.id ? parseInt(this.$route.query.id) : '',
+      nodeId: '',
       // 获取 innerHeight
       InnerHeight: '',
       // 获取 innerWidth
@@ -64,8 +62,8 @@ export default {
   watch: {
     $route: {
       handler(to) {
-        this.nodeName = to.query.name;
-        this.nodeId = to.query.id;
+        this.nodeName = to.params.name;
+        this.nodeId = to.params.id;
         this.setTitleLabel(this.nodeName);
         if (to.query.q) {
           this.showSelectNum = parseInt(to.query.q);
@@ -119,7 +117,10 @@ export default {
 .g-content {
   background-color: #f0f2f5;
 }
-.know-searchshow-titlte {
+.g-node-show {
+  overflow: hidden;
+}
+.g-node-show-titlte {
   overflow: hidden;
   padding: 0px 10px;
   margin: 0 10px;

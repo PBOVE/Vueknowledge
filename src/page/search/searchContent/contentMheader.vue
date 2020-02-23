@@ -20,7 +20,7 @@
     <div class="know-s-c-m-c">
       <div v-for="(item) in reqShowData" :key="item.nodeId" class="know-s-c-m-c-f">
         <div class="s-c-m-b">
-          <router-link :to="{path:'/search', query: {id:item.nodeId,name:item.nodeName}}">
+          <router-link :to="{name:'nodeshow', params: {id:item.nodeId,name:item.nodeName}}">
             <div class="s-c-m-c-title" v-html="item.nodeTitleName"></div>
           </router-link>
           <div class="know-s-c-m-c-user">

@@ -27,7 +27,7 @@ import axios from 'axios';
 /**
  * 导入自定义 ui
  */
-import '../assets/css/default.css';
+import '@/assets/css/index.css';
 /**
  * 引入路由组件
  */
@@ -44,18 +44,23 @@ let router = new vueRouter({
 	mode: 'history',
 	routes: [{
 		path: '/',
+		name: 'home',
+		component: () => import('@/page/home/home.vue'),
+	},
+	{
+		path: '/search',
 		name: 'search',
-		component: () => import('../page/search/search'),
+		component: () => import('@/page/search/search.vue'),
 	},
 	{
 		path: '/login',
 		name: 'login',
-		component: () => import('../page/login/main'),
+		component: () => import('@/page/login/main'),
 	},
 	{
 		path: '/manage/:user/:itemId',
 		name: 'manage',
-		component: () => import('../page/Backstage/manage'),
+		component: () => import('@/page/Backstage/manage'),
 		meta: {
 			requireAuth: true
 		}
@@ -63,7 +68,7 @@ let router = new vueRouter({
 	{
 		path: '/project',
 		name: 'project',
-		component: () => import('../page/project/project'),
+		component: () => import('@/page/project/project'),
 		children: [
 			{
 				path: '/',
@@ -88,20 +93,20 @@ let router = new vueRouter({
 	{
 		path: '/user',
 		name: 'user',
-		component: () => import('../page/user/user'),
+		component: () => import('@/page/user/user'),
 		meta: {
 			requireAuth: true
 		}
 	},
 	{
-		path: '/search',
-		name: 'searchid',
-		component: () => import('../page/searchshow/searchshow'),
+		path: '/node/:id/:name',
+		name: 'nodeshow',
+		component: () => import('@/page/nodeshow/nodeshow.vue'),
 	},
 	{
 		path: '*',
 		name: 'nofound',
-		component: () => import('../page/noFound/nofound')
+		component: () => import('@/page/noFound/nofound')
 	}
 	]
 })
@@ -122,8 +127,8 @@ router.beforeEach((to, from, next) => {
 				next('/login');
 			}
 		} else {
-			if (to.name === 'searchid') {
-				if (!to.query.id || !to.query.name) {
+			if (to.name === 'search') {
+				if (!to.query.q) {
 					next('/')
 				} else {
 					next();

@@ -28,5 +28,8 @@ export default {
     },
     getShowType: (state) => {
         return state.userShowType;
+    },
+    getSearcHistory: (state) => {
+        return state.searchHistory
     }
 }

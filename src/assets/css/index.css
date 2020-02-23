@@ -42,6 +42,9 @@
   background: #4d80e4;
   cursor: pointer;
 }
+.b-auto-complete i {
+  right: inherit;
+}
 @keyframes ani-demo-load {
   from {
     transform: rotate(0deg);

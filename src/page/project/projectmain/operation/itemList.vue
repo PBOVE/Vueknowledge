@@ -86,8 +86,10 @@ export default {
 .g-row-img {
   width: 40px;
   height: 40px;
-  background: url('https://knowledge.pchelper666.com/api/storage/preview/1519B57D88D32D5DC227BF7510A3C2727860DEAE')
-    100%/100%;
+  background: url('../../../../assets/images/item_bg.png') no-repeat;
+  background-position: center center;
+  background-size: cover;
+  border-radius: 4px;
 }
 .g-list-left {
   margin: 0 30px 0 0;

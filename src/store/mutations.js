@@ -17,6 +17,25 @@ export default {
     state.userShowType = type;
     localStorage.setItem('user_showType', type);
   },
+  setSearchHistory(state, history) {
+    const historyArray = state.searchHistory;
+    if (historyArray.length > 10) {
+      historyArray.pop();
+    }
+    const index = historyArray.indexOf(history);
+    if (index !== -1) {
+      window.con
+      historyArray.splice(index, 1);
+    }
+    historyArray.splice(0, 0, history);
+    state.searchHistory = historyArray;
+    localStorage.setItem('search_history', JSON.stringify(historyArray));
+  },
+  delSearchHistory(state, index) {
+    const historyArray = state.searchHistory;
+    historyArray.splice(index, 1);
+    localStorage.setItem('search_history', JSON.stringify(historyArray));
+  },
   delToken(state) {
     state.token = '';
     state.user = '';
