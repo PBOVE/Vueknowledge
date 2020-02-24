@@ -84,8 +84,11 @@ export default {
         this.reqShowData.push({
           info: item.info,
           nodeId: item.nodeId,
-          labels: item.labels.labels,
-          property: this.handleServerProperty(item.property.property),
+          labels: item.labels === null ? undefined : item.labels.labels,
+          property:
+            item.property === null
+              ? {}
+              : this.handleServerProperty(item.property.property),
           text: this.html2Escape(item.text).replace(
             reg,
             '<span class="s-c-m-c-t-u">' + this.ShowSMeg + '</span>',
@@ -97,7 +100,6 @@ export default {
             '<span class="s-c-m-c-t-u">' + this.ShowSMeg + '</span>',
           ),
         });
-        // this.handleServerLabel(item.labels);
       });
     },
     // 处理属性 数据
