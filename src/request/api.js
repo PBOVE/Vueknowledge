@@ -176,7 +176,6 @@ const showStatus = (err) => {
       router.replace({
         path: '/login',
       }).catch(() => { });
-      // store.commit('delToken');
       notify('error', '登录失效，请重新登录');
       break;
     case 500:
@@ -217,11 +216,8 @@ axios.interceptors.request.use(
  */
 axios.interceptors.response.use(response => {
   // 对响应数据做点什么
-  let data = response.data;
-  if (typeof data === 'string') {
-    showStatus(404);
-    return Promise.reject();
-  } else if (data.code === 0 && data.msg === 'Success') {
+  const { data } = response;
+  if (data.code === 200 && data.msg === 'OK') {
     return response;
   }
   else {

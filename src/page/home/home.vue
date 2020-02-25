@@ -136,7 +136,9 @@ export default {
             this.userStatusFlag = -1;
           }
         })
-        .catch(() => {});
+        .catch((err) => {
+          window.console.log(err);
+        });
     },
     // change 事件触发的函数
     changeEvent() {
@@ -349,7 +351,7 @@ export default {
   line-height: 34px;
   color: #5f6368;
   background-color: #f2f2f2;
-  background-image: linear-gradient(top, #f5f5f5, #f1f1f1);
+  background-image: linear-gradient(to top, #f5f5f5, #f1f1f1);
   border: 1px solid #f2f2f2;
   border-radius: 4px;
   user-select: none;
@@ -361,7 +363,7 @@ export default {
   color: #222;
   border: 1px solid #c6c6c6;
   background-color: #f8f8f8;
-  background-image: linear-gradient(top, #f8f8f8, #f1f1f1);
+  background-image: linear-gradient(to top, #f8f8f8, #f1f1f1);
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 }
 .g-footer-button:active {
