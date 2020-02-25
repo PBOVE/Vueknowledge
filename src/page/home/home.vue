@@ -136,9 +136,7 @@ export default {
             this.userStatusFlag = -1;
           }
         })
-        .catch((err) => {
-          window.console.log(err);
-        });
+        .catch(() => {});
     },
     // change 事件触发的函数
     changeEvent() {

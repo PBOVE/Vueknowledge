@@ -51,7 +51,6 @@ export default {
     ...mapMutations(['setShowType']),
     // 下拉菜单change事件触发
     dropdowdnChange(select) {
-      window.console.log();
       this.selectIcon = this.TypeArr[parseInt(select, 10) - 1];
       this.setShowType(select);
     },

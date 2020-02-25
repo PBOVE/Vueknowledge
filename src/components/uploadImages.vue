@@ -119,15 +119,11 @@ export default {
             this.precent = (loaded / total) * 100;
           })
             .then((res) => {
-              window.console.log(res)
               this.showImgFlag = 2;
-              // this.srcImage = res.link;
-              window.console.log(res);
+              this.srcImage = res.link;
               this.disabledFlag = false;
             })
-            .catch((err) => {
-              window.console.log(err);
-            });
+            .catch(() => {});
         },
         // 展示上传照片展示位
         5: () => {

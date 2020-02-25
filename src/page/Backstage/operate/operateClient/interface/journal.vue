@@ -7,7 +7,7 @@
 
 <template>
   <ul class="know-journal-ul">
-    <Scroll :on-reach-bottom="getPageLogData" :height="SetHeight">
+    <Scroll :on-reach-bottom="getPageLogData" :height="SetHeight" :loading-text="loadingText">
       <li v-for="(item ,index) in JournalData" v-bind:key="item.randomId" class="know-journal-li">
         <div
           class="know-journal-title"
@@ -41,20 +41,22 @@ export default {
   props: ['treeNode', 'showSelectNum', 'InnerHeight', 'spinShow'],
   data() {
     return {
-      //请求数据标志位
+      // 请求数据标志位
       getDataFlag: false,
-      //请求的日志数据
+      // 请求的日志数据
       JournalData: [],
-      //请求数据数量
+      // 请求数据数量
       dataSize: 10,
       // 分页起始位置
       dataPage: 0,
-      //分页终点位置
+      // 分页终点位置
       dataEndPage: 1,
-      //请求标志位
+      // 请求标志位
       requestFlag: false,
       // topHeight
       TopHeight: 120,
+      // 加载中的文案
+      loadingText: '加载中',
     };
   },
   methods: {
@@ -68,7 +70,10 @@ export default {
     },
     // 分页点击加载 请求服务器数据 数据
     getPageLogData() {
-      if (this.dataPage === this.dataEndPage) return;
+      if (this.dataPage === this.dataEndPage) {
+        this.loadingText = '没有更多的日志了'
+        return;
+      }
       this.getServerData(this.dataPage++);
     },
     // 请求 服务器 数据
