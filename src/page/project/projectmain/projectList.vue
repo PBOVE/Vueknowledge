@@ -7,7 +7,8 @@
 
 <template>
   <div class="g-warp">
-    <item-header :totalElements="totalElements"></item-header>
+    <item-header :totalElements="totalElements" />
+    <loadAnimation v-if="!itemload" />
     <item-card
       :itemData="itemData"
       status="true"
@@ -46,6 +47,7 @@ import itemHeader from './operation/itemHeader.vue';
 import itemSetting from './operation/itemSetting.vue';
 import itemDelete from './operation/itemDelete.vue';
 import itemCreate from './operation/itemCreate.vue';
+import loadAnimation from '@/components/loadAnimation.vue';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -56,6 +58,7 @@ export default {
     itemSetting,
     itemDelete,
     itemCreate,
+    loadAnimation,
   },
   data() {
     return {
@@ -65,6 +68,8 @@ export default {
       totalElements: 0,
       // 选中项目下标
       selectIndex: '',
+      // 项目加载标志位
+      itemload: false,
     };
   },
   computed: {
@@ -82,6 +87,7 @@ export default {
       };
       this.get(URL, OBJ)
         .then((res) => {
+          this.itemload = true;
           this.itemData = res.data.content;
           this.totalElements = res.data.totalElements;
         })

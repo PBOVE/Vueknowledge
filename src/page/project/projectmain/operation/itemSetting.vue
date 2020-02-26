@@ -6,7 +6,7 @@
 
 
 <template>
-  <Modal v-model="ModalFalg" width="600">
+  <Modal v-model="ModalFalg" width="600" :styles="{top: '50px'}">
     <p slot="header" class="header center">
       <span>项目设置</span>
     </p>
@@ -52,14 +52,11 @@
       >
         <Option v-for="item in shareList" :value="item.value" :key="item.value">{{ item.label }}</Option>
       </Select>
-      <div
-        v-else
-        class="item-border"
-      >{{submitMsg.share === 'true'?shareList[0].label:shareList[1].label}}</div>
+      <div v-else class="item-border">公开项目 (所有成员可见，仅项目成员可编辑)</div>
       <div class="item-modal-title">项目创建时间</div>
-      <div>{{TimeConversion(submitMsg.createTime)}}</div>
-      <div class="item-modal-title">项目修改时间</div>
-      <div>{{TimeConversion(submitMsg.updateTime)}}</div>
+      <div>{{submitMsg.createTime|TimeConversion}}</div>
+      <div class="item-modal-title">项目最近修改时间</div>
+      <div>{{submitMsg.updateTime|TimeConversion}}</div>
     </div>
     <div slot="footer" class="item-modal-footer">
       <Button type="text" @click="ModalFalg = false">取消</Button>
@@ -83,6 +80,22 @@
 import { mapState } from 'vuex';
 
 export default {
+  filters: {
+    TimeConversion(time) {
+      const date = new Date(time);
+      const completion = (num) => {
+        return num.toString().padStart(2, '0');
+      };
+      return (
+        date.getFullYear() +
+        ' 年 ' +
+        completion(date.getMonth() + 1) +
+        ' 月 ' +
+        completion(date.getDate()) +
+        ' 日 '
+      );
+    },
+  },
   data() {
     return {
       // 模态框展示标志位
@@ -137,21 +150,6 @@ export default {
         flag = false;
       }
       this.allowFlag = flag;
-    },
-    // 时间转换函数
-    TimeConversion(time) {
-      const date = new Date(time);
-      const completion = (num) => {
-        return num.toString().padStart(2, '0');
-      };
-      return (
-        date.getFullYear() +
-        ' 年 ' +
-        completion(date.getMonth() + 1) +
-        ' 月 ' +
-        completion(date.getDate()) +
-        ' 日 '
-      );
     },
     // 展示 设置modal
     showView(val, status) {
@@ -249,7 +247,7 @@ export default {
   background-size: 100% 100%;
 }
 .item-modal-main {
-  max-height: calc(100vh - 308px);
+  max-height: calc(100vh - 200px);
   overflow: auto;
 }
 .item-border {

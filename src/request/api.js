@@ -173,10 +173,10 @@ const showStatus = (err) => {
       notify('error', '账号或密码错误');
       break;
     case 404:
+      notify('error', '登录失效，请重新登录');
       router.replace({
         path: '/login',
       }).catch(() => { });
-      notify('error', '登录失效，请重新登录');
       break;
     case 500:
       notify('error', '系统正在维护中,请稍等');

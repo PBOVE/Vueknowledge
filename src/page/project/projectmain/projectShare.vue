@@ -7,7 +7,8 @@
 
 <template>
   <div class="g-warp">
-    <item-header :totalElements="totalElements"></item-header>
+    <item-header :totalElements="totalElements"/>
+    <loadAnimation v-if="!itemload" />
     <item-card
       :itemData="itemShareData"
       status="false"
@@ -34,6 +35,7 @@ import itemCard from './operation/itemCard.vue';
 import itemList from './operation/itemList.vue';
 import itemSetting from './operation/itemSetting.vue';
 import itemDelete from './operation/itemDelete.vue';
+import loadAnimation from '@/components/loadAnimation.vue';
 import { mapGetters } from 'vuex';
 
 export default {
@@ -43,6 +45,7 @@ export default {
     itemCard,
     itemSetting,
     itemDelete,
+    loadAnimation
   },
   data() {
     return {
@@ -50,6 +53,8 @@ export default {
       itemShareData: [],
       // 项目个数
       totalElements: 0,
+       // 项目加载标志位
+      itemload: false,
     };
   },
   computed: {
@@ -63,10 +68,11 @@ export default {
     getShareItem() {
       const url = 'item/share';
       const OBJ = {
-        size: 4,
+        size: 50,
       };
       this.get(url, OBJ)
         .then((res) => {
+          this.itemload = true;
           this.itemShareData = res.data.content;
           this.totalElements = res.data.totalElements;
         })

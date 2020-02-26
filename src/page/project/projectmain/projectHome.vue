@@ -15,9 +15,7 @@
         <div class="create-box-title">创建项目</div>
       </div>
     </div>
-    <div class="item-load" v-if="shareitemLoadFlag">
-      <Icon type="md-star-half" class="item-load-icon" />
-    </div>
+    <load-animation v-if="itemLoadFlag" />
     <div v-if="itemData.length" class="title-h1">我参与的</div>
     <item-card
       v-if="itemData.length"
@@ -31,9 +29,7 @@
         <div class="create-box-title">查看更多我参与的项目</div>
       </div>
     </item-card>
-    <div class="item-load" v-if="shareitemLoadFlag">
-      <Icon type="md-star-half" class="item-load-icon" />
-    </div>
+    <load-animation v-if="shareitemLoadFlag" />
     <div v-if="itemShareData.length" class="title-h1">分享项目</div>
     <item-card
       v-if="itemShareData.length"
@@ -59,9 +55,10 @@ import itemCard from './operation/itemCard.vue';
 import itemCreate from './operation/itemCreate.vue';
 import itemSetting from './operation/itemSetting.vue';
 import itemDelete from './operation/itemDelete.vue';
+import loadAnimation from '@/components/loadAnimation.vue';
 
 export default {
-  components: { itemCard, itemCreate, itemSetting, itemDelete },
+  components: { itemCard, itemCreate, itemSetting, itemDelete, loadAnimation },
   data() {
     return {
       // 项目数据
@@ -194,26 +191,5 @@ export default {
   font-size: 15px;
   margin: 5px 0 0 0;
   letter-spacing: 0.1em;
-}
-.item-load {
-  height: 120px;
-  line-height: 120px;
-  text-align: center;
-  color: #2d8cf0;
-  font-size: 30px;
-}
-.item-load-icon {
-  animation: star-load-iocn 2.5s linear infinite;
-}
-@keyframes star-load-iocn {
-  0% {
-    transform: rotateY(0);
-  }
-  50% {
-    transform: rotateY(180deg);
-  }
-  100% {
-    transform: rotateY(0);
-  }
 }
 </style>
