@@ -12,7 +12,7 @@
     <item-card
       :itemData="itemData"
       status="true"
-      v-if="getShowType==='1'"
+      v-if="getShowType==='card'"
       @selectItem="selectSetting"
       @selectDelete="selectDelete"
     >
@@ -24,7 +24,7 @@
     <item-list
       :itemData="itemData"
       status="true"
-      v-if="getShowType==='2'"
+      v-if="getShowType==='list'"
       @on-setting="selectSetting"
       @on-delete="selectDelete"
     >

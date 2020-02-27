@@ -119,10 +119,6 @@ export default {
       let myChart = echarts.init(this.$refs.knowtree);
       myChart.clear();
       myChart.setOption(option);
-
-      // myChart.on("click", function(params) {
-      //   // 控制台打印数据的名称
-      // });
     }
   }
 };

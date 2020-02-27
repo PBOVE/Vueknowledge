@@ -12,14 +12,14 @@
     <item-card
       :itemData="itemShareData"
       status="false"
-      v-if="getShowType==='1'"
+      v-if="getShowType==='card'"
       @selectItem="selectSetting"
       @selectDelete="selectDelete"
     ></item-card>
     <item-list
       :itemData="itemShareData"
       status="false"
-      v-if="getShowType==='2'"
+      v-if="getShowType==='list'"
       @on-setting="selectSetting"
       @on-delete="selectDelete"
     ></item-list>

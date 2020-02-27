@@ -269,6 +269,7 @@ export default {
   font-family: Georgia;
   display: inline-block;
   width: 25px;
+  height: 25px;
   border-radius: 50%;
   text-align: center;
   user-select: none;

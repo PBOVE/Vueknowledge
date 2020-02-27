@@ -221,12 +221,13 @@ export default {
   animation: ani-demo-load 2.5s linear infinite;
 }
 .g-login-img {
-  color: #fff;
-  font-family: Georgia;
   display: inline-block;
   width: 25px;
+  height: 25px;
   border-radius: 50%;
   text-align: center;
+  font-family: Georgia;
+  color: #fff;
   user-select: none;
 }
 .g-left-title {

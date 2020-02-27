@@ -15,7 +15,7 @@ export default {
   },
   setShowType(state, type) {
     state.userShowType = type;
-    localStorage.setItem('user_showType', type);
+    localStorage.setItem('item_showType', type);
   },
   setSearchHistory(state, history) {
     const historyArray = state.searchHistory;
@@ -46,13 +46,11 @@ export default {
     const { token } = data._csrf;
     state.token = token;
     state.user = user;
-    sessionStorage.setItem('user_roles', JSON.stringify(user));
     sessionStorage.setItem('access_token', token);
 
   },
   modify(state, data) {
     const user = data;
     state.user = user;
-    sessionStorage.setItem('user_roles', JSON.stringify(user));
   },
 }

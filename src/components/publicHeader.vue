@@ -146,6 +146,7 @@ export default {
 .know-public-header-user-logo {
   display: inline-block;
   width: 25px;
+  height: 25px;
   border-radius: 50%;
   text-align: center;
   line-height: 25px;

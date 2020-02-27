@@ -16,10 +16,10 @@
     <Dropdown class="g-right" trigger="click" @on-click="dropdowdnChange">
       <span class="g-right-icon cup iconfont" :class="selectIcon" />
       <DropdownMenu slot="list">
-        <DropdownItem class="df g-list-menu" name="1" :selected="getShowType==='1'">
+        <DropdownItem class="df g-list-menu" name="card" :selected="getShowType==='card'">
           <span class="icon-card iconfont g-list-icon" />卡片视图
         </DropdownItem>
-        <DropdownItem class="df g-list-menu" :selected="getShowType==='2'" name="2">
+        <DropdownItem class="df g-list-menu" name="list" :selected="getShowType==='list'">
           <span class="icon-list iconfont g-list-icon" />列表视图
         </DropdownItem>
       </DropdownMenu>
@@ -36,13 +36,13 @@ export default {
   data() {
     return {
       // 展示方式
-      TypeArr: ['icon-card', 'icon-list'],
+      TypeArr: { card: 'icon-card', list: 'icon-list' },
       // 设置选中的图标
       selectIcon: '',
     };
   },
   created() {
-    this.selectIcon = this.TypeArr[parseInt(this.getShowType, 10) - 1];
+    this.selectIcon = this.TypeArr[this.getShowType] || 'icon-card';
   },
   computed: {
     ...mapGetters(['getShowType']),
@@ -51,7 +51,7 @@ export default {
     ...mapMutations(['setShowType']),
     // 下拉菜单change事件触发
     dropdowdnChange(select) {
-      this.selectIcon = this.TypeArr[parseInt(select, 10) - 1];
+      this.selectIcon = this.TypeArr[select];
       this.setShowType(select);
     },
   },
