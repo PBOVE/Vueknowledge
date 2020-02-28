@@ -75,6 +75,8 @@ export default {
       itemId: parseInt(this.$route.params.itemId),
       // 项目编辑 标志位
       itemExitFlag: false,
+      // 获取项目 标志位
+      getItemFlag: false,
     };
   },
   created() {},
@@ -94,11 +96,18 @@ export default {
         this.splitinit = (parseInt(this.splitMin) + 50) / this.InnerWidth;
       }
     },
+    'user.userName': {
+      handler(val) {
+        if (val) {
+          this.getServerItem();
+        }
+      },
+    },
   },
   mounted() {
     this.InnerHeight = window.innerHeight;
     this.InnerWidth = window.innerWidth;
-    this.getItem();
+    this.getServerItem();
     window.addEventListener('resize', this.getInner);
   },
   beforeDestroy() {
@@ -109,6 +118,13 @@ export default {
     getInner() {
       this.InnerHeight = window.innerHeight;
       this.InnerWidth = window.innerWidth;
+    },
+    // 获取项目开始
+    getServerItem() {
+      if (!this.getItemFlag && this.user.userName) {
+        this.getItemFlag = true;
+        this.getItem();
+      }
     },
     // 获取项目
     getItem() {

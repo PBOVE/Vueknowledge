@@ -6,7 +6,7 @@
 
 
 <template>
-  <div class="g-search-warp" v-title="知识图谱搜索">
+  <div class="g-search-warp" v-title="知识图谱节点搜索">
     <search-header routerKey="q" />
     <search-content class="g-content scroll" />
   </div>

@@ -20,7 +20,9 @@
     <div class="know-s-c-m-c">
       <div v-for="(item) in reqShowData" :key="item.nodeId" class="know-s-c-m-c-f">
         <div class="s-c-m-b">
-          <router-link :to="{name:'nodeshow', params: {id:item.nodeId,name:item.nodeName}}">
+          <router-link
+            :to="{name:'nodeshow', params: {id:item.nodeId,name:item.nodeName},query:{type:'force'}}"
+          >
             <div class="s-c-m-c-title" v-html="item.nodeTitleName"></div>
           </router-link>
           <div class="know-s-c-m-c-user">
@@ -70,48 +72,48 @@
 </template>
 
 <script>
-import foldingPanel from "../../../components/foldingPanel";
+import foldingPanel from '../../../components/foldingPanel';
 export default {
   components: { foldingPanel },
   props: [
-    "ShowSMeg",
-    "totalElements",
-    "reqShowData",
-    "pageNum",
-    "totalPages",
-    "reqSuccessFlag"
+    'ShowSMeg',
+    'totalElements',
+    'reqShowData',
+    'pageNum',
+    'totalPages',
+    'reqSuccessFlag',
   ],
   data() {
     return {
       //显示加载信息
-      loadMsg: "加载更多",
+      loadMsg: '加载更多',
       //显示加载标志位
-      loadFlag: true
+      loadFlag: true,
     };
   },
   methods: {
     // 点击加载数据请求分页
     getServerPage() {
-      if (this.loadMsg !== "数据加载") {
-        this.loadMsg = "数据加载";
-        this.$emit("contentCallback", 1);
+      if (this.loadMsg !== '数据加载') {
+        this.loadMsg = '数据加载';
+        this.$emit('contentCallback', 1);
       }
     },
     // 点击获取节点信息
     getNodeInmes(index) {
-      this.$emit("contentCallback", 2, index);
-    }
+      this.$emit('contentCallback', 2, index);
+    },
   },
   watch: {
     reqSuccessFlag() {
-      this.loadMsg = "加载更多";
+      this.loadMsg = '加载更多';
       if (this.pageNum + 1 === this.totalPages || this.totalPages === 0) {
         this.loadFlag = false;
       } else {
         this.loadFlag = true;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -175,8 +177,8 @@ export default {
   font-size: 14px;
   margin: 5px 5px 2px 3px;
   cursor: default;
-  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
-    "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
 }
 .know-s-c-m-attr-d-list span {
   display: inline-block;

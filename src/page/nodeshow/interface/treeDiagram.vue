@@ -16,10 +16,10 @@
 
 
 <script>
-import treeChart from "../../../components/treeChart";
+import treeChart from '../../../components/treeChart';
 export default {
   components: { treeChart },
-  props: ["showSelectNum", "InnerHeight", "nodeId"],
+  props: ['showSelectType', 'InnerHeight', 'nodeId', 'spinShow'],
   data() {
     return {
       // 获取数据 标志位
@@ -27,46 +27,59 @@ export default {
       //设置top高
       TopHeight: 120,
       //设置right宽度
-      RightWeight: 0
+      RightWeight: 0,
+      // 数据请求过标志位
+      requestDataFlag: false,
     };
   },
   methods: {
     // 获取 服务器 数据
     getforceData() {
-      if (this.getDataFlag || !this.nodeId) return;
+      if (this.requestDataFlag) {
+        this.$emit('update:spinShow', false);
+      }
+      if (this.getDataFlag) {
+        return;
+      }
       this.getDataFlag = true;
-      let url = "node/" + this.nodeId + "/link";
+      let url = 'node/' + this.nodeId + '/link';
       this.get(url)
-        .then(res => {
-          if (this.showSelectNum === 2) {
+        .then((res) => {
+          if (this.showSelectType === 'tree') {
+            this.requestDataFlag = true;
+            this.$emit('update:spinShow', false);
             this.$refs.treechart.handletreeData(res.data);
+          } else {
+            this.getDataFlag = false;
           }
         })
         .catch(() => {});
-    }
+    },
   },
   watch: {
-    showSelectNum: {
+    showSelectType: {
       handler(val) {
-        if (val !== 2) return;
+        if (val !== 'tree') return;
         this.getforceData();
       },
       // 代表在wacth里声明了firstName这个方法之后立即先去执行handler方法
-      immediate: true
+      immediate: true,
     },
     nodeId() {
+      this.requestDataFlag = false;
       this.getDataFlag = false;
-      if (this.showSelectNum === 2) {
+      this.$emit('update:spinShow', true);
+      if (this.showSelectType === 'tree') {
         this.getforceData();
       }
-    }
+    },
   },
   computed: {
     //设置  可视区 高度
     SetHeight() {
-      return this.InnerHeight - this.TopHeight + "px";
-    }
-  }
+      return this.InnerHeight - this.TopHeight + 'px';
+    },
+  },
 };
 </script>
 

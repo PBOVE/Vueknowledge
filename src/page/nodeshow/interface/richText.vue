@@ -12,23 +12,34 @@
 
 <script>
 export default {
-  props: ["showSelectNum", "nodeId"],
+  props: ['showSelectType', 'nodeId', 'spinShow'],
   data() {
     return {
       // 获取数据 标志位
-      getDataFlag: false
+      getDataFlag: false,
+      // 数据请求过标志位
+      requestDataFlag: false,
     };
   },
   methods: {
     // 获取 服务器 数据
     getforceData() {
-      if (this.getDataFlag || !this.nodeId) return;
+      if (this.requestDataFlag) {
+        this.$emit('update:spinShow', false);
+      }
+      if (this.getDataFlag) {
+        return;
+      }
       this.getDataFlag = true;
-      let url = "storage/text/" + this.nodeId;
+      let url = 'storage/text/' + this.nodeId;
       this.get(url)
-        .then(res => {
-          if (this.showSelectNum === 3) {
+        .then((res) => {
+          if (this.showSelectType === 'text') {
+            this.requestDataFlag = true;
+            this.$emit('update:spinShow', false);
             this.handlerTextData(res.data);
+          } else {
+            this.getDataFlag = false;
           }
         })
         .catch(() => {});
@@ -38,26 +49,28 @@ export default {
       if (data) {
         this.$refs.eixtText.innerHTML = data;
       } else {
-        this.$refs.eixtText.innerHTML = "作者没有再此节点编辑任何信息。";
+        this.$refs.eixtText.innerHTML = '作者没有再此节点编辑任何信息。';
       }
-    }
+    },
   },
   watch: {
-    showSelectNum: {
+    showSelectType: {
       handler(val) {
-        if (val !== 3) return;
+        if (val !== 'text') return;
         this.getforceData();
       },
       // 代表在wacth里声明了firstName这个方法之后立即先去执行handler方法
-      immediate: true
+      immediate: true,
     },
     nodeId() {
+      this.requestDataFlag = false;
       this.getDataFlag = false;
-      if (this.showSelectNum === 3) {
+      this.$emit('update:spinShow', true);
+      if (this.showSelectType === 'text') {
         this.getforceData();
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

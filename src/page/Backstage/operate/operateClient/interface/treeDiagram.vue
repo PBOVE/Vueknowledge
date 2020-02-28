@@ -7,8 +7,6 @@
 
 <template>
   <tree-chart
-    :TopHeight="TopHeight"
-    :RightWeight="RightWeight"
     :style="{height:SetHeight}"
     ref="treechart"
   ></tree-chart>
@@ -23,9 +21,7 @@ export default {
     return {
       getDataFlag: false,
       //设置top高
-      TopHeight: 120,
-      //设置right宽度
-      RightWeight: 20,
+      TopHeight: 100,
     };
   },
   methods: {

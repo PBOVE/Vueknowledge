@@ -6,22 +6,13 @@
 
 <template>
   <div class="g-node-show">
-    <search-header  />
+    <search-header />
     <div class="g-content" :style="{'height':clientHeight}">
       <div class="g-node-show-titlte">
         <span>{{nodeName}}</span>
       </div>
-      <node-select
-        @searchIdCallback="searchIdCallback"
-        ref="searchidselect"
-        :selectNum="showSelectNum"
-      ></node-select>
-      <node-content
-        :showSelectNum="showSelectNum"
-        :InnerHeight="InnerHeight - topHeight"
-        :nodeId="nodeId"
-        ref="searchcontent"
-      ></node-content>
+      <node-select />
+      <node-content :InnerHeight="InnerHeight - topHeight" :nodeId="nodeId"></node-content>
     </div>
   </div>
 </template>
@@ -37,9 +28,7 @@ export default {
   data() {
     return {
       // 节点名称
-      nodeName: this.$route.query.name,
-      // 选中的按钮
-      showSelectNum: '',
+      nodeName: '',
       // 选中的节点 id
       nodeId: '',
       // 获取 innerHeight
@@ -48,7 +37,6 @@ export default {
       InnerWidth: '',
       // 路由跳转地址
       routerTO: '/project',
-      //TopHeigh高度
     };
   },
   computed: {
@@ -60,19 +48,11 @@ export default {
     },
   },
   watch: {
-    $route: {
-      handler(to) {
-        this.nodeName = to.params.name;
-        this.nodeId = to.params.id;
+    '$route.params': {
+      handler(params) {
+        this.nodeName = params.name;
+        this.nodeId = parseInt(params.id, 10);
         this.setTitleLabel(this.nodeName);
-        if (to.query.q) {
-          this.showSelectNum = parseInt(to.query.q);
-        } else {
-          this.showSelectNum = 1;
-        }
-        //  to , from 分别表示从哪跳转到哪，都是一个对象
-        // to.path   ( 表示的是要跳转到的路由的地址 eg:  /home );
-        // to.query.id 提取id进行http请求数据更新页面
       },
       immediate: true,
     },
@@ -90,20 +70,6 @@ export default {
     getInner() {
       this.InnerHeight = window.innerHeight;
       this.InnerWidth = window.innerWidth;
-    },
-    // 回调函数
-    searchIdCallback(type, val) {
-      const statusMap = {
-        //点击按钮
-        1: () => {
-          this.showSelectNum = val;
-        },
-        //设置数据
-        2: () => {
-          this.$refs.searchidselect.setselectNum(this.showSelectNum);
-        },
-      };
-      statusMap[type]();
     },
     // 设置title标签
     setTitleLabel(title) {

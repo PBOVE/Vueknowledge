@@ -6,7 +6,7 @@
 
 
 <template>
-  <force-chart :style="{height:SetHeight}" :RightWeight="RightWeight" ref="forcechart"></force-chart>
+  <force-chart :style="{height:SetHeight}"  ref="forcechart"></force-chart>
 </template>
 
 <script>
@@ -20,9 +20,7 @@ export default {
       // 获取数据 标志位
       getDataFlag: false,
       //设置top高
-      TopHeight: 120,
-      //设置right宽度
-      RightWeight: 20
+      TopHeight: 100,
     };
   },
   methods: {

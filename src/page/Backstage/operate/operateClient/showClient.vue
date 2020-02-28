@@ -8,58 +8,54 @@
 <template>
   <div class="know-Showclient">
     <Spin fix size="large" v-if="spinShow"></Spin>
-    <div v-show="showSelectNum === 1">
-      <details-show
-        ref="detailsShow"
-        :itemId="itemId"
-        :treeNode="treeNode"
-        :showSelectNum="showSelectNum"
-        :spinShow.sync="spinShow"
-        :itemExitFlag="itemExitFlag"
-        @SClientCallback="SClientCallback"
-        class="know-Showclient-default"
-      ></details-show>
-    </div>
-    <div v-show="showSelectNum === 2">
-      <force-diagram
-        ref="forcediagram"
-        :InnerHeight="InnerHeight"
-        :treeNode="treeNode"
-        :showSelectNum="showSelectNum"
-        :spinShow.sync="spinShow"
-        :itemId="itemId"
-        class="know-Showclient-default"
-      ></force-diagram>
-    </div>
-    <div v-show="showSelectNum === 3">
-      <tree-diagram
-        ref="treediagram"
-        :InnerHeight="InnerHeight"
-        :treeNode="treeNode"
-        :showSelectNum="showSelectNum"
-        :spinShow.sync="spinShow"
-        class="know-Showclient-default"
-      ></tree-diagram>
-    </div>
-    <div v-show="showSelectNum === 4" v-if="itemExitFlag">
-      <journal-show
-        ref="journalog"
-        :treeNode="treeNode"
-        :showSelectNum="showSelectNum"
-        :InnerHeight="InnerHeight"
-        :spinShow.sync="spinShow"
-        class="know-Showclient-default"
-      ></journal-show>
-    </div>
-    <div v-show="showSelectNum === 5">
-      <rich-text
-        :InnerHeight="InnerHeight"
-        :treeNode="treeNode"
-        :showSelectNum="showSelectNum"
-        :spinShow.sync="spinShow"
-        :itemExitFlag="itemExitFlag"
-      ></rich-text>
-    </div>
+    <details-show
+      v-show="showSelectNum === 1"
+      ref="detailsShow"
+      :itemId="itemId"
+      :treeNode="treeNode"
+      :showSelectNum="showSelectNum"
+      :spinShow.sync="spinShow"
+      :itemExitFlag="itemExitFlag"
+      @SClientCallback="SClientCallback"
+      class="know-Showclient-default"
+    ></details-show>
+    <force-diagram
+      v-show="showSelectNum === 2"
+      ref="forcediagram"
+      :InnerHeight="InnerHeight"
+      :treeNode="treeNode"
+      :showSelectNum="showSelectNum"
+      :spinShow.sync="spinShow"
+      :itemId="itemId"
+      class="know-Showclient-default"
+    ></force-diagram>
+    <tree-diagram
+      v-show="showSelectNum === 3"
+      ref="treediagram"
+      :InnerHeight="InnerHeight"
+      :treeNode="treeNode"
+      :showSelectNum="showSelectNum"
+      :spinShow.sync="spinShow"
+      class="know-Showclient-default"
+    ></tree-diagram>
+    <journal-show
+      v-show="showSelectNum === 4"
+      v-if="itemExitFlag"
+      ref="journalog"
+      :treeNode="treeNode"
+      :showSelectNum="showSelectNum"
+      :InnerHeight="InnerHeight"
+      :spinShow.sync="spinShow"
+      class="know-Showclient-default"
+    ></journal-show>
+    <rich-text
+      v-show="showSelectNum === 5"
+      :InnerHeight="InnerHeight"
+      :treeNode="treeNode"
+      :showSelectNum="showSelectNum"
+      :spinShow.sync="spinShow"
+      :itemExitFlag="itemExitFlag"
+    ></rich-text>
   </div>
 </template>
 

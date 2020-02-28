@@ -7,15 +7,28 @@
 
 <template>
   <div class="know-selectid-content scroll" :style="{height:setClientHeight}">
-    <div v-show="showSelectNum === 1">
-      <force-diagram :InnerHeight="InnerHeight" :showSelectNum="showSelectNum" :nodeId="nodeId"></force-diagram>
-    </div>
-    <div v-show="showSelectNum===2">
-      <tree-diagram :InnerHeight="InnerHeight" :showSelectNum="showSelectNum" :nodeId="nodeId"></tree-diagram>
-    </div>
-    <div v-show="showSelectNum===3">
-      <rich-text :InnerHeight="InnerHeight" :showSelectNum="showSelectNum" :nodeId="nodeId"></rich-text>
-    </div>
+    <Spin size="large" fix v-show="spinShow" />
+    <force-diagram
+      v-show="showSelectType === 'force'"
+      :spinShow.sync="spinShow"
+      :InnerHeight="InnerHeight"
+      :showSelectType="showSelectType"
+      :nodeId="nodeId"
+    />
+    <tree-diagram
+      v-show="showSelectType==='tree'"
+      :spinShow.sync="spinShow"
+      :InnerHeight="InnerHeight"
+      :showSelectType="showSelectType"
+      :nodeId="nodeId"
+    />
+    <rich-text
+      v-show="showSelectType==='text'"
+      :spinShow.sync="spinShow"
+      :InnerHeight="InnerHeight"
+      :showSelectType="showSelectType"
+      :nodeId="nodeId"
+    />
   </div>
 </template>
 
@@ -30,11 +43,15 @@ import richText from './interface/richText';
 
 export default {
   components: { forceDiagram, treeDiagram, richText },
-  props: ['InnerHeight', 'showSelectNum', 'nodeId'],
+  props: ['InnerHeight', 'nodeId'],
   data() {
     return {
-      //设置top高
+      // 设置top高
       TopHeight: 100,
+      // 加载完成展示 标志位,
+      spinShow: true,
+      // 展示
+      showSelectType: '',
     };
   },
   computed: {
@@ -43,12 +60,22 @@ export default {
       return this.InnerHeight - this.TopHeight + 'px';
     },
   },
+  watch: {
+    '$route.query': {
+      handler(query) {
+        this.spinShow = true;
+        this.showSelectType = query.type;
+      },
+      immediate: true,
+    },
+  },
 };
 </script>
 
 
 <style scoped>
 .know-selectid-content {
+  position: relative;
   padding: 10px;
   overflow: auto;
   min-width: 900px;

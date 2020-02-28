@@ -12,9 +12,8 @@
 
 <script>
 //导入 d3 数据 包
-import * as echarts from "echarts";
+import * as echarts from 'echarts';
 export default {
-  props: ["RightWeight", "TopHeight"],
   data() {
     return {};
   },
@@ -32,19 +31,19 @@ export default {
         return [];
       }
       let getRandomColor = () => {
-        let color = "#";
+        let color = '#';
         for (let i = 0; i < 6; i++) {
-          color += "0123456789abcdef"[Math.floor(Math.random() * 16)];
+          color += '0123456789abcdef'[Math.floor(Math.random() * 16)];
         }
         return color;
       };
       let nodeBFS = (data, val, color) => {
         let Arr = [];
-        data.forEach(item => {
+        data.forEach((item) => {
           let randomColor = getRandomColor();
           let obj = {
             lineStyle: { color: color || randomColor },
-            name: item.name
+            name: item.name,
           };
           if (item.child) {
             if (val)
@@ -60,67 +59,67 @@ export default {
     },
     //父亲节点处理
     parentNodeProcessing(childdata, parent) {
-      let treeData = childdata;
+      let treeData = childdata.length ? childdata[0].children : [];
       parent = parent.reverse();
-      parent.forEach(item => {
+
+      parent.forEach((item) => {
         treeData = {
           name: item.name,
-          children: treeData.constructor === Array ? treeData : [treeData]
+          children: treeData.constructor === Array ? treeData : [treeData],
         };
       });
       return treeData;
     },
     //树图渲染数据
     CreateD3jsTree(dataset) {
-      
       let option = {
         tooltip: {
-          trigger: "item",
-          triggerOn: "mousemove"
+          trigger: 'item',
+          triggerOn: 'mousemove',
         },
         series: [
           {
-            type: "tree",
+            type: 'tree',
             data: [JSON.parse(dataset)],
-            top: "1%",
-            left: "8%",
-            bottom: "1%",
-            right: "20%",
+            top: '1%',
+            left: '8%',
+            bottom: '1%',
+            right: '8%',
             symbolSize: 10,
             roam: true,
             label: {
               normal: {
-                position: "left",
-                verticalAlign: "middle",
-                align: "right",
-                fontSize: 14
-              }
+                position: 'left',
+                verticalAlign: 'middle',
+                align: 'right',
+                fontSize: 14,
+              },
             },
             leaves: {
               label: {
                 normal: {
-                  position: "right",
-                  verticalAlign: "middle",
-                  align: "left"
-                }
-              }
+                  position: 'right',
+                  verticalAlign: 'middle',
+                  align: 'left',
+                },
+              },
             },
             itemStyle: {
-              borderColor: "#9D85FB"
+              borderColor: '#9D85FB',
             },
-            lineStyle: { color: "#fb767b" },
+            lineStyle: { color: '#fb767b' },
             expandAndCollapse: true,
             animationDuration: 550,
-            animationDurationUpdate: 750
-          }
-        ]
+            animationDurationUpdate: 750,
+          },
+        ],
       };
 
       let myChart = echarts.init(this.$refs.knowtree);
       myChart.clear();
       myChart.setOption(option);
-    }
-  }
+    },
+  },
 };
 </script>
 
