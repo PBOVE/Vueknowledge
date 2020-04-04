@@ -6,11 +6,13 @@
 
 
 <template>
-  <div class="know-searchshow-text" ref="eixtText"></div>
+  <div class="know-searchshow-text" v-html="Nodecontent" />
 </template>
 
 
 <script>
+import Prism from 'prismjs';
+
 export default {
   props: ['showSelectType', 'nodeId', 'spinShow'],
   data() {
@@ -19,6 +21,8 @@ export default {
       getDataFlag: false,
       // 数据请求过标志位
       requestDataFlag: false,
+      // 节点知识
+      Nodecontent: '',
     };
   },
   methods: {
@@ -31,7 +35,7 @@ export default {
         return;
       }
       this.getDataFlag = true;
-      let url = 'storage/text/' + this.nodeId;
+      let url = '/storage/text/' + this.nodeId;
       this.get(url)
         .then((res) => {
           if (this.showSelectType === 'text') {
@@ -42,27 +46,31 @@ export default {
             this.getDataFlag = false;
           }
         })
-        .catch(() => {});
+        .catch((err) => {
+          window.console.log(err);
+        });
     },
     //处理富文本数据
     handlerTextData(data) {
       if (data) {
-        this.$refs.eixtText.innerHTML = data;
+        this.Nodecontent = data;
+        this.$nextTick(() => {
+          Prism.highlightAll();
+        });
       } else {
-        this.$refs.eixtText.innerHTML = '作者没有再此节点编辑任何信息。';
+        this.Nodecontent = '作者没有再此节点编辑任何信息。';
       }
     },
   },
   watch: {
     showSelectType: {
       handler(val) {
-        if (val !== 'text') return;
+        if (val !== 'text' || !this.nodeId) return;
         this.getforceData();
       },
-      // 代表在wacth里声明了firstName这个方法之后立即先去执行handler方法
-      immediate: true,
     },
-    nodeId() {
+    nodeId(val) {
+      if (!val) return;
       this.requestDataFlag = false;
       this.getDataFlag = false;
       this.$emit('update:spinShow', true);
@@ -74,6 +82,5 @@ export default {
 };
 </script>
 
-
-<style scoped>
+<style scoped >
 </style>

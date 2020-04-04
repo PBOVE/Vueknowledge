@@ -101,7 +101,7 @@ export default {
           if (this.logoutLoad) {
             return;
           }
-          const url = 'user/logout';
+          const url = '/user/logout';
           this.logoutLoad = true;
           this.post_json(url)
             .then(() => {
@@ -125,8 +125,9 @@ export default {
       const target = event.target;
       const Ptarget = target.parentNode;
       if (
-        Ptarget.dataset.k === this.randomPass ||
-        target.dataset.k === this.randomPass
+        Ptarget.dataset &&
+        (Ptarget.dataset.k === this.randomPass ||
+          target.dataset.k === this.randomPass)
       ) {
         this.showViewFlag = !this.showViewFlag;
       } else {

@@ -12,14 +12,13 @@
         <router-link to="/project" class="g-link-keypad">
           <Icon type="ios-keypad" class="g-link-icon cup" />
         </router-link>
-        <router-link to="/login" v-if="userStatusFlag === -1">
-          <span class="g-link-login cup">登录</span>
-        </router-link>
-        <drop-down v-else-if="userStatusFlag === 1">
+        <drop-down v-if="userName">
           <img v-if="images" :src="images" class="g-login-img cup" />
           <div v-else class="Noimg">{{nickName.charAt(0).toUpperCase()}}</div>
         </drop-down>
-        <Icon type="md-refresh" class="g-loading" v-else-if="userStatusFlag === 0" />
+        <router-link to="/login" v-else>
+          <span class="g-link-login cup">登录</span>
+        </router-link>
       </div>
     </div>
     <div class="g-search-wrap" ref="knowSearchBox">
@@ -86,8 +85,6 @@ export default {
   props: ['routerKey'],
   data() {
     return {
-      // 判断用户状态
-      userStatusFlag: 0,
       // 联想 请求的数据
       searchData: [],
       // 联系请求异步
@@ -104,39 +101,29 @@ export default {
     ...mapGetters({
       images: 'getImageSrc',
       nickName: 'getnickName',
+      userName: 'getuserName',
       searcHistory: 'getSearcHistory',
     }),
   },
   created() {
-    this.getUser();
     this.routerAssignment();
   },
   mounted() {
     this.MonitoringlAddInput();
   },
   methods: {
-    ...mapMutations(['setUserData', 'setSearchHistory', 'delSearchHistory']),
+    ...mapMutations([
+      'setUserData',
+      'setSearchHistory',
+      'delSearchHistory',
+      'setToken',
+    ]),
     // 通过路由赋值
     routerAssignment() {
       const queryName = this.$route.query[this.routerKey];
       if (queryName) {
         this.InSearchMeg = queryName;
       }
-    },
-    // 获取  user信息
-    getUser() {
-      const url = 'user/me';
-      this.get(url)
-        .then((res) => {
-          if (res.data.user.id) {
-            let data = res.data;
-            this.userStatusFlag = 1;
-            this.setUserData(data);
-          } else {
-            this.userStatusFlag = -1;
-          }
-        })
-        .catch(() => {});
     },
     // change 事件触发的函数
     changeEvent() {
@@ -149,7 +136,7 @@ export default {
         return;
       }
       const q = this.searchDataAsyn;
-      const URL = 'search';
+      const URL = '/search';
       const OBJ = {
         q,
         tips: true,
@@ -199,7 +186,7 @@ export default {
         },
       });
     },
-    // 散出历史纪录
+    // 清出历史纪录
     delhistory(index) {
       this.delSearchHistory(index);
     },
@@ -335,7 +322,11 @@ export default {
 }
 .g-auto-title {
   display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   padding: 7px 0px;
+  width: 460px;
   font-size: 14px;
   color: #52188c;
 }

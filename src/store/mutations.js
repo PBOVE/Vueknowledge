@@ -1,8 +1,8 @@
 /**
-*
-*  @author ZTiger
-*
-*/
+ *
+ *  @author ZTiger
+ *
+ */
 
 export default {
   setToken(state, token) {
@@ -10,8 +10,6 @@ export default {
   },
   setUser(state, data) {
     state.user = data;
-    state.nickName = JSON.parse(state.user).nickName;
-    state.updateTime = JSON.parse(state.user).updateTime;
   },
   setShowType(state, type) {
     state.userShowType = type;
@@ -39,7 +37,7 @@ export default {
   delToken(state) {
     state.token = '';
     state.user = '';
-    sessionStorage.clear();
+    sessionStorage.removeItem('access_token');
   },
   setUserData(state, data) {
     const { user } = data;

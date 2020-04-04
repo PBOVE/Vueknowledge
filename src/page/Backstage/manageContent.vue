@@ -8,7 +8,7 @@
 <template>
   <div class="know-manage-split" :style="{height:ClientHeight}">
     <Spin size="large" fix v-if="loadingFlag" class="g-lodding"></Spin>
-    <Split v-model="splitinit" :min="splitMin" :max="splitMax" v-if="showErrorFlag">
+    <Split v-if="showErrorFlag" v-model="splitinit" :min="splitMin" :max="splitMax" >
       <div slot="left" class="know-manage-split-pane">
         <tree-list
           ref="treelist"
@@ -35,7 +35,7 @@
         <div class="g-error-title">抱歉，你访问的项目不存在。</div>
         <div>
           <Button type="primary">
-            <router-link to="/project" class="g-error-a">返回首页</router-link>
+            <router-link to="/project" class="g-error-a">返回项目管理页面</router-link>
           </Button>
         </div>
       </div>
@@ -89,7 +89,7 @@ export default {
   watch: {
     InnerWidth(val) {
       if (val < 800) {
-        this.splitMax = '40px';
+        this.splitMax = '0px';
         this.splitinit = 1;
       } else {
         this.splitMax = '500px';
@@ -128,7 +128,7 @@ export default {
     },
     // 获取项目
     getItem() {
-      const url = 'item/' + this.itemId;
+      const url = '/item/' + this.itemId;
       this.get(url)
         .then((res) => {
           this.loadingFlag = false;
